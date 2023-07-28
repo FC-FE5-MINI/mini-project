@@ -1,5 +1,5 @@
 {
-  "name": "fe-project-name",
+  "name": "my_turn",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/react": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.1.8",
     "@types/styled-components": "^5.1.26",
     "axios": "^1.4.0",
     "gitmoji-cli": "^8.4.0",
