@@ -2,6 +2,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import styled from "styled-components";
+import { listApplication } from "../lib/api/eventApi";
+import { useState, useEffect } from "react";
 
 const StyledEvent = styled.div`
   background-color: ${(props) =>
@@ -16,23 +18,37 @@ const StyledEvent = styled.div`
   cursor: pointer;
 `;
 
+interface EventData {
+  username: string;
+  startDate: string;
+  endDate: string;
+  eventType: number;
+  userId: number;
+}
 const Calendar = () => {
-  const events = [
-    {
-      title: "user1",
-      start: "2023-07-30",
-      end: new Date("2023-08-02").toISOString(),
-      id: "연차",
-      userid: "user1",
-    },
-    {
-      title: "user2",
-      start: "2023-07-28",
-      end: "2023-07-29",
-      id: "당직",
-      userid: "user2",
-    },
-  ];
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const eventData = await listApplication();
+        console.log("eventData:", typeof eventData); //왜..string이지?
+
+        const formattedEvents = eventData.map((data: EventData) => ({
+          title: data.username,
+          start: data.startDate,
+          end: data.endDate,
+          id: data.eventType,
+          userid: data.userId,
+        }));
+        console.log("formattedEvents:", formattedEvents);
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("오류 발생:", error);
+      }
+    }
+    fetchEvents();
+  }, []);
 
   return (
     <>
@@ -41,7 +57,6 @@ const Calendar = () => {
         initialView="dayGridMonth"
         events={events}
         eventBorderColor="white"
-        slotMaxTime="2023-08-04"
         eventContent={(arg) => <StyledEvent id={arg.event.id}>{arg.event.title}</StyledEvent>}
       />
     </>
