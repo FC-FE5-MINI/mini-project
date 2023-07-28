@@ -2,11 +2,11 @@ import { ReactNode } from "react";
 import { styled } from "styled-components";
 import { theme } from "../../styles/theme";
 
-interface IChildren {
+export interface ChildrenProp {
   children: ReactNode;
 }
 
-const Modal = ({ children }: IChildren) => {
+const Modal = ({ children }: ChildrenProp) => {
   return (
     <ModalWrapper>
       <ModalLayout>{children}</ModalLayout>

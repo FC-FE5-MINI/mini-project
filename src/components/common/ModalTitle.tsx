@@ -1,11 +1,7 @@
-import { ReactNode } from "react";
 import { styled } from "styled-components";
+import { ChildrenProp } from "./Modal";
 
-interface IChildren {
-  children: ReactNode;
-}
-
-const ModalTitle = ({ children }: IChildren) => {
+const ModalTitle = ({ children }: ChildrenProp) => {
   return <Title>{children}</Title>;
 };
 
