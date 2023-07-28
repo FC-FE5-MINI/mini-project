@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import logoImage from "../../../public/logo.png";
 
 const SignUp = () => {
   const {
@@ -20,25 +21,41 @@ const SignUp = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Label>(로고)</Label>
-        <Label>(오늘은 내 차례!) 이용을 위해 가입하세요</Label>
+        <LogoImage src={logoImage} alt="로고" />
+        <Label>오늘은 내 차례!</Label>
+        <Label>회원가입하세요</Label>
         <Input {...register("name", { required: true })} placeholder="이름" />
-        {errors.name && errors.name.type === "required" && <ErrorMessage>필수 입력 항목입니다.</ErrorMessage>}
+        <ErrorMessage>{errors.name && errors.name.type === "required" && "필수 입력 항목입니다."}</ErrorMessage>
         <Input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} placeholder="이메일" />
-        {errors.email && errors.email.type === "required" && <ErrorMessage>필수 입력 항목입니다.</ErrorMessage>}
-        {errors.email && errors.email.type === "pattern" && <ErrorMessage>이메일 형식을 확인해주세요.</ErrorMessage>}
+        <ErrorMessage>
+          {errors.email && errors.email.type === "required" && "필수 입력 항목입니다."}
+          {errors.email && errors.email.type === "pattern" && "이메일 형식을 확인해주세요."}
+        </ErrorMessage>
         <Input
-          {...register("password", { required: true, minLength: 8, maxLength: 15, pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/ })}
+          {...register("password", {
+            required: true,
+            minLength: 8,
+            maxLength: 15,
+            pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/,
+          })}
           type="password"
           placeholder="비밀번호"
         />
-        {errors.password && errors.password.type === "required" && <ErrorMessage>필수 입력 항목입니다.</ErrorMessage>}
-        {errors.password && errors.password.type === "pattern" && <ErrorMessage>영문, 숫자 포함 8-15자리를 입력해주세요.</ErrorMessage>}
-        {errors.password && errors.password.type === "minLength" && <ErrorMessage>비밀번호는 최소 8자 이상입니다.</ErrorMessage>}
-        {errors.password && errors.password.type === "maxLength" && <ErrorMessage>비밀번호는 최대 15자 이하입니다.</ErrorMessage>}
-        <Input {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })} type="password" placeholder="비밀번호 확인" />
-        {errors.passwordConfirm && errors.passwordConfirm.type === "required" && <ErrorMessage>필수 입력 항목입니다.</ErrorMessage>}
-        {errors.passwordConfirm && errors.passwordConfirm.type === "validate" && <ErrorMessage>비밀번호가 다릅니다.</ErrorMessage>}
+        <ErrorMessage>
+          {errors.password && errors.password.type === "required" && "필수 입력 항목입니다."}
+          {errors.password && errors.password.type === "pattern" && "영문, 숫자 포함 8-15자리를 입력해주세요."}
+          {errors.password && errors.password.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
+          {errors.password && errors.password.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
+        </ErrorMessage>
+        <Input
+          {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })}
+          type="password"
+          placeholder="비밀번호 확인"
+        />
+        <ErrorMessage>
+          {errors.passwordConfirm && errors.passwordConfirm.type === "required" && "필수 입력 항목입니다."}
+          {errors.passwordConfirm && errors.passwordConfirm.type === "validate" && "비밀번호가 다릅니다."}
+        </ErrorMessage>
         <Button />
       </Form>
     </Container>
@@ -58,32 +75,42 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   width: 300px;
-  gap: 15px;
+  gap: 5px;
 `;
 
+const LogoImage = styled.img`
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+`;
 const Input = styled.input`
+  box-sizing: border-box;
   height: 40px;
   padding: 0px 10px;
-  border : 0.5px solid ${({ theme }) => theme.colors.gray[1]};
-  border-radius : 5px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[1]};
+  border-radius: 5px;
   &:focus {
-    border : 0.5px solid ${({ theme }) => theme.colors.orange.dark};
+    border: 1px solid ${({ theme }) => theme.colors.orange.dark};
   }
 `;
 
 const Label = styled.label`
   font-size: 20px;
   color: ${({ theme }) => theme.colors.orange.main};
+  text-align: center;
+  margin-bottom: 5px;
 `;
 
 const ErrorMessage = styled.p`
   color: red;
-  font-size: 14px;
+  font-size: 12px;
+  height: 15px;
+  margin-bottom: 3px;
 `;
 
 const Button = styled.input.attrs({
-  type: 'submit',
-  value: '가입'
+  type: "submit",
+  value: "가입",
 })`
   background-color: ${({ theme }) => theme.colors.green.main};
   border: none;
