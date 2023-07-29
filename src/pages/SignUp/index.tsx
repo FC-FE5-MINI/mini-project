@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import logoImage from "../../../public/logo.png";
+import logoImage from "../../assets/logo.png";
 
 const SignUp = () => {
   const {
