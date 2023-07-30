@@ -1,17 +1,16 @@
+import { useQuery } from "react-query";
 import FullCalendar from "@fullcalendar/react";
+import { EventInput } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import styled from "styled-components";
 import { listApplication } from "../lib/api/eventApi";
-import { useState, useEffect } from "react";
 
 const StyledEvent = styled.div`
-  background-color: ${(props) =>
-    props.id === "연차"
-      ? props.theme.colors.green.main
-      : props.id === "당직"
-      ? props.theme.colors.orange.main
-      : "initial"};
+  background-color: ${(props) => {
+    console.log(props);
+    return props.id === "ANNUAL" ? props.theme.colors.green.main : props.theme.colors.orange.main;
+  }};
   color: ${(props) => props.theme.colors.white};
   align-items: center;
   font-size: 14px;
@@ -24,40 +23,40 @@ interface EventData {
   endDate: string;
   eventType: number;
   userId: number;
+  orderState: string;
+  eventId: number;
 }
+
 const Calendar = () => {
-  const [events, setEvents] = useState([]);
+  const { data: events, isLoading } = useQuery<EventData[]>("events", listApplication);
 
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const eventData = await listApplication();
-        console.log("eventData:", typeof eventData); //왜..string이지?
+  const eventContent = (arg: { event: EventInput }) => {
+    const { event } = arg;
+    const eventType = event._def.extendedProps.type;
+    return <StyledEvent id={eventType}>{event.title}</StyledEvent>;
+  };
 
-        const formattedEvents = eventData.map((data: EventData) => ({
-          title: data.username,
-          start: data.startDate,
-          end: data.endDate,
-          id: data.eventType,
-          userid: data.userId,
-        }));
-        console.log("formattedEvents:", formattedEvents);
-        setEvents(formattedEvents);
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
-    }
-    fetchEvents();
-  }, []);
+  if (isLoading) return <div>Loading...</div>;
+
+  const formattedEvents: EventInput[] =
+    events?.map((data: EventData) => ({
+      title: data.username,
+      start: data.startDate,
+      end: data.endDate,
+      type: data.eventType,
+      id: data.eventId.toString(),
+      userid: data.userId,
+      orderState: data.orderState,
+    })) || [];
 
   return (
     <>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
-        events={events}
+        events={formattedEvents}
         eventBorderColor="white"
-        eventContent={(arg) => <StyledEvent id={arg.event.id}>{arg.event.title}</StyledEvent>}
+        eventContent={eventContent}
       />
     </>
   );
