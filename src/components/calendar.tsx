@@ -8,7 +8,6 @@ import { listApplication } from "../lib/api/eventApi";
 
 const StyledEvent = styled.div`
   background-color: ${(props) => {
-    console.log(props);
     return props.id === "ANNUAL" ? props.theme.colors.green.main : props.theme.colors.orange.main;
   }};
   color: ${(props) => props.theme.colors.white};
