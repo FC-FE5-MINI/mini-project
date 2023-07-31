@@ -21,3 +21,13 @@
   > 달력의 초기 뷰를 "월(Month)"로 설정해야 하므로 'dayGridPlugin', 'interactionPlugin' 사용
   > 이벤트 데이터를 EventInput 형식으로 가공, 이벤트 데이터에서 필요한 정보를 EventInput으로 변환하고 formattedEvent 배열에 저장
   > eventContent : 각 콘텐츠를 렌더링
+
+## 23.07.31
+
+- zustand로 탭메뉴 상태관리 추가
+- 탭 전환 시 스케줄이 겹쳐보이는 이슈
+  > FullCalendar 컴포넌트가 리렌더링 될 때, 이전 이벤트의 데이터가 완전히 제거되지 않고 새로운 이벤트 데이터와 겹쳐서 나타남
+  > key를 랜덤한 값으로 생성해서 사용하는것 보다는 events 배열의 내용을 바탕으로 유니크한 key를 생성해서 해결할 수 있다
+  > 예를 들어, events 배열의 모든 항목들을 문자열로 만들어서 이 문자열의 해시값을 key로 사용할 수 있습니다.
+  > 이런 방식을 사용하면 events 배열의 내용이 바뀔 때만 key가 변경되므로 불필요한 컴포넌트의 재생성을 방지
+- crypto-js 설치
