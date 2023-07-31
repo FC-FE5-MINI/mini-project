@@ -36,7 +36,7 @@ const SignUp = () => {
             required: true,
             minLength: 8,
             maxLength: 15,
-            pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/,
+            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/,
           })}
           type="password"
           placeholder="비밀번호"
