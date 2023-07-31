@@ -6,6 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import styled from "styled-components";
 import { listApplication } from "../lib/api/eventApi";
 import useTabStore from "../store/calendarState";
+import { SHA256 } from "crypto-js";
 
 const StyledEvent = styled.div`
   background-color: ${(props) => {
@@ -58,6 +59,9 @@ const Calendar = () => {
         orderState: data.orderState,
       })) || [];
 
+  const eventsString = JSON.stringify(filteredEvents);
+  const eventsHash = SHA256(eventsString).toString();
+
   return (
     <>
       <div>
@@ -67,6 +71,7 @@ const Calendar = () => {
       </div>
 
       <FullCalendar
+        key={eventsHash} // 새로 추가한 부분
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={filteredEvents}
