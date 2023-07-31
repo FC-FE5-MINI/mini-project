@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import logoImage from "../../assets/logo.png";
+import { checkEmail, signUp } from '../../lib/api/userApi';
 
 const SignUp = () => {
   const {
@@ -14,9 +15,32 @@ const SignUp = () => {
   const password = useRef();
   password.current = watch("password");
 
-  const onSubmit = (data) => {
-    console.log("data : ", data);
-  };
+  const onSubmit = async (data: any, e:any) => {
+    e.preventDefault();
+    try {
+      const checkEmailResponse = await checkEmail(data.email);
+
+      // 이메일 중복 체크를 성공적으로 수행했고 중복된 이메일이 없다면 회원 가입 요청
+      if (checkEmailResponse.data.responseType === true) {
+        try {
+          const signUpResponse = await signUp(data.email, data.password, data.name);
+
+          if (signUpResponse.status === "201") {
+            alert("회원가입에 성공하였습니다.");
+            // TODO: 다른 페이지로 리다이렉션 또는 추가 액션 수행
+          } else {
+            alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+          }
+        } catch (err) {
+          alert("회원가입 요청 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+      } else {
+        alert("이메일이 중복되었습니다. 다른 이메일을 사용해주세요.");
+      }
+    } catch (err) {
+      alert("이메일 중복 체크 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+};
 
   return (
     <Container>
@@ -36,16 +60,18 @@ const SignUp = () => {
             required: true,
             minLength: 8,
             maxLength: 15,
-            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/,
+            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/
           })}
           type="password"
           placeholder="비밀번호"
         />
         <ErrorMessage>
           {errors.password && errors.password.type === "required" && "필수 입력 항목입니다."}
-          {errors.password && errors.password.type === "pattern" && "영문, 숫자 포함 8-15자리를 입력해주세요."}
           {errors.password && errors.password.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
           {errors.password && errors.password.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
+          {errors.password && errors.password.type === "pattern" && "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
+
+
         </ErrorMessage>
         <Input
           {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })}
