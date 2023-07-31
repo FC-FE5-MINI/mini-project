@@ -6,10 +6,38 @@ import { useState } from "react";
 import { css } from "styled-components";
 import { theme } from "../styles/theme";
 import DatePickerComponent from "./DatePicker";
+import useDateStore from "../store/dateStore";
+import { AddEvent, addEvent } from "../lib/api/eventApi";
 
 const AddModal = () => {
   const selectNames = ["연차", "당직"];
   const [selected, setSelected] = useState("연차");
+  const { startDate, endDate } = useDateStore();
+
+  const onClick = (event: MouseEvent) => {
+    event.preventDefault();
+    const reqBody: AddEvent = new Object();
+    reqBody.startDate = startDate;
+    if (selected === selectNames[0]) {
+      if (!endDate) {
+        alert("연차 종료 날짜를 설정해 주세요.");
+      } else {
+        reqBody.eventType = "LEAVE";
+        reqBody.endDate = endDate;
+
+        const oneDay = 24 * 60 * 60 * 1000;
+        const diffDays =
+          Math.round(
+            Math.abs((new Date(endDate).setHours(0, 0, 0, 0) - new Date(startDate).setHours(0, 0, 0, 0)) / oneDay)
+          ) + 1;
+        reqBody.count = diffDays;
+      }
+    } else {
+      reqBody.eventType = "DUTY";
+      reqBody.count = 1; //임시적용
+    }
+    addEvent(reqBody);
+  };
 
   return (
     <Modal>
@@ -26,7 +54,9 @@ const AddModal = () => {
       </CalendarWrapper>
       <ButtonWrapper>
         <Button $ligth>취소</Button>
-        <Button $dark>신청</Button>
+        <Button $dark onClick={onClick}>
+          신청
+        </Button>
       </ButtonWrapper>
     </Modal>
   );
