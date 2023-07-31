@@ -14,6 +14,7 @@ const StyledEvent = styled.div`
   }};
   color: ${(props) => props.theme.colors.white};
   font-size: 14px;
+  padding: 0.3rem;
   cursor: pointer;
 `;
 const CalendarTabMenu = styled.div`
@@ -31,24 +32,33 @@ const TabBtnWrapper = styled.div`
 const TabBtn = styled.button<{ isActive: boolean }>`
   padding: 0.5rem 1rem;
   font-size: 1.5rem;
-  color: ${(props) =>
-    !props.isActive && props.children === "전체" ? props.theme.colors.black : props.theme.colors.white};
+  color: ${(props) => (props.children === "전체" ? props.theme.colors.black : props.theme.colors.white)};
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 0.5rem 0.5rem 0 0;
+  color: ${(props) => {
+    if (props.isActive) {
+      if (props.children === "연차") {
+        return props.theme.colors.green.main;
+      } else if (props.children === "당직") {
+        return props.theme.colors.orange.main;
+      } else if (props.children === "전체") {
+        return props.theme.colors.black;
+      }
+    }
+  }};
   background-color: ${(props) =>
     props.isActive
       ? props.theme.colors.white
       : props.children === "연차"
-      ? props.theme.colors.orange.main
-      : props.children === "당직"
       ? props.theme.colors.green.main
+      : props.children === "당직"
+      ? props.theme.colors.orange.main
       : props.theme.colors.white};
 
-  //isActive : 버튼 활성화 상태
+  /* isActive (버튼 활성화 상태) */
   ${(props) =>
     props.isActive &&
     css`
-      color: ${props.children === "연차" ? props.theme.colors.orange.main : props.theme.colors.green.main};
       border-bottom: 1px solid ${props.theme.colors.white};
       transform-origin: center bottom;
       transform: scale(1.2);
@@ -83,7 +93,16 @@ const Calendar = () => {
   const eventContent = (arg: { event: EventInput }) => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
-    return <StyledEvent id={eventType}>{event.title}</StyledEvent>;
+    const orderState = event._def.extendedProps.orderState;
+
+    if (orderState === "REJECTED") return null;
+
+    return (
+      <StyledEvent id={eventType}>
+        {orderState === "WAITING" && <span style={{ fontSize: "10px", marginRight: "4px" }}>승인대기</span>}
+        {event.title}
+      </StyledEvent>
+    );
   };
 
   if (isLoading) return <div>Loading...</div>;
