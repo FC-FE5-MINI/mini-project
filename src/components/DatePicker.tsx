@@ -1,8 +1,9 @@
-import { createElement, forwardRef, useState } from "react";
+import { createElement, forwardRef } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { styled } from "styled-components";
 import { theme } from "../styles/theme";
+import useDateStore from "../store/dateStore";
 
 interface DatePickerProp {
   isRange: boolean;
@@ -14,8 +15,7 @@ interface CusTomInputProp {
 }
 
 const DatePickerComponent = ({ isRange }: DatePickerProp) => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const { startDate, setStartDate, endDate, setEndDate } = useDateStore();
 
   const CustomInput = forwardRef<HTMLButtonElement, CusTomInputProp>(({ value, onClick }, ref) => (
     <DateButton className="example-custom-input" onClick={onClick} ref={ref}>
@@ -29,7 +29,7 @@ const DatePickerComponent = ({ isRange }: DatePickerProp) => {
         selected={startDate}
         selectsStart
         onChange={(date) => {
-          setStartDate(date);
+          setStartDate(date as Date);
         }}
         customInput={createElement(CustomInput)}
       />
@@ -43,7 +43,7 @@ const DatePickerComponent = ({ isRange }: DatePickerProp) => {
               startDate={startDate}
               minDate={startDate}
               onChange={(date) => {
-                setEndDate(date);
+                setEndDate(date as Date);
               }}
               customInput={createElement(CustomInput)}
             />
