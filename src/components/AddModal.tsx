@@ -5,6 +5,7 @@ import ModalTitle from "./common/ModalTitle";
 import { useState } from "react";
 import { css } from "styled-components";
 import { theme } from "../styles/theme";
+import DatePickerComponent from "./DatePicker";
 
 const AddModal = () => {
   const selectNames = ["연차", "당직"];
@@ -20,7 +21,9 @@ const AddModal = () => {
           </Select>
         ))}
       </SelectWrapper>
-      <CalendarWrapper>캘린더 영역</CalendarWrapper>
+      <CalendarWrapper>
+        <DatePickerComponent isRange={selected === selectNames[0]} />
+      </CalendarWrapper>
       <ButtonWrapper>
         <Button $ligth>취소</Button>
         <Button $dark>신청</Button>
@@ -52,8 +55,10 @@ const Select = styled.div<{
 `;
 
 const CalendarWrapper = styled.div`
-  flex-grow: 1;
-  background-color: orange;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin: 20px 0;
 `;
 
 const ButtonWrapper = styled.div`
