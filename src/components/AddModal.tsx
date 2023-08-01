@@ -9,17 +9,11 @@ import DatePickerComponent from "./DatePicker";
 import useDateStore from "../store/dateStore";
 import { AddEvent, addEvent } from "../lib/api/eventApi";
 import { ADD_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
+import { calcPeriods } from "../lib/util/functions";
 
 const AddModal = () => {
-  const [selected, setSelected] = useState("연차");
+  const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
-
-  const calcPeriods = (start: Date, end: Date) => {
-    const oneDay = 24 * 60 * 60 * 1000;
-    const diffDays =
-      Math.round(Math.abs((new Date(end).setHours(0, 0, 0, 0) - new Date(start).setHours(0, 0, 0, 0)) / oneDay)) + 1;
-    return diffDays;
-  };
 
   const onClick = (event: MouseEvent) => {
     event.preventDefault();
