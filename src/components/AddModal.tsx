@@ -8,7 +8,7 @@ import { theme } from "../styles/theme";
 import DatePickerComponent from "./DatePicker";
 import useDateStore from "../store/dateStore";
 import { AddEvent, addEvent } from "../lib/api/eventApi";
-import { EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
+import { ADD_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 
 const AddModal = () => {
   const [selected, setSelected] = useState("연차");
@@ -30,7 +30,7 @@ const AddModal = () => {
 
     if (selected === TAB_ADD[0]) {
       if (!endDate) {
-        alert("연차 종료 날짜를 설정해 주세요.");
+        alert(ADD_MESSAGE.PLEASE_ENDDATE);
       } else {
         reqBody.endDate = endDate;
         reqBody.count = calcPeriods(startDate, endDate);
