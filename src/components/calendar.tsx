@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import { EventInput } from "@fullcalendar/core";
+import { EventInput, DayHeaderContentArg, DayCellContentArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useQuery } from "react-query";
@@ -13,7 +13,7 @@ const StyledEvent = styled.div`
     return props.id === "LEAVE" ? props.theme.colors.green.main : props.theme.colors.orange.main;
   }};
   color: ${(props) => props.theme.colors.white};
-  font-size: 14px;
+  font-size: 1rem;
   padding: 0.3rem;
   cursor: pointer;
 `;
@@ -23,15 +23,17 @@ const CalendarTabMenu = styled.div`
   margin-bottom: 1rem;
 `;
 const BorderArea = styled.div`
-  width: 75%;
+  width: 100%;
   border-bottom: 1px solid ${(props) => props.theme.colors.green.main};
 `;
 const TabBtnWrapper = styled.div`
-  width: 25%;
+  display: flex;
+  justify-content: flex-end;
 `;
 const TabBtn = styled.button<{ isActive: boolean }>`
+  width: 5rem;
   padding: 0.5rem 1rem;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: ${(props) => (props.children === "전체" ? props.theme.colors.black : props.theme.colors.white)};
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 0.5rem 0.5rem 0 0;
@@ -73,7 +75,10 @@ const TabBtn = styled.button<{ isActive: boolean }>`
       }
     `}
 `;
-
+const OrderState = styled.span`
+  font-size: 0.7rem;
+  margin-right: 1rem;
+`;
 interface EventData {
   username: string;
   startDate: string;
@@ -99,7 +104,7 @@ const Calendar = () => {
 
     return (
       <StyledEvent id={eventType}>
-        {orderState === "WAITING" && <span style={{ fontSize: "10px", marginRight: "4px" }}>승인대기</span>}
+        {orderState === "WAITING" && <OrderState>승인대기</OrderState>}
         {event.title}
       </StyledEvent>
     );
@@ -128,6 +133,20 @@ const Calendar = () => {
   const eventsString = JSON.stringify(filteredEvents);
   const eventsHash = SHA256(eventsString).toString();
 
+  const dayHeaderContent = (arg: DayHeaderContentArg) => {
+    const { text } = arg;
+    // 일요일(Sun)인 경우 빨간색, 토요일(Sat)인 경우 파란색 스타일 적용
+    const textColor = text === "Sun" ? "red" : text === "Sat" ? "blue" : "inherit";
+    return <div style={{ color: textColor }}>{text}</div>;
+  };
+
+  const dayCellContent = (arg: DayCellContentArg) => {
+    const { date } = arg;
+    // 일요일(Sun)인 경우 빨간색, 토요일(Sat)인 경우 파란색 스타일 적용
+    const textColor = date.getDay() === 0 ? "red" : date.getDay() === 6 ? "blue" : "inherit";
+    return <div style={{ color: textColor }}>{date.getDate()}</div>;
+  };
+
   return (
     <>
       <CalendarTabMenu>
@@ -152,6 +171,8 @@ const Calendar = () => {
         events={filteredEvents}
         eventBorderColor="white"
         eventContent={eventContent}
+        dayHeaderContent={dayHeaderContent} // 헤더(요일 이름)의 스타일 적용
+        dayCellContent={dayCellContent} // 캘린더 셀(날짜)의 스타일 적용
       />
     </>
   );
