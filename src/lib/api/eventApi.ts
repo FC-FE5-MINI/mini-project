@@ -1,6 +1,6 @@
 import axios from "axios";
 
-type EventType = "DUTY" | "LEAVE";
+export type EventType = "DUTY" | "LEAVE";
 // type OrderStateType = "WAITING" | "APPROVED" | "REJECTED" | "CANCEL";
 
 export interface CancelEvent {
