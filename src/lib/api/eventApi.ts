@@ -8,21 +8,11 @@ export interface CancelEvent {
   eventType: EventType;
   orderState: "CANCEL";
 }
-
-// 연차/당직 신청(POST)
 export interface AddEvent {
   eventType?: EventType;
   startDate?: Date;
   endDate?: Date;
   count?: number;
-}
-
-// 모든 유저 연차/당직 리스트(GET)
-interface listApplication {
-  eventType: string;
-  startDate: string;
-  endDate: string;
-  count: number;
 }
 
 const api = axios.create({
@@ -32,7 +22,8 @@ const api = axios.create({
   },
 });
 
-export const listApplication = async () => {
+// 모든 유저 연차/당직 리스트(GET)
+export const AllList = async () => {
   try {
     const { data } = await api.get(`/user/event/list`);
     return data;
@@ -42,7 +33,18 @@ export const listApplication = async () => {
   }
 };
 
-// 연차/당직 신청
+// 내 연차/당직 신청 현솽(GET)
+export const MyList = async () => {
+  try {
+    const { data } = await api.get(`/user/event/myList`);
+    return data.data;
+  } catch (error) {
+    console.error("오류 발생:", error);
+    throw error;
+  }
+};
+
+// 연차/당직 신청(POST)
 const addEvent = async (reqBody: AddEvent) => {
   const { data } = await api.post("/user/event/add", reqBody);
   console.log(data);
