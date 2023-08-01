@@ -8,33 +8,33 @@ import { theme } from "../styles/theme";
 import DatePickerComponent from "./DatePicker";
 import useDateStore from "../store/dateStore";
 import { AddEvent, addEvent } from "../lib/api/eventApi";
+import { EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 
 const AddModal = () => {
-  const selectNames = ["연차", "당직"];
   const [selected, setSelected] = useState("연차");
   const { startDate, endDate } = useDateStore();
+
+  const calcPeriods = (start: Date, end: Date) => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays =
+      Math.round(Math.abs((new Date(end).setHours(0, 0, 0, 0) - new Date(start).setHours(0, 0, 0, 0)) / oneDay)) + 1;
+    return diffDays;
+  };
 
   const onClick = (event: MouseEvent) => {
     event.preventDefault();
     const reqBody: AddEvent = new Object();
+
     reqBody.startDate = startDate;
-    if (selected === selectNames[0]) {
+    reqBody.eventType = EVENT_TYPE[selected];
+
+    if (selected === TAB_ADD[0]) {
       if (!endDate) {
         alert("연차 종료 날짜를 설정해 주세요.");
       } else {
-        reqBody.eventType = "LEAVE";
         reqBody.endDate = endDate;
-
-        const oneDay = 24 * 60 * 60 * 1000;
-        const diffDays =
-          Math.round(
-            Math.abs((new Date(endDate).setHours(0, 0, 0, 0) - new Date(startDate).setHours(0, 0, 0, 0)) / oneDay)
-          ) + 1;
-        reqBody.count = diffDays;
+        reqBody.count = calcPeriods(startDate, endDate);
       }
-    } else {
-      reqBody.eventType = "DUTY";
-      reqBody.count = 1; //임시적용
     }
     addEvent(reqBody);
   };
@@ -43,14 +43,14 @@ const AddModal = () => {
     <Modal>
       <ModalTitle>신청하기</ModalTitle>
       <SelectWrapper>
-        {selectNames.map((name, idx) => (
+        {TAB_ADD.map((name, idx) => (
           <Select key={idx} onClick={() => setSelected(name)} $isSelected={selected === name}>
             {name}
           </Select>
         ))}
       </SelectWrapper>
       <CalendarWrapper>
-        <DatePickerComponent isRange={selected === selectNames[0]} />
+        <DatePickerComponent isRange={selected === TAB_ADD[0]} />
       </CalendarWrapper>
       <ButtonWrapper>
         <Button $ligth>취소</Button>
