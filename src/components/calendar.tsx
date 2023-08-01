@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import { EventInput } from "@fullcalendar/core";
+import { EventInput, DayHeaderContentArg, DayCellContentArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useQuery } from "react-query";
@@ -9,13 +9,16 @@ import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
 
 const StyledEvent = styled.div`
+  display: flex;
+  align-items: center;
   background-color: ${(props) => {
     return props.id === "LEAVE" ? props.theme.colors.green.main : props.theme.colors.orange.main;
   }};
   color: ${(props) => props.theme.colors.white};
-  font-size: 14px;
-  padding: 0.3rem;
-  cursor: pointer;
+  font-size: 1rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
 `;
 const CalendarTabMenu = styled.div`
   display: flex;
@@ -23,20 +26,22 @@ const CalendarTabMenu = styled.div`
   margin-bottom: 1rem;
 `;
 const BorderArea = styled.div`
-  width: 75%;
+  width: 100%;
   border-bottom: 1px solid ${(props) => props.theme.colors.green.main};
 `;
 const TabBtnWrapper = styled.div`
-  width: 25%;
+  display: flex;
+  justify-content: flex-end;
 `;
-const TabBtn = styled.button<{ isActive: boolean }>`
+const TabBtn = styled.button<{ $isActive: boolean }>`
+  width: 5rem;
   padding: 0.5rem 1rem;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: ${(props) => (props.children === "전체" ? props.theme.colors.black : props.theme.colors.white)};
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 0.5rem 0.5rem 0 0;
   color: ${(props) => {
-    if (props.isActive) {
+    if (props.$isActive) {
       if (props.children === "연차") {
         return props.theme.colors.green.main;
       } else if (props.children === "당직") {
@@ -47,7 +52,7 @@ const TabBtn = styled.button<{ isActive: boolean }>`
     }
   }};
   background-color: ${(props) =>
-    props.isActive
+    props.$isActive
       ? props.theme.colors.white
       : props.children === "연차"
       ? props.theme.colors.green.main
@@ -55,9 +60,9 @@ const TabBtn = styled.button<{ isActive: boolean }>`
       ? props.theme.colors.orange.main
       : props.theme.colors.white};
 
-  /* isActive (버튼 활성화 상태) */
+  /* $isActive (버튼 활성화 상태) */
   ${(props) =>
-    props.isActive &&
+    props.$isActive &&
     css`
       border-bottom: 1px solid ${props.theme.colors.white};
       transform-origin: center bottom;
@@ -73,7 +78,27 @@ const TabBtn = styled.button<{ isActive: boolean }>`
       }
     `}
 `;
-
+const OrderState = styled.p`
+  font-size: 0.7rem;
+  width: 10rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to right, ${(props) => props.theme.colors.gray[0]}, transparent);
+  background-position: right;
+  background-size: 100%;
+`;
+const CalendarDay = styled.div`
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+`;
+const CustomFullCalendar = styled(FullCalendar)`
+  .fc-theme-standard .fc-scrollgrid {
+    border: 10px solid red;
+    border-radius: 10px;
+  }
+`;
 interface EventData {
   username: string;
   startDate: string;
@@ -99,8 +124,7 @@ const Calendar = () => {
 
     return (
       <StyledEvent id={eventType}>
-        {orderState === "WAITING" && <span style={{ fontSize: "10px", marginRight: "4px" }}>승인대기</span>}
-        {event.title}
+        {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
       </StyledEvent>
     );
   };
@@ -128,30 +152,44 @@ const Calendar = () => {
   const eventsString = JSON.stringify(filteredEvents);
   const eventsHash = SHA256(eventsString).toString();
 
+  const dayHeaderContent = (arg: DayHeaderContentArg) => {
+    const { text } = arg;
+    const textColor = text === "Sun" ? "red" : text === "Sat" ? "blue" : "inherit";
+    return <CalendarDay style={{ color: textColor }}>{text}</CalendarDay>;
+  };
+
+  const dayCellContent = (arg: DayCellContentArg) => {
+    const { date } = arg;
+    const textColor = date.getDay() === 0 ? "red" : date.getDay() === 6 ? "blue" : "inherit";
+    return <div style={{ color: textColor }}>{date.getDate()}</div>;
+  };
+
   return (
     <>
       <CalendarTabMenu>
         <BorderArea></BorderArea>
         <TabBtnWrapper>
-          <TabBtn isActive={selectedTab === "전체"} onClick={() => setSelectedTab("전체")}>
+          <TabBtn $isActive={selectedTab === "전체"} onClick={() => setSelectedTab("전체")}>
             전체
           </TabBtn>
-          <TabBtn isActive={selectedTab === "연차"} onClick={() => setSelectedTab("연차")}>
+          <TabBtn $isActive={selectedTab === "연차"} onClick={() => setSelectedTab("연차")}>
             연차
           </TabBtn>
-          <TabBtn isActive={selectedTab === "당직"} onClick={() => setSelectedTab("당직")}>
+          <TabBtn $isActive={selectedTab === "당직"} onClick={() => setSelectedTab("당직")}>
             당직
           </TabBtn>
         </TabBtnWrapper>
       </CalendarTabMenu>
 
-      <FullCalendar
+      <CustomFullCalendar
         key={eventsHash}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={filteredEvents}
         eventBorderColor="white"
         eventContent={eventContent}
+        dayHeaderContent={dayHeaderContent}
+        dayCellContent={dayCellContent}
       />
     </>
   );
