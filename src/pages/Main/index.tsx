@@ -1,3 +1,4 @@
+import NavBar from '../../components/NavBar';
 import Calendar from "../../components/calendar";
 import styled from "styled-components";
 
@@ -8,6 +9,7 @@ const MainContainer = styled.div`
 const Main = () => {
   return (
     <MainContainer>
+      <NavBar />
       <Calendar />
     </MainContainer>
   );
