@@ -4,9 +4,10 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useQuery } from "react-query";
 import styled, { css } from "styled-components";
-import { listApplication } from "../lib/api/eventApi";
+import { AllList, MyList } from "../lib/api/eventApi";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
+import { useState } from "react";
 
 const StyledEvent = styled.div`
   display: flex;
@@ -28,6 +29,16 @@ const CalendarTabMenu = styled.div`
 const BorderArea = styled.div`
   width: 100%;
   border-bottom: 1px solid ${(props) => props.theme.colors.green.main};
+  display: flex;
+`;
+const Label = styled.label`
+  width: 95%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+const MyListBtn = styled.input`
+  /* width: 100px; */
 `;
 const TabBtnWrapper = styled.div`
   display: flex;
@@ -99,8 +110,9 @@ const CustomFullCalendar = styled(FullCalendar)`
     border-radius: 10px;
   }
 `;
+
 interface EventData {
-  username: string;
+  username?: string;
   startDate: string;
   endDate: string;
   eventType: string;
@@ -112,8 +124,10 @@ interface EventData {
 const Calendar = () => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
+  const [showMyList, setShowMyList] = useState(false);
 
-  const { data: events, isLoading } = useQuery<EventData[]>("events", listApplication);
+  const { data: allEvents, isLoading } = useQuery<EventData[]>("events", AllList);
+  const { data: myEvents } = useQuery<EventData[]>("myevents", MyList);
 
   const eventContent = (arg: { event: EventInput }) => {
     const { event } = arg;
@@ -132,7 +146,7 @@ const Calendar = () => {
   if (isLoading) return <div>Loading...</div>;
 
   const filteredEvents: EventInput[] =
-    events
+    (showMyList ? myEvents : allEvents)
       ?.filter((data: EventData) => {
         if (selectedTab === "전체") return true;
         if (selectedTab === "연차") return data.eventType === "LEAVE";
@@ -167,7 +181,17 @@ const Calendar = () => {
   return (
     <>
       <CalendarTabMenu>
-        <BorderArea></BorderArea>
+        <BorderArea>
+          <Label htmlFor="myListCheckbox">
+            <MyListBtn
+              type="checkbox"
+              id="myListCheckbox"
+              checked={showMyList}
+              onChange={() => setShowMyList((prev) => !prev)}
+            />
+            내 일정만 보기
+          </Label>
+        </BorderArea>
         <TabBtnWrapper>
           <TabBtn $isActive={selectedTab === "전체"} onClick={() => setSelectedTab("전체")}>
             전체
