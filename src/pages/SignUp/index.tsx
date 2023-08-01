@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import logoImage from "../../assets/logo.png";
 import { checkEmail, signUp } from '../../lib/api/userApi';
+import { useNavigate } from 'react-router-dom'; 
 
 const SignUp = () => {
   const {
@@ -14,6 +15,8 @@ const SignUp = () => {
 
   const password = useRef();
   password.current = watch("password");
+
+  const navigate = useNavigate();
 
   const onSubmit = async (data: any, e:any) => {
     e.preventDefault();
@@ -27,7 +30,8 @@ const SignUp = () => {
 
           if (signUpResponse.status === "201") {
             alert("회원가입에 성공하였습니다.");
-            // TODO: 다른 페이지로 리다이렉션 또는 추가 액션 수행
+            //로그인 페이지로 이동
+            navigate('/login'); 
           } else {
             alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
           }
