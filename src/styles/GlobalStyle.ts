@@ -64,10 +64,45 @@ const GlobalStyle = createGlobalStyle`
     overflow:visible;
     cursor:pointer
   }
-
   * {
     box-sizing: inherit;
   }
+
+.fc {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  border: none;
+}
+
+.fc th,
+.fc td {
+  padding: 0;
+  vertical-align: top;
+  border-right: none;
+  border-bottom: none;
+}
+
+.fc th {
+  border-bottom: 1px solid ${(props) => props.theme.colors.gray[1]};
+  border-radius: 1rem 1rem 0 0;
+  text-align: center;
+  padding: 0.3rem 0;
+}
+
+.fc-event {
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+.fc-theme-standard .fc-scrollgrid {
+  border: 1px solid ${(props) => props.theme.colors.gray[1]};
+  border-radius: 1rem;
+}
+
+
+
 `;
 
 export default GlobalStyle;
