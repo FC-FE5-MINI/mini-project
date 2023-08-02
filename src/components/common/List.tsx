@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { ChildrenProp } from "./Modal";
 import { theme } from "../../styles/theme";
 import { OrderStateType, cancelEvent } from "../../lib/api/eventApi";
+import { MODAL_MESSAGE, ORDER_STATE } from "../../lib/util/constants";
 
 interface ListProp extends ChildrenProp {
   orderState: OrderStateType;
@@ -11,25 +12,24 @@ interface ListProp extends ChildrenProp {
 const List = ({ children, orderState, eventId }: ListProp) => {
   const renderState = (orderState: OrderStateType) => {
     switch (orderState) {
-      case "APPROVED":
+      case ORDER_STATE.AP:
         return <StateMessage>승인 완료</StateMessage>;
-      case "REJECTED":
+      case ORDER_STATE.RJ:
         return <StateMessage>승인 반려</StateMessage>;
-      case "WAITING":
+      case ORDER_STATE.WT:
         return (
           <>
             <Waiting disabled>승인대기</Waiting>
             <Cancel
               onClick={() => {
                 cancelEvent(eventId);
+                alert(MODAL_MESSAGE.CANCELED);
               }}
             >
               취소
             </Cancel>
           </>
         );
-      case "CANCEL":
-        return <StateMessage>신청 취소</StateMessage>;
     }
   };
 
