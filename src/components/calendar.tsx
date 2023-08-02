@@ -10,6 +10,7 @@ import { SHA256 } from "crypto-js";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { theme } from "../styles/theme";
+import { motion } from "framer-motion";
 
 const StyledEvent = styled.div`
   display: flex;
@@ -39,15 +40,32 @@ const BorderArea = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.colors.green.main};
   display: flex;
 `;
-const WrapperArea = styled.div`
+const ModalBtnArea = styled.div`
   width: 80%;
 `;
+const ModalBtn = styled.button`
+  width: 7rem;
+  height: 2rem;
+  border: 1px solid ${(props) => props.theme.colors.green.main};
+  border-radius: 2rem;
+  font-size: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  &:first-child {
+    margin-right: 0.5rem;
+  }
+  &:hover {
+    background-color: ${(props) => props.theme.colors.green.dark};
+    color: ${(props) => props.theme.colors.white};
+  }
+`;
 const Label = styled.label`
-  width: 120px;
+  width: 130px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-right: 1rem;
 `;
+
 const MyListBtn = styled.input`
   width: 20px;
   height: 20px;
@@ -200,7 +218,10 @@ const Calendar = () => {
     <>
       <CalendarTabMenu>
         <BorderArea>
-          <WrapperArea></WrapperArea>
+          <ModalBtnArea>
+            <ModalBtn>연차/당직 신청</ModalBtn>
+            <ModalBtn>내 신청 현황</ModalBtn>
+          </ModalBtnArea>
           <Label htmlFor="myListCheckbox">
             <MyListBtn
               type="checkbox"
@@ -224,16 +245,23 @@ const Calendar = () => {
         </TabBtnWrapper>
       </CalendarTabMenu>
 
-      <CustomFullCalendar
+      <motion.div
         key={eventsHash}
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        events={filteredEvents}
-        eventBorderColor="white"
-        eventContent={eventContent}
-        dayHeaderContent={dayHeaderContent}
-        dayCellContent={dayCellContent}
-      />
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <CustomFullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          events={filteredEvents}
+          eventBorderColor="white"
+          eventContent={eventContent}
+          dayHeaderContent={dayHeaderContent}
+          dayCellContent={dayCellContent}
+        />
+      </motion.div>
     </>
   );
 };
