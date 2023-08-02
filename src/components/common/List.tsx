@@ -9,6 +9,7 @@ interface ListProp extends ChildrenProp {
 }
 
 const List = ({ children, orderState, eventId }: ListProp) => {
+  // orderState에 따라 다르게 렌더링
   const renderState = (orderState: OrderStateType) => {
     switch (orderState) {
       case "APPROVED":
