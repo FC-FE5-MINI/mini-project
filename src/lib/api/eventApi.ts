@@ -1,13 +1,8 @@
 import axios from "axios";
 
 export type EventType = "DUTY" | "LEAVE";
-// type OrderStateType = "WAITING" | "APPROVED" | "REJECTED" | "CANCEL";
+export type OrderStateType = "WAITING" | "APPROVED" | "REJECTED" | "CANCEL";
 
-export interface CancelEvent {
-  eventId: number;
-  eventType: EventType;
-  orderState: "CANCEL";
-}
 export interface AddEvent {
   eventType?: EventType;
   startDate?: Date;
@@ -52,8 +47,8 @@ const addEvent = async (reqBody: AddEvent) => {
 };
 
 // 연차/당직 취소
-const cancelEvent = async (reqBody: CancelEvent) => {
-  const { data } = await api.post("/user/event/cancel", reqBody);
+const cancelEvent = async (userId: number) => {
+  const { data } = await api.post("/user/event/cancel", { userId });
   console.log(data);
   return data;
 };
