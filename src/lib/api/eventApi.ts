@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export type EventType = "DUTY" | "LEAVE";
-export type OrderStateType = "WAITING" | "APPROVED" | "REJECTED" | "CANCEL";
+export type OrderStateType = "WAITING" | "APPROVED" | "REJECTED";
 
 export interface AddEvent {
   eventType?: EventType;
@@ -42,21 +42,18 @@ export const MyList = async () => {
 // 연차/당직 신청(POST)
 const addEvent = async (reqBody: AddEvent) => {
   const { data } = await api.post("/user/event/add", reqBody);
-  console.log(data);
   return data;
 };
 
 // 연차/당직 취소
 const cancelEvent = async (userId: number) => {
   const { data } = await api.post("/user/event/cancel", { userId });
-  console.log(data);
   return data;
 };
 
 // 연차/당직 신청 현황
 const getMyEvents = async (userId: number) => {
   const { data } = await api.get(`/user/event/list?id=${userId}`);
-  console.log(data);
   return data;
 };
 

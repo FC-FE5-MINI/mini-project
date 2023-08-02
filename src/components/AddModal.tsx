@@ -8,7 +8,7 @@ import { theme } from "../styles/theme";
 import DatePickerComponent from "./DatePicker";
 import useDateStore from "../store/dateStore";
 import { AddEvent, addEvent } from "../lib/api/eventApi";
-import { ADD_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
+import { MODAL_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 
 const AddModal = () => {
@@ -24,7 +24,7 @@ const AddModal = () => {
 
     if (selected === TAB_ADD[0]) {
       if (!endDate) {
-        alert(ADD_MESSAGE.PLEASE_ENDDATE);
+        alert(MODAL_MESSAGE.PLEASE_ENDDATE);
       } else {
         reqBody.endDate = endDate;
         reqBody.count = calcPeriods(startDate, endDate);
