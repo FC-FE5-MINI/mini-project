@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { EventType, getMyEvents } from "../lib/api/eventApi";
+import { EventType, OrderStateType, getMyEvents } from "../lib/api/eventApi";
 
 export interface MyListData {
   eventId: number;
-  eventType: "LEAVE" | "DUTY";
-  startDate: string;
-  endDate?: string;
-  orderState: "WAITING";
-  createdAt: string;
-  updatedAt: string | null;
+  username: string;
+  annualCount: number;
+  eventType: EventType;
+  startDate: Date;
+  endDate?: Date;
+  orderState: OrderStateType;
 }
 
 const useMyList = (eventType: EventType, userId: number) => {
