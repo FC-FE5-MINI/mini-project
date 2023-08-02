@@ -33,15 +33,15 @@ const ModalLayout = styled.div`
   bottom: 0;
   margin: auto;
   width: 500px;
-  height: 500px;
+  height: 600px;
   padding: 20px;
   display: flex;
   border: 1px solid;
   position: absolute;
   border-radius: 20px;
   flex-direction: column;
-  background-color: aliceblue;
   justify-content: space-between;
+  background-color: ${theme.colors.white};
   box-shadow: 4px 4px 1.25rem ${theme.colors.black};
 `;
 
