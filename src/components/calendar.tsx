@@ -8,6 +8,8 @@ import { AllList, MyList } from "../lib/api/eventApi";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
 import { useState } from "react";
+import { SyncLoader } from "react-spinners";
+import { theme } from "../styles/theme";
 
 const StyledEvent = styled.div`
   display: flex;
@@ -21,6 +23,12 @@ const StyledEvent = styled.div`
   display: flex;
   align-items: center;
 `;
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+`;
 const CalendarTabMenu = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -31,14 +39,18 @@ const BorderArea = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.colors.green.main};
   display: flex;
 `;
+const WrapperArea = styled.div`
+  width: 80%;
+`;
 const Label = styled.label`
-  width: 95%;
+  width: 120px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 `;
 const MyListBtn = styled.input`
-  /* width: 100px; */
+  width: 20px;
+  height: 20px;
 `;
 const TabBtnWrapper = styled.div`
   display: flex;
@@ -91,11 +103,11 @@ const TabBtn = styled.button<{ $isActive: boolean }>`
 `;
 const OrderState = styled.p`
   font-size: 0.7rem;
-  width: 10rem;
+  width: 3rem;
   height: 100%;
   display: flex;
   align-items: center;
-  background: linear-gradient(to right, ${(props) => props.theme.colors.gray[0]}, transparent);
+  background: ${(props) => props.theme.colors.gray[0]};
   background-position: right;
   background-size: 100%;
 `;
@@ -143,7 +155,13 @@ const Calendar = () => {
     );
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <SyncLoader size={10} color={theme.colors.green.main} loading={isLoading} />
+      </LoadingContainer>
+    );
+  }
 
   const filteredEvents: EventInput[] =
     (showMyList ? myEvents : allEvents)
@@ -182,6 +200,7 @@ const Calendar = () => {
     <>
       <CalendarTabMenu>
         <BorderArea>
+          <WrapperArea></WrapperArea>
           <Label htmlFor="myListCheckbox">
             <MyListBtn
               type="checkbox"

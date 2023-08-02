@@ -1,4 +1,4 @@
-import NavBar from '../../components/NavBar';
+import NavBar from "../../components/NavBar";
 import Calendar from "../../components/calendar";
 import styled from "styled-components";
 
