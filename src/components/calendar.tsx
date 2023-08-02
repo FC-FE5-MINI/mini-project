@@ -44,18 +44,28 @@ const ModalBtnArea = styled.div`
   width: 80%;
 `;
 const ModalBtn = styled.button`
-  width: 8rem;
-  height: 3rem;
+  width: 7rem;
+  height: 2rem;
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 2rem;
   font-size: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  &:first-child {
+    margin-right: 0.5rem;
+  }
+  &:hover {
+    background-color: ${(props) => props.theme.colors.green.dark};
+    color: ${(props) => props.theme.colors.white};
+  }
 `;
 const Label = styled.label`
-  width: 120px;
+  width: 130px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-right: 1rem;
 `;
+
 const MyListBtn = styled.input`
   width: 20px;
   height: 20px;
