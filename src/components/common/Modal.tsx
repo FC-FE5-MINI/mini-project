@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export interface ChildrenProp {
   children: ReactNode;
-  onClose: boolean;
+  onClose?: boolean;
 }
 
 const Modal = ({ children }: ChildrenProp) => {
