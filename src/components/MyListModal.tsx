@@ -18,7 +18,7 @@ const MyListModal = () => {
       const anuualSpend = leaveList
         .map((item) => item.endDate && item.orderState === ORDER_STATE.WT && calcPeriods(item.startDate, item.endDate))
         .reduce((a, b) => (a as number) + (b as number));
-      return myAnuualCount - (anuualSpend as number);
+      return <Leaves>{myAnuualCount - (anuualSpend as number)}</Leaves>;
     }
   };
 
@@ -59,8 +59,14 @@ const MyListModal = () => {
   );
 };
 
+const Leaves = styled.span`
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: ${theme.colors.green.dark};
+`;
+
 const LeaveDays = styled.span`
-  color: ${theme.colors.orange.dark};
+  color: ${theme.colors.green.dark};
 `;
 
 const ListsWrapper = styled.div`
