@@ -42,6 +42,7 @@ const List = ({ children, orderState, eventId }: ListProp) => {
 };
 
 const StyledList = styled.li`
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -54,18 +55,26 @@ const StateWrapper = styled.div`
   justify-content: center;
 `;
 
+const Waiting = styled.button`
+  width: 4rem;
+  cursor: default;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background-color: transparent;
+  color: ${theme.colors.orange.dark};
+`;
+
 const Cancel = styled.button`
   width: 4rem;
   padding: 2px 5px;
   border-radius: 5px;
   color: ${theme.colors.white};
+  transition: all 0.2s ease-in-out;
   background-color: ${theme.colors.gray[0]};
-`;
 
-const Waiting = styled(Cancel)`
-  cursor: default;
-  color: ${theme.colors.white};
-  background-color: ${theme.colors.gray[1]};
+  &:hover {
+    background-color: ${theme.colors.black};
+  }
 `;
 
 const StateMessage = styled.span`
