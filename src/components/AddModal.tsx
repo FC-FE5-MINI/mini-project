@@ -11,7 +11,7 @@ import { AddEvent, addEvent } from "../lib/api/eventApi";
 import { MODAL_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 import useOpenModal from "../store/closeState";
-import { AiOutlineClose } from "react-icons/Ai";
+import { AiOutlineClose } from "react-icons/ai";
 
 const AddModal = ({ onClose }) => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
