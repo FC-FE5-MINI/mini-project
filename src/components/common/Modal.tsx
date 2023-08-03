@@ -34,7 +34,7 @@ const ModalLayout = styled.div`
   margin: auto;
   width: 500px;
   height: 600px;
-  padding: 20px;
+  padding: 30px;
   display: flex;
   border: 1px solid;
   position: absolute;
