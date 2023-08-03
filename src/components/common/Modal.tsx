@@ -5,13 +5,13 @@ import { motion } from "framer-motion";
 
 export interface ChildrenProp {
   children: ReactNode;
-  onClose: boolean;
+  layoutId?: string;
 }
 
-const Modal = ({ children }: ChildrenProp) => {
+const Modal = ({ layoutId, children }: ChildrenProp) => {
   return (
-    <ModalWrapper initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 1 }}>
-      <ModalLayout>{children}</ModalLayout>
+    <ModalWrapper>
+      <ModalLayout layoutId={layoutId}>{children}</ModalLayout>
     </ModalWrapper>
   );
 };
@@ -28,7 +28,7 @@ const ModalWrapper = styled(motion.div)`
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
-const ModalLayout = styled.div`
+const ModalLayout = styled(motion.div)`
   top: 0;
   left: 0;
   right: 0;
