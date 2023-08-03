@@ -46,7 +46,7 @@ const BorderArea = styled.div`
 const ModalBtnArea = styled.div`
   width: 80%;
 `;
-const ModalBtn = styled.button`
+const ModalBtn = styled(motion.button)`
   width: 7rem;
   height: 2rem;
   border: 1px solid ${(props) => props.theme.colors.green.main};
@@ -144,6 +144,7 @@ const CustomFullCalendar = styled(FullCalendar)`
     border-radius: 10px;
   }
 `;
+
 interface EventData {
   username?: string;
   startDate: string;
@@ -224,8 +225,12 @@ const Calendar = () => {
       <CalendarTabMenu>
         <BorderArea>
           <ModalBtnArea>
-            <ModalBtn onClick={() => setOpenAddModal(true)}>연차/당직 신청</ModalBtn>
-            <ModalBtn onClick={() => setOpenMyListModal(true)}>내 신청현황</ModalBtn>
+            <ModalBtn layoutId="addModal" onClick={() => setOpenAddModal(true)}>
+              연차/당직 신청
+            </ModalBtn>
+            <ModalBtn layoutId="myListModal" onClick={() => setOpenMyListModal(true)}>
+              내 신청현황
+            </ModalBtn>
           </ModalBtnArea>
           <Label htmlFor="myListCheckbox">
             <MyListBtn
@@ -250,30 +255,8 @@ const Calendar = () => {
         </TabBtnWrapper>
       </CalendarTabMenu>
 
-      {openAddModal && (
-        <motion.div
-          initial={{ y: -1000 }}
-          animate={{ y: 0 }}
-          exit={{ y: -0 }}
-          transition={{
-            duration: 0.5,
-          }}
-        >
-          <AddModal />
-        </motion.div>
-      )}
-      {openMyListModal && (
-        <motion.div
-          initial={{ y: -1000 }}
-          animate={{ y: 0 }}
-          exit={{ y: -0 }}
-          transition={{
-            duration: 0.5,
-          }}
-        >
-          <MyListModal />
-        </motion.div>
-      )}
+      {openAddModal && <AddModal />}
+      {openMyListModal && <MyListModal />}
 
       <motion.div
         key={eventsHash}
