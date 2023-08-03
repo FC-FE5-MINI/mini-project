@@ -7,7 +7,7 @@ import { EVENT_TYPE, ORDER_STATE } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 import { theme } from "../styles/theme";
 import useOpenModal from "../store/closeState";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/Ai";
 
 const MyListModal = () => {
   const userId = 4; //임시
