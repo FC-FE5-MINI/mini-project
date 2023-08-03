@@ -28,16 +28,19 @@ const AddModal = ({ onClose }) => {
     if (selected === TAB_ADD[0]) {
       if (!endDate) {
         alert(MODAL_MESSAGE.PLEASE_ENDDATE);
+        return;
       } else {
         reqBody.endDate = endDate;
         reqBody.count = calcPeriods(startDate, endDate);
       }
     }
     addEvent(reqBody);
+    alert(`${selected} ${MODAL_MESSAGE.ADD_SUCCESS}`);
+    setOpenAddModal(false);
   };
 
   return (
-    <Modal onClose={onClose}>
+    <Modal $smallModal>
       <ModalTitle>신청하기</ModalTitle>
       <CloseButton onClick={() => setOpenAddModal(false)}>
         <AiOutlineClose size="1rem" />
@@ -55,13 +58,13 @@ const AddModal = ({ onClose }) => {
       </CalendarWrapper>
       <ButtonWrapper>
         <Button
-          $greenLight={selected === "연차"}
-          $orangeLight={selected === "당직"}
+          $greenLight={selected === TAB_ADD[0]}
+          $orangeLight={selected === TAB_ADD[1]}
           onClick={() => setOpenAddModal(false)}
         >
           취소
         </Button>
-        <Button $greenDark={selected === "연차"} $orangeDark={selected === "당직"} onClick={onClick}>
+        <Button $greenDark={selected === TAB_ADD[0]} $orangeDark={selected === TAB_ADD[1]} onClick={onClick}>
           신청
         </Button>
       </ButtonWrapper>
@@ -104,7 +107,7 @@ const ToggleBar = styled.div<{
   background-color: ${theme.colors.white};
 
   ${({ $selected }) =>
-    $selected === "연차"
+    $selected === TAB_ADD[0]
       ? css`
           transform: none;
         `
