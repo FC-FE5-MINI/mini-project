@@ -10,10 +10,13 @@ import useDateStore from "../store/dateStore";
 import { AddEvent, addEvent } from "../lib/api/eventApi";
 import { MODAL_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
+import useOpenModal from "../store/closeState";
+import { AiOutlineClose } from "react-icons/ai";
 
-const AddModal = ({ onClose }) => {
+const AddModal = () => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
+  const { setOpenAddModal } = useOpenModal();
 
   const onClick = (event: MouseEvent) => {
     event.preventDefault();
@@ -34,8 +37,11 @@ const AddModal = ({ onClose }) => {
   };
 
   return (
-    <Modal onClose={onClose}>
+    <Modal>
       <ModalTitle>신청하기</ModalTitle>
+      <CloseButton onClick={() => setOpenAddModal(false)}>
+        <AiOutlineClose size="1rem" />
+      </CloseButton>
       <SelectWrapper>
         <ToggleBar $selected={selected} />
         {TAB_ADD.map((name, idx) => (
@@ -48,7 +54,11 @@ const AddModal = ({ onClose }) => {
         <DatePickerComponent isRange={selected === TAB_ADD[0]} />
       </CalendarWrapper>
       <ButtonWrapper>
-        <Button $greenLight={selected === "연차"} $orangeLight={selected === "당직"}>
+        <Button
+          $greenLight={selected === "연차"}
+          $orangeLight={selected === "당직"}
+          onClick={() => setOpenAddModal(false)}
+        >
           취소
         </Button>
         <Button $greenDark={selected === "연차"} $orangeDark={selected === "당직"} onClick={onClick}>
@@ -58,6 +68,14 @@ const AddModal = ({ onClose }) => {
     </Modal>
   );
 };
+
+const CloseButton = styled.button`
+  top: 7%;
+  right: 7%;
+  cursor: pointer;
+  position: absolute;
+  background-color: transparent;
+`;
 
 const SelectWrapper = styled.div`
   width: 50%;
