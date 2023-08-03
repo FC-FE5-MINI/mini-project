@@ -1,25 +1,29 @@
 import styled from "styled-components";
-import { LuLogOut } from "react-icons/Lu";
+import { LuLogOut } from "react-icons/lu";
 import LogoImage from "../assets/logo_2.png";
-import { useState } from 'react'
-import UserInfoModal from './UserInfoModal';
+import { useState } from "react";
+import UserInfoModal from "./UserInfoModal";
 const NavBar = () => {
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   return (
     <Container>
       <LogoBox src={LogoImage} alt="logo image" />
       <ProfileContainer>
-        <UserProfile src="https://i.ibb.co/dfkMYGS/hani.png" alt="profile image" title="회원정보 수정" onClick={handleOpenModal}/>
+        <UserProfile
+          src="https://i.ibb.co/dfkMYGS/hani.png"
+          alt="profile image"
+          title="회원정보 수정"
+          onClick={handleOpenModal}
+        />
         <UserName>팜하니</UserName>
         <LogoutButton title="로그아웃">
           <LogoutIcon />

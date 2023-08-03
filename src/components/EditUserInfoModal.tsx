@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Modal from "./common/Modal";
 import ModalTitle from "./common/ModalTitle";
-import { MdOutlineClose } from "react-icons/Md";
-import { BsFillCloudUploadFill } from "react-icons/Bs";
+import { MdOutlineClose } from "react-icons/md";
+import { BsFillCloudUploadFill } from "react-icons/bs";
 import Button from "./common/Button";
 
 interface User {
@@ -58,7 +58,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel })
     }
   };
 
-  const onSubmit = (data : FormValues) => {
+  const onSubmit = (data: FormValues) => {
     // API 호출하고 서버에 변경 정보 전달하는 로직이 들어갈 자리입니다.
     console.log(data);
   };
@@ -154,7 +154,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel })
               "새 비밀번호 확인은 필수 입력 항목입니다."}
             {errors.newPwdConfirm && errors.newPwdConfirm.type === "validate" && "비밀번호가 일치하지 않습니다."}
           </ErrorMessage>
-        <ButtonWrapper>
+          <ButtonWrapper>
             <Button $greenLight type="button" onClick={onCancel}>
               취소
             </Button>
@@ -283,7 +283,7 @@ const ErrorMessage = styled.p`
 
 const ButtonWrapper = styled.div`
   gap: 10px;
-  margin-top : 7px;
+  margin-top: 7px;
   display: flex;
   align-self: end;
 `;
