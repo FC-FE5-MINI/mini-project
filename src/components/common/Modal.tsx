@@ -1,17 +1,23 @@
 import { ReactNode } from "react";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { theme } from "../../styles/theme";
 import { motion } from "framer-motion";
 
 export interface ChildrenProp {
   children: ReactNode;
+}
+
+interface ModalProp extends ChildrenProp {
+  $smallModal?: boolean;
   layoutId?: string;
 }
 
-const Modal = ({ layoutId, children }: ChildrenProp) => {
+const Modal = ({ layoutId, children, ...rest }: ModalProp) => {
   return (
     <ModalWrapper>
-      <ModalLayout layoutId={layoutId}>{children}</ModalLayout>
+      <ModalLayout {...rest} layoutId={layoutId}>
+        {children}
+      </ModalLayout>
     </ModalWrapper>
   );
 };
@@ -28,16 +34,18 @@ const ModalWrapper = styled(motion.div)`
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
-const ModalLayout = styled(motion.div)`
+const ModalLayout = styled(motion.div)<{
+  $smallModal?: boolean;
+}>`
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 500px;
-  height: 600px;
   padding: 30px;
   display: flex;
+  max-width: 500px;
+  max-height: 600px;
   border: 1px solid;
   position: absolute;
   border-radius: 20px;
@@ -45,6 +53,12 @@ const ModalLayout = styled(motion.div)`
   justify-content: space-between;
   background-color: ${theme.colors.white};
   box-shadow: 4px 4px 1.25rem ${theme.colors.black};
+
+  ${({ $smallModal }) =>
+    $smallModal &&
+    css`
+      max-height: 500px;
+    `}
 `;
 
 export default Modal;
