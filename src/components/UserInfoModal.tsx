@@ -40,8 +40,8 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
     setEditModal(true); // 수정하기 버튼 클릭시 수정모달 창 상태를 true로 변경
   }
 
-  if (editModal) { // 수정모달 창 상태가 true일 때 EditUserInfoModal을 렌더링
-    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)} onUpdate={(data) => {/* 서버에 업데이트 요청을 보내는 로직 */}}/>
+  if (editModal && userInfo) { 
+    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)}/>
   }
 
   return (
@@ -64,7 +64,7 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
             </InfoGrid>
           </UserInfoArea>
           <ButtonWrapper>
-            <Button $dark onClick={onClick}>
+            <Button $greenDark onClick={onClick}>
               수정하기
             </Button>
           </ButtonWrapper>
@@ -109,16 +109,18 @@ const UserInfoArea = styled.div`
     width: 150px;
     height: 150px;
     border-radius: 75px;
+    margin-bottom: 15px;
  
   }
 `;
 
 const InfoGrid = styled.div`
   display: grid;
-  grid-template-columns: 35% 65%;
+  grid-template-columns: 25% 75%;
   width: 100%;
   margin: 10px 0;
   p {
+    font-size : 1.5rem;
     margin: 15px 15px;
   }
 `;
@@ -127,7 +129,7 @@ const IconArea = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items : center;
-  font-size : 24px;
+  font-size : 36px;
 
 `;
 
