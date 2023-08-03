@@ -8,7 +8,7 @@ const ModalTitle = ({ children }: ChildrenProp) => {
 const Title = styled.span`
   font-size: 1.6rem;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 export default ModalTitle;

@@ -13,6 +13,7 @@ import { theme } from "../styles/theme";
 import { motion } from "framer-motion";
 import AddModal from "./AddModal";
 import MyListModal from "./MyListModal";
+import useOpenModal from "../store/closeState";
 
 const StyledEvent = styled.div`
   display: flex;
@@ -158,8 +159,7 @@ const Calendar = () => {
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
   const [showMyList, setShowMyList] = useState(false);
 
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [openMyListModal, setOpenMyListModal] = useState(false);
+  const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
   const { data: allEvents, isLoading } = useQuery<EventData[]>("events", AllList);
   const { data: myEvents } = useQuery<EventData[]>("myevents", MyList);
@@ -259,7 +259,7 @@ const Calendar = () => {
             duration: 0.5,
           }}
         >
-          <AddModal onClose={() => setOpenAddModal(false)} />
+          <AddModal />
         </motion.div>
       )}
       {openMyListModal && (
@@ -271,7 +271,7 @@ const Calendar = () => {
             duration: 0.5,
           }}
         >
-          <MyListModal onClose={() => setOpenAddModal(false)} />
+          <MyListModal />
         </motion.div>
       )}
 

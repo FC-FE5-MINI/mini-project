@@ -10,10 +10,13 @@ import useDateStore from "../store/dateStore";
 import { AddEvent, addEvent } from "../lib/api/eventApi";
 import { MODAL_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
+import useOpenModal from "../store/closeState";
+import { AiOutlineClose } from "react-icons/ai";
 
 const AddModal = ({ onClose }) => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
+  const { setOpenAddModal } = useOpenModal();
 
   const onClick = (event: MouseEvent) => {
     event.preventDefault();
@@ -36,9 +39,13 @@ const AddModal = ({ onClose }) => {
   return (
     <Modal onClose={onClose}>
       <ModalTitle>신청하기</ModalTitle>
+      <CloseButton onClick={() => setOpenAddModal(false)}>
+        <AiOutlineClose size="1rem" />
+      </CloseButton>
       <SelectWrapper>
+        <ToggleBar $selected={selected} />
         {TAB_ADD.map((name, idx) => (
-          <Select key={idx} onClick={() => setSelected(name)} $isSelected={selected === name}>
+          <Select key={idx} onClick={() => setSelected(name)}>
             {name}
           </Select>
         ))}
@@ -47,8 +54,14 @@ const AddModal = ({ onClose }) => {
         <DatePickerComponent isRange={selected === TAB_ADD[0]} />
       </CalendarWrapper>
       <ButtonWrapper>
-        <Button $ligth>취소</Button>
-        <Button $dark onClick={onClick}>
+        <Button
+          $greenLight={selected === "연차"}
+          $orangeLight={selected === "당직"}
+          onClick={() => setOpenAddModal(false)}
+        >
+          취소
+        </Button>
+        <Button $greenDark={selected === "연차"} $orangeDark={selected === "당직"} onClick={onClick}>
           신청
         </Button>
       </ButtonWrapper>
@@ -56,26 +69,57 @@ const AddModal = ({ onClose }) => {
   );
 };
 
-const SelectWrapper = styled.div`
-  display: flex;
+const CloseButton = styled.button`
+  top: 7%;
+  right: 7%;
+  cursor: pointer;
+  position: absolute;
+  background-color: transparent;
 `;
 
-const Select = styled.div<{
-  $isSelected?: boolean;
-}>`
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
-  border: 1px solid ${theme.colors.black};
-  padding: 10px 1.5rem;
-  cursor: pointer;
+const SelectWrapper = styled.div`
+  width: 50%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: 0.5rem;
+  justify-content: space-around;
+  transition: all 1s ease-in-out;
+  background-color: ${theme.colors.gray[2]};
+  border: 1px solid ${theme.colors.gray[1]};
+`;
 
-  ${({ $isSelected }) =>
-    $isSelected &&
-    css`
-      color: ${theme.colors.white};
-      background-color: ${theme.colors.black};
-      border: none;
-    `}
+const ToggleBar = styled.div<{
+  $selected?: string;
+}>`
+  width: 45%;
+  height: 85%;
+  border: none;
+  display: flex;
+  position: absolute;
+  border-radius: 0.5rem;
+  color: ${theme.colors.orange.dark};
+  left: calc((219px / 2 - 97.65px) / 2);
+  transition: transform 0.4s ease-in-out;
+  background-color: ${theme.colors.white};
+
+  ${({ $selected }) =>
+    $selected === "연차"
+      ? css`
+          transform: none;
+        `
+      : css`
+          transform: translateX(calc(219px / 2 - 2px));
+        `};
+`;
+
+const Select = styled.div`
+  z-index: 1;
+  display: flex;
+  cursor: pointer;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: center;
 `;
 
 const CalendarWrapper = styled.div`
