@@ -7,6 +7,7 @@ import { AiOutlineMail } from "react-icons/Ai";
 import { RiUser5Line } from "react-icons/Ri";
 import { getUserInfo } from "../lib/api/userApi";
 import Button from './common/Button';
+import EditUserInfoModal from './EditUserInfoModal'; // 이 부분 추가
 
 interface UserInfoModalProps {
   closeModal: () => void;
@@ -22,6 +23,7 @@ interface UserData {
 
 const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
+  const [editModal, setEditModal] = useState(false);  // 수정모달 창 상태 관리를 위한 상태
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +37,11 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   }, []);
 
   const onClick = () => {
-    console.log("버튼클릭")
+    setEditModal(true); // 수정하기 버튼 클릭시 수정모달 창 상태를 true로 변경
+  }
+
+  if (editModal) { // 수정모달 창 상태가 true일 때 EditUserInfoModal을 렌더링
+    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)} onUpdate={(data) => {/* 서버에 업데이트 요청을 보내는 로직 */}}/>
   }
 
   return (
@@ -67,7 +73,6 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
     </Modal>
   );
 };
-
 const ModalTitleArea = styled.div`
   display: flex;
   justify-content: space-between;
@@ -93,7 +98,7 @@ const UserInfoWrapper = styled.div`
   justify-content: space-between;
   height: 100%;
   width: 100%;
-  margin: 20px 0;
+  margin: 10px 0;
 `;
 
 const UserInfoArea = styled.div`
@@ -104,6 +109,7 @@ const UserInfoArea = styled.div`
     width: 150px;
     height: 150px;
     border-radius: 75px;
+ 
   }
 `;
 
