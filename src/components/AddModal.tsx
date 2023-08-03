@@ -13,7 +13,7 @@ import { calcPeriods } from "../lib/util/functions";
 import useOpenModal from "../store/closeState";
 import { AiOutlineClose } from "react-icons/ai";
 
-const AddModal = () => {
+const AddModal = ({ onClose }) => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
   const { setOpenAddModal } = useOpenModal();
@@ -37,7 +37,7 @@ const AddModal = () => {
   };
 
   return (
-    <Modal>
+    <Modal onClose={onClose}>
       <ModalTitle>신청하기</ModalTitle>
       <CloseButton onClick={() => setOpenAddModal(false)}>
         <AiOutlineClose size="1rem" />
