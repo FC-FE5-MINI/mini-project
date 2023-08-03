@@ -11,6 +11,8 @@ import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { theme } from "../styles/theme";
 import { motion } from "framer-motion";
+import AddModal from "./AddModal";
+import MyListModal from "./MyListModal";
 
 const StyledEvent = styled.div`
   display: flex;
@@ -135,12 +137,12 @@ const CalendarDay = styled.div`
   align-items: center;
 `;
 const CustomFullCalendar = styled(FullCalendar)`
+  z-index: 0;
   .fc-theme-standard .fc-scrollgrid {
     border: 10px solid red;
     border-radius: 10px;
   }
 `;
-
 interface EventData {
   username?: string;
   startDate: string;
@@ -155,6 +157,9 @@ const Calendar = () => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
   const [showMyList, setShowMyList] = useState(false);
+
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openMyListModal, setOpenMyListModal] = useState(false);
 
   const { data: allEvents, isLoading } = useQuery<EventData[]>("events", AllList);
   const { data: myEvents } = useQuery<EventData[]>("myevents", MyList);
@@ -219,8 +224,8 @@ const Calendar = () => {
       <CalendarTabMenu>
         <BorderArea>
           <ModalBtnArea>
-            <ModalBtn>연차/당직 신청</ModalBtn>
-            <ModalBtn>내 신청 현황</ModalBtn>
+            <ModalBtn onClick={() => setOpenAddModal(true)}>연차/당직 신청</ModalBtn>
+            <ModalBtn onClick={() => setOpenMyListModal(true)}>내 신청현황</ModalBtn>
           </ModalBtnArea>
           <Label htmlFor="myListCheckbox">
             <MyListBtn
@@ -244,6 +249,31 @@ const Calendar = () => {
           </TabBtn>
         </TabBtnWrapper>
       </CalendarTabMenu>
+
+      {openAddModal && (
+        <motion.div
+          initial={{ y: -1000 }}
+          animate={{ y: 0 }}
+          exit={{ y: -0 }}
+          transition={{
+            duration: 0.5,
+          }}
+        >
+          <AddModal onClose={() => setOpenAddModal(false)} />
+        </motion.div>
+      )}
+      {openMyListModal && (
+        <motion.div
+          initial={{ y: -1000 }}
+          animate={{ y: 0 }}
+          exit={{ y: -0 }}
+          transition={{
+            duration: 0.5,
+          }}
+        >
+          <MyListModal onClose={() => setOpenAddModal(false)} />
+        </motion.div>
+      )}
 
       <motion.div
         key={eventsHash}

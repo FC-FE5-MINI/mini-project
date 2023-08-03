@@ -11,7 +11,7 @@ import { AddEvent, addEvent } from "../lib/api/eventApi";
 import { MODAL_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 
-const AddModal = () => {
+const AddModal = ({ onClose }) => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
 
@@ -34,7 +34,7 @@ const AddModal = () => {
   };
 
   return (
-    <Modal>
+    <Modal onClose={onClose}>
       <ModalTitle>신청하기</ModalTitle>
       <SelectWrapper>
         <ToggleBar $selected={selected} />

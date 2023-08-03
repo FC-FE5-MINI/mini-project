@@ -1,25 +1,27 @@
 import { ReactNode } from "react";
 import { styled } from "styled-components";
 import { theme } from "../../styles/theme";
+import { motion } from "framer-motion";
 
 export interface ChildrenProp {
   children: ReactNode;
+  onClose: boolean;
 }
 
 const Modal = ({ children }: ChildrenProp) => {
   return (
-    <ModalWrapper>
+    <ModalWrapper initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 1 }}>
       <ModalLayout>{children}</ModalLayout>
     </ModalWrapper>
   );
 };
 
-const ModalWrapper = styled.div`
+const ModalWrapper = styled(motion.div)`
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   height: 100%;
   position: fixed;
