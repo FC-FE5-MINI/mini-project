@@ -6,11 +6,14 @@ import useMyList, { MyListData } from "../hooks/useMyList";
 import { EVENT_TYPE, ORDER_STATE } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 import { theme } from "../styles/theme";
+import useOpenModal from "../store/closeState";
+import { AiOutlineClose } from "react-icons/ai";
 
 const MyListModal = () => {
   const userId = 4; //임시
   const leaveList = useMyList(EVENT_TYPE.LV, userId);
   const dutyList = useMyList(EVENT_TYPE.DT, userId);
+  const { setOpenMyListModal } = useOpenModal();
 
   const renderCount = () => {
     if (leaveList.length) {
@@ -42,6 +45,9 @@ const MyListModal = () => {
   return (
     <Modal>
       <ModalTitle>신청현황</ModalTitle>
+      <CloseButton onClick={() => setOpenMyListModal(false)}>
+        <AiOutlineClose size="1rem" />
+      </CloseButton>
       <ListsWrapper>
         <ListWrapper>
           <LeaveTitleWrapper>
@@ -58,6 +64,14 @@ const MyListModal = () => {
     </Modal>
   );
 };
+
+const CloseButton = styled.button`
+  top: 7%;
+  right: 7%;
+  cursor: pointer;
+  position: absolute;
+  background-color: transparent;
+`;
 
 const Leaves = styled.span`
   font-weight: 700;
