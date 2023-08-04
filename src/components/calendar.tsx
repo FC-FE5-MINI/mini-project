@@ -227,12 +227,8 @@ const Calendar = () => {
       <CalendarTabMenu>
         <BorderArea>
           <ModalBtnArea>
-            <ModalBtn layoutId="addModal" onClick={() => setOpenAddModal(true)}>
-              연차/당직 신청
-            </ModalBtn>
-            <ModalBtn layoutId="myListModal" onClick={() => setOpenMyListModal(true)}>
-              내 신청현황
-            </ModalBtn>
+            <ModalBtn onClick={() => setOpenAddModal(true)}>연차/당직 신청</ModalBtn>
+            <ModalBtn onClick={() => setOpenMyListModal(true)}>내 신청현황</ModalBtn>
           </ModalBtnArea>
           <Label htmlFor="myListCheckbox">
             <MyListBtn
