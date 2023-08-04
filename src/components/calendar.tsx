@@ -18,14 +18,13 @@ import useOpenModal from "../store/closeState";
 const StyledEvent = styled.div`
   display: flex;
   align-items: center;
+  color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => {
     return props.id === "LEAVE" ? props.theme.colors.green.main : props.theme.colors.orange.main;
   }};
-  color: ${(props) => props.theme.colors.white};
+  border-radius: 40px;
   font-size: 1rem;
   height: 1.5rem;
-  display: flex;
-  align-items: center;
 `;
 const LoadingContainer = styled.div`
   display: flex;
@@ -126,11 +125,12 @@ const TabBtn = styled.button<{ $isActive: boolean }>`
 `;
 const OrderState = styled.p`
   font-size: 0.7rem;
-  width: 3rem;
+  padding: 0 0.5rem;
   height: 100%;
   display: flex;
   align-items: center;
   background: ${(props) => props.theme.colors.gray[0]};
+  border-radius: 40px;
   background-position: right;
   background-size: 100%;
 `;
