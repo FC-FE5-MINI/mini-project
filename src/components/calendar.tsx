@@ -45,10 +45,12 @@ const BorderArea = styled.div`
 `;
 const ModalBtnArea = styled.div`
   width: 80%;
+  height: 2rem;
+  display: flex;
+  align-items: center;
 `;
 const ModalBtn = styled(motion.button)`
-  width: 7rem;
-  height: 2rem;
+  padding: 0.5rem 1rem;
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 2rem;
   font-size: 1rem;
@@ -62,7 +64,7 @@ const ModalBtn = styled(motion.button)`
   }
 `;
 const Label = styled.label`
-  width: 130px;
+  width: 200px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -70,7 +72,7 @@ const Label = styled.label`
 `;
 
 const MyListBtn = styled.input`
-  width: 20px;
+  width: 30px;
   height: 20px;
 `;
 const TabBtnWrapper = styled.div`
