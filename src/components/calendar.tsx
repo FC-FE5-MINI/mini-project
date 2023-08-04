@@ -174,16 +174,15 @@ const Calendar = () => {
     const startDate = event._instance.range.start;
     const endDate = event._instance.range.end;
 
-    // const startDateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
-    // const endDateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
-
     if (orderState === "REJECTED") return null;
 
+    console.log(startDate, endDate);
+
     return (
-      <StyledEvent id={eventType} style={{ fontSize: "5px" }}>
+      <StyledEvent id={eventType}>
         {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
         <p>
-          {startDate.toString()} - {endDate.toString()}
+          {startDate.toISOString().slice(5, 10)} - {endDate.toISOString().slice(5, 10)}
         </p>
       </StyledEvent>
     );
