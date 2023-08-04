@@ -57,13 +57,9 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
           <UserInfoArea>
             <img src={userInfo.imageUrl} alt="User profile" />
             <InfoGrid>
-              <IconArea>
-                <AiOutlineMail />
-              </IconArea>
+              <IconArea><MailIcon /></IconArea>
               <p>{userInfo.email}</p>
-              <IconArea>
-                <RiUser5Line />
-              </IconArea>
+              <IconArea><UserIcon /></IconArea>
               <p>{userInfo.username}</p>
             </InfoGrid>
           </UserInfoArea>
@@ -95,6 +91,17 @@ const CloseIcon = styled(MdOutlineClose)`
   color: #333;
   font-size: 24px;
 `;
+
+const MailIcon = styled(MdOutlineMail)`
+  color: #333;
+  font-size: 24px;
+`;
+
+const UserIcon = styled(RiUser5Line)`
+  color: #333;
+  font-size: 24px;
+`;
+
 
 const UserInfoWrapper = styled.div`
   display: flex;
