@@ -43,16 +43,28 @@ const Container = styled.nav`
   padding: 0 20px;
   border-bottom: 1px solid;
   margin-bottom: 15px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const LogoBox = styled.img`
   width: 190px;
   height: auto;
+
+  @media (max-width: 768px) {
+    width: 140px;
+  }
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
+
+  @media (max-width: 768px) {
+    margin-top: 15px;
+  }
 `;
 
 const UserProfile = styled.img`
@@ -65,11 +77,21 @@ const UserProfile = styled.img`
   &:hover {
     transform: scale(1.1); // scale up on hover
   }
+
+  @media (max-width: 768px) {
+    width: 28px;
+    height: 28px;
+  }
 `;
 
 const UserName = styled.p`
   margin: 0 10px;
   width: 100px;
+
+  @media (max-width: 768px) {
+    margin: 0 5px;
+    font-size: 14px;
+  }
 `;
 
 const LogoutButton = styled.button`
@@ -84,5 +106,9 @@ const LogoutIcon = styled(LuLogOut)`
 
   &:hover {
     transform: scale(1.1); // scale up on hover
+  }
+
+  @media (max-width: 768px) {
+    font-size: 20px;
   }
 `;
