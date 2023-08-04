@@ -92,7 +92,7 @@ const CloseIcon = styled(MdOutlineClose)`
   font-size: 24px;
 `;
 
-const MailIcon = styled(MdOutlineMail)`
+const MailIcon = styled(AiOutlineMail)`
   color: #333;
   font-size: 24px;
 `;
