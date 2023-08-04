@@ -43,7 +43,7 @@ const MyListModal = () => {
   };
 
   return (
-    <Modal layoutId="myListModal">
+    <Modal>
       <ModalTitle>신청현황</ModalTitle>
       <CloseButton onClick={() => setOpenMyListModal(false)}>
         <AiOutlineClose size="1rem" />

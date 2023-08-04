@@ -9,13 +9,17 @@ export interface ChildrenProp {
 
 interface ModalProp extends ChildrenProp {
   $smallModal?: boolean;
-  layoutId?: string;
 }
 
-const Modal = ({ layoutId, children, ...rest }: ModalProp) => {
+const Modal = ({ children, ...rest }: ModalProp) => {
   return (
     <ModalWrapper>
-      <ModalLayout {...rest} layoutId={layoutId}>
+      <ModalLayout
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0 }}
+        {...rest}
+      >
         {children}
       </ModalLayout>
     </ModalWrapper>

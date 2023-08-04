@@ -18,14 +18,13 @@ import useOpenModal from "../store/closeState";
 const StyledEvent = styled.div`
   display: flex;
   align-items: center;
+  color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => {
     return props.id === "LEAVE" ? props.theme.colors.green.main : props.theme.colors.orange.main;
   }};
-  color: ${(props) => props.theme.colors.white};
+  border-radius: 40px;
   font-size: 1rem;
   height: 1.5rem;
-  display: flex;
-  align-items: center;
 `;
 const LoadingContainer = styled.div`
   display: flex;
@@ -45,10 +44,12 @@ const BorderArea = styled.div`
 `;
 const ModalBtnArea = styled.div`
   width: 80%;
+  height: 2rem;
+  display: flex;
+  align-items: center;
 `;
 const ModalBtn = styled(motion.button)`
-  width: 7rem;
-  height: 2rem;
+  padding: 0.5rem 1rem;
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 2rem;
   font-size: 1rem;
@@ -62,7 +63,7 @@ const ModalBtn = styled(motion.button)`
   }
 `;
 const Label = styled.label`
-  width: 130px;
+  width: 200px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -70,7 +71,7 @@ const Label = styled.label`
 `;
 
 const MyListBtn = styled.input`
-  width: 20px;
+  width: 30px;
   height: 20px;
 `;
 const TabBtnWrapper = styled.div`
@@ -124,11 +125,12 @@ const TabBtn = styled.button<{ $isActive: boolean }>`
 `;
 const OrderState = styled.p`
   font-size: 0.7rem;
-  width: 3rem;
+  padding: 0 0.5rem;
   height: 100%;
   display: flex;
   align-items: center;
   background: ${(props) => props.theme.colors.gray[0]};
+  border-radius: 40px;
   background-position: right;
   background-size: 100%;
 `;
@@ -162,50 +164,64 @@ const Calendar = () => {
 
   const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
-  const { data: allEvents, isLoading } = useQuery<EventData[]>("events", AllList);
-  const { data: myEvents } = useQuery<EventData[]>("myevents", MyList);
+  const { data: allEvents, isLoading: allEventsLoading } = useQuery<EventData[]>("events", AllList);
+  const { data: myEvents, isLoading: myEventsLoading } = useQuery<EventData[]>("myevents", MyList);
 
   const eventContent = (arg: { event: EventInput }) => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
+    const startDate = event._instance.range.start;
+    const endDate = event._instance.range.end;
 
     if (orderState === "REJECTED") return null;
+
+    console.log(startDate, endDate);
 
     return (
       <StyledEvent id={eventType}>
         {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
+        <p>
+          {startDate.toISOString().slice(5, 10)} - {endDate.toISOString().slice(5, 10)}
+        </p>
       </StyledEvent>
     );
   };
 
-  if (isLoading) {
+  // allEvents와 myEvents가 존재하지 않을 경우 빈 배열로 초기화
+  const eventsExist =
+    !allEventsLoading && !myEventsLoading && (allEvents || []).length > 0 && (myEvents || []).length > 0;
+
+  if (allEventsLoading || myEventsLoading || !eventsExist) {
     return (
       <LoadingContainer>
-        <SyncLoader size={10} color={theme.colors.green.main} loading={isLoading} />
+        <SyncLoader size={10} color={theme.colors.green.main} loading={true} />
       </LoadingContainer>
     );
   }
 
-  const filteredEvents: EventInput[] =
-    (showMyList ? myEvents : allEvents)
-      ?.filter((data: EventData) => {
+  const filteredEvents: EventInput[] = (showMyList ? myEvents : allEvents) || [];
+  const filteredEventsByTab: EventInput[] = Array.isArray(filteredEvents)
+    ? filteredEvents.filter((data: EventInput) => {
         if (selectedTab === "전체") return true;
-        if (selectedTab === "연차") return data.eventType === "LEAVE";
-        if (selectedTab === "당직") return data.eventType === "DUTY";
+        if (selectedTab === "연차") return data.type === "LEAVE";
+        if (selectedTab === "당직") return data.type === "DUTY";
         return false;
       })
-      .map((data: EventData) => ({
-        title: data.username,
-        start: data.startDate,
-        end: data.endDate,
-        type: data.eventType,
-        id: data.eventId.toString(),
-        userid: data.userId,
-        orderState: data.orderState,
-      })) || [];
+    : [];
 
-  const eventsString = JSON.stringify(filteredEvents);
+  const mappedEvents: EventInput[] = filteredEventsByTab.map((data: EventInput) => ({
+    title: data.username,
+    start: data.startDate,
+    end: data.endDate,
+    type: data.eventType,
+    id: data.eventId.toString(),
+    userId: data.userId,
+    orderState: data.orderState,
+  }));
+
+  console.log(mappedEvents);
+  const eventsString = JSON.stringify(mappedEvents);
   const eventsHash = SHA256(eventsString).toString();
 
   const dayHeaderContent = (arg: DayHeaderContentArg) => {
@@ -225,12 +241,8 @@ const Calendar = () => {
       <CalendarTabMenu>
         <BorderArea>
           <ModalBtnArea>
-            <ModalBtn layoutId="addModal" onClick={() => setOpenAddModal(true)}>
-              연차/당직 신청
-            </ModalBtn>
-            <ModalBtn layoutId="myListModal" onClick={() => setOpenMyListModal(true)}>
-              내 신청현황
-            </ModalBtn>
+            <ModalBtn onClick={() => setOpenAddModal(true)}>연차/당직 신청</ModalBtn>
+            <ModalBtn onClick={() => setOpenMyListModal(true)}>내 신청현황</ModalBtn>
           </ModalBtnArea>
           <Label htmlFor="myListCheckbox">
             <MyListBtn
@@ -268,7 +280,7 @@ const Calendar = () => {
         <CustomFullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          events={filteredEvents}
+          events={mappedEvents}
           eventBorderColor="white"
           eventContent={eventContent}
           dayHeaderContent={dayHeaderContent}

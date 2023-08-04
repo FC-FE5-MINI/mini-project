@@ -40,7 +40,7 @@ const AddModal = () => {
   };
 
   return (
-    <Modal layoutId="addModal" $smallModal>
+    <Modal $smallModal>
       <ModalTitle>신청하기</ModalTitle>
       <CloseButton onClick={() => setOpenAddModal(false)}>
         <AiOutlineClose size="1rem" />
