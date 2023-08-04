@@ -164,50 +164,65 @@ const Calendar = () => {
 
   const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
-  const { data: allEvents, isLoading } = useQuery<EventData[]>("events", AllList);
-  const { data: myEvents } = useQuery<EventData[]>("myevents", MyList);
+  const { data: allEvents, isLoading: allEventsLoading } = useQuery<EventData[]>("events", AllList);
+  const { data: myEvents, isLoading: myEventsLoading } = useQuery<EventData[]>("myevents", MyList);
 
   const eventContent = (arg: { event: EventInput }) => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
+    const startDate = event._instance.range.start;
+    const endDate = event._instance.range.end;
+
+    // const startDateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
+    // const endDateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
 
     if (orderState === "REJECTED") return null;
 
     return (
-      <StyledEvent id={eventType}>
+      <StyledEvent id={eventType} style={{ fontSize: "5px" }}>
         {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
+        <p>
+          {startDate.toString()} - {endDate.toString()}
+        </p>
       </StyledEvent>
     );
   };
 
-  if (isLoading) {
+  // allEvents와 myEvents가 존재하지 않을 경우 빈 배열로 초기화
+  const eventsExist =
+    !allEventsLoading && !myEventsLoading && (allEvents || []).length > 0 && (myEvents || []).length > 0;
+
+  if (allEventsLoading || myEventsLoading || !eventsExist) {
     return (
       <LoadingContainer>
-        <SyncLoader size={10} color={theme.colors.green.main} loading={isLoading} />
+        <SyncLoader size={10} color={theme.colors.green.main} loading={true} />
       </LoadingContainer>
     );
   }
 
-  const filteredEvents: EventInput[] =
-    (showMyList ? myEvents : allEvents)
-      ?.filter((data: EventData) => {
+  const filteredEvents: EventInput[] = (showMyList ? myEvents : allEvents) || [];
+  const filteredEventsByTab: EventInput[] = Array.isArray(filteredEvents)
+    ? filteredEvents.filter((data: EventInput) => {
         if (selectedTab === "전체") return true;
-        if (selectedTab === "연차") return data.eventType === "LEAVE";
-        if (selectedTab === "당직") return data.eventType === "DUTY";
+        if (selectedTab === "연차") return data.type === "LEAVE";
+        if (selectedTab === "당직") return data.type === "DUTY";
         return false;
       })
-      .map((data: EventData) => ({
-        title: data.username,
-        start: data.startDate,
-        end: data.endDate,
-        type: data.eventType,
-        id: data.eventId.toString(),
-        userid: data.userId,
-        orderState: data.orderState,
-      })) || [];
+    : [];
 
-  const eventsString = JSON.stringify(filteredEvents);
+  const mappedEvents: EventInput[] = filteredEventsByTab.map((data: EventInput) => ({
+    title: data.username,
+    start: data.startDate,
+    end: data.endDate,
+    type: data.eventType,
+    id: data.eventId.toString(),
+    userId: data.userId,
+    orderState: data.orderState,
+  }));
+
+  console.log(mappedEvents);
+  const eventsString = JSON.stringify(mappedEvents);
   const eventsHash = SHA256(eventsString).toString();
 
   const dayHeaderContent = (arg: DayHeaderContentArg) => {
@@ -266,7 +281,7 @@ const Calendar = () => {
         <CustomFullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          events={filteredEvents}
+          events={mappedEvents}
           eventBorderColor="white"
           eventContent={eventContent}
           dayHeaderContent={dayHeaderContent}
