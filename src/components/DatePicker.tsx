@@ -1,75 +1,32 @@
-import { createElement, forwardRef } from "react";
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { styled } from "styled-components";
-import { theme } from "../styles/theme";
+import { DatePicker, Space } from "antd";
 import useDateStore from "../store/dateStore";
+import { RangeValue } from "rc-picker/lib/interface";
+import { Dayjs } from "dayjs";
+
+const { RangePicker } = DatePicker;
+
+type DateValue = Dayjs | null;
 
 interface DatePickerProp {
   isRange: boolean;
 }
 
-interface CusTomInputProp {
-  value: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
-
 const DatePickerComponent = ({ isRange }: DatePickerProp) => {
-  const { startDate, setStartDate, endDate, setEndDate } = useDateStore();
+  const { setStartDate, setEndDate } = useDateStore();
 
-  const CustomInput = forwardRef<HTMLButtonElement, CusTomInputProp>(({ value, onClick }, ref) => (
-    <DateButton className="example-custom-input" onClick={onClick} ref={ref}>
-      {value}
-    </DateButton>
-  ));
-
+  const getSelectedDate = (_: RangeValue<Dayjs> | DateValue, dateString: string[] | string) => {
+    if (typeof dateString === "string") {
+      setStartDate(new Date(dateString));
+    } else {
+      setStartDate(new Date(dateString[0]));
+      setEndDate(new Date(dateString[1]));
+    }
+  };
   return (
-    <PickerWrapper>
-      <ReactDatePicker
-        selected={startDate}
-        selectsStart
-        onChange={(date) => {
-          setStartDate(date as Date);
-        }}
-        customInput={createElement(CustomInput)}
-      />
-      {isRange && (
-        <>
-          <div>-</div>
-          <EndDatePicker>
-            <ReactDatePicker
-              selected={endDate}
-              selectsEnd
-              startDate={startDate}
-              minDate={startDate}
-              onChange={(date) => {
-                setEndDate(date as Date);
-              }}
-              customInput={createElement(CustomInput)}
-            />
-          </EndDatePicker>
-        </>
-      )}
-    </PickerWrapper>
+    <Space direction="vertical" size={12}>
+      {isRange ? <RangePicker onChange={getSelectedDate} /> : <DatePicker onChange={getSelectedDate} />}
+    </Space>
   );
 };
-
-const PickerWrapper = styled.div`
-  display: flex;
-  height: 20px;
-  border: 1px solid ${theme.colors.black};
-  border-radius: 5px;
-  background-color: ${theme.colors.white};
-`;
-
-const DateButton = styled.button`
-  height: 20px;
-  width: 100px;
-  border: none;
-  cursor: pointer;
-  background-color: transparent;
-`;
-
-const EndDatePicker = styled.div``;
 
 export default DatePickerComponent;

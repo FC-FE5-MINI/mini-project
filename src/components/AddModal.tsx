@@ -18,7 +18,7 @@ const AddModal = () => {
   const { startDate, endDate } = useDateStore();
   const { setOpenAddModal } = useOpenModal();
 
-  const onClick = (event: MouseEvent) => {
+  const onSubmit = (event: MouseEvent) => {
     event.preventDefault();
     const reqBody: AddEvent = new Object();
 
@@ -43,7 +43,7 @@ const AddModal = () => {
     <Modal $smallModal>
       <ModalTitle>신청하기</ModalTitle>
       <CloseButton onClick={() => setOpenAddModal(false)}>
-        <AiOutlineClose size="1rem" />
+        <AiOutlineClose size="1.5rem" />
       </CloseButton>
       <SelectWrapper>
         <ToggleBar $selected={selected} />
@@ -64,7 +64,7 @@ const AddModal = () => {
         >
           취소
         </Button>
-        <Button $greenDark={selected === TAB_ADD[0]} $orangeDark={selected === TAB_ADD[1]} onClick={onClick}>
+        <Button $greenDark={selected === TAB_ADD[0]} $orangeDark={selected === TAB_ADD[1]} onClick={onSubmit}>
           신청
         </Button>
       </ButtonWrapper>
@@ -73,8 +73,8 @@ const AddModal = () => {
 };
 
 const CloseButton = styled.button`
-  top: 7%;
-  right: 7%;
+  top: 2rem;
+  right: 2rem;
   cursor: pointer;
   position: absolute;
   background-color: transparent;

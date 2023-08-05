@@ -46,7 +46,7 @@ const MyListModal = () => {
     <Modal>
       <ModalTitle>신청현황</ModalTitle>
       <CloseButton onClick={() => setOpenMyListModal(false)}>
-        <AiOutlineClose size="1rem" />
+        <AiOutlineClose size="1.5rem" />
       </CloseButton>
       <ListsWrapper>
         <ListWrapper>
@@ -66,8 +66,8 @@ const MyListModal = () => {
 };
 
 const CloseButton = styled.button`
-  top: 7%;
-  right: 7%;
+  top: 2rem;
+  right: 2rem;
   cursor: pointer;
   position: absolute;
   background-color: transparent;

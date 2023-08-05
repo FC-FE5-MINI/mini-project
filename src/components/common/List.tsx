@@ -42,10 +42,17 @@ const List = ({ children, orderState, eventId }: ListProp) => {
 };
 
 const StyledList = styled.li`
-  height: 22px;
+  height: 2.5rem;
   display: flex;
+  padding: 0 10px;
   align-items: center;
+  border: 1px solid ${theme.colors.gray[2]};
   justify-content: space-between;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    background-color: ${theme.colors.gray[2]};
+  }
 `;
 
 const StateWrapper = styled.div`

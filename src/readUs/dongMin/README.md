@@ -38,3 +38,9 @@
 - 연차/당직 토글 구현
 - 연차/당직 전용 색상으로 취소/신청 버튼 스타일링
 - 모달 open/close 구현
+
+# 23.08.04
+
+- List hover 스타일 추가 및 세부 스타일링
+- react-datepicker 대신 antd datepicker로 변경
+- 공용 Button 컴포넌트 hover 스타일 추가

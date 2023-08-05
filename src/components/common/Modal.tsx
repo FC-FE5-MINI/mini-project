@@ -50,7 +50,6 @@ const ModalLayout = styled(motion.div)<{
   display: flex;
   max-width: 500px;
   max-height: 600px;
-  border: 1px solid;
   position: absolute;
   border-radius: 20px;
   flex-direction: column;
