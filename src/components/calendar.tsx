@@ -167,27 +167,6 @@ const Calendar = () => {
   const { data: allEvents, isLoading: allEventsLoading } = useQuery<EventData[]>("events", AllList);
   const { data: myEvents, isLoading: myEventsLoading } = useQuery<EventData[]>("myevents", MyList);
 
-  const eventContent = (arg: { event: EventInput }) => {
-    const { event } = arg;
-    const eventType = event._def.extendedProps.type;
-    const orderState = event._def.extendedProps.orderState;
-    const startDate = event._instance.range.start;
-    const endDate = event._instance.range.end;
-
-    if (orderState === "REJECTED") return null;
-
-    console.log(startDate, endDate);
-
-    return (
-      <StyledEvent id={eventType}>
-        {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
-        <p>
-          {startDate.toISOString().slice(5, 10)} - {endDate.toISOString().slice(5, 10)}
-        </p>
-      </StyledEvent>
-    );
-  };
-
   // allEvents와 myEvents가 존재하지 않을 경우 빈 배열로 초기화
   const eventsExist =
     !allEventsLoading && !myEventsLoading && (allEvents || []).length > 0 && (myEvents || []).length > 0;
@@ -220,7 +199,47 @@ const Calendar = () => {
     orderState: data.orderState,
   }));
 
-  console.log(mappedEvents);
+  const eventContent = (arg: { event: EventInput }) => {
+    const { event } = arg;
+    const eventType = event._def.extendedProps.type;
+    const orderState = event._def.extendedProps.orderState;
+    const startDate = event._instance.range.start;
+    const endDate = event._instance.range.end;
+
+    if (orderState === "REJECTED") return null;
+
+    return (
+      <>
+        <StyledEvent id={eventType}>
+          {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
+          <p>
+            {startDate.toISOString().slice(5, 10)} - {endDate.toISOString().slice(5, 10)}
+          </p>
+        </StyledEvent>
+        {extractedIds.length > 3 && <button>+더보기</button>}
+      </>
+    );
+  };
+
+  // eventId의 개수 구하기
+  //mappedEvents 배열에서 orderState가 "REJECTED"인 경우 eventId를 배열에 담지 않기
+  const extractedIds = mappedEvents.filter((event) => event.orderState !== "REJECTED").map((event) => event.id);
+
+  // start 날짜를 기준으로 eventId들을 그룹으로 묶기
+  // const groupedEvents = extractedIds.reduce((groups, eventId) => {
+  //   const event = mappedEvents.find((event) => event.id === eventId);
+  //   if (event) {
+  //     const startDate = event.start;
+  //     if (!groups[startDate]) {
+  //       groups[startDate] = [];
+  //     }
+  //     groups[startDate].push(eventId);
+  //   }
+  //   return groups;
+  // }, {});
+
+  // console.log(groupedEvents);
+
   const eventsString = JSON.stringify(mappedEvents);
   const eventsHash = SHA256(eventsString).toString();
 

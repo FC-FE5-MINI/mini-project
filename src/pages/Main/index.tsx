@@ -1,5 +1,5 @@
 import NavBar from "../../components/NavBar";
-import Calendar from "../../components/calendar";
+import Calendar from "../../components/Calendar";
 import styled from "styled-components";
 
 const MainContainer = styled.div`
