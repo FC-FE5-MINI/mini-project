@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://b79e656d-ef86-45fe-a5cb-a112eafd50a8.mock.pstmn.io",
+  baseURL: "https://fast-api-heroku-test-fb58c33ccfb2.herokuapp.com",
 });
 
 export const checkEmail = async (email: string) => {

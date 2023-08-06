@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import logoImage from "../../assets/logo.png";
-import { checkEmail, signUp } from '../../lib/api/userApi';
-import { useNavigate } from 'react-router-dom'; 
+import { checkEmail, signUp } from "../../lib/api/userApi";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const {
@@ -18,7 +18,7 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = async (data: any, e:any) => {
+  const onSubmit = async (data: any, e: any) => {
     e.preventDefault();
     try {
       const checkEmailResponse = await checkEmail(data.email);
@@ -28,10 +28,10 @@ const SignUp = () => {
         try {
           const signUpResponse = await signUp(data.email, data.password, data.name);
 
-          if (signUpResponse.status === "201") {
+          if (signUpResponse.status === 201) {
             alert("회원가입에 성공하였습니다.");
             //로그인 페이지로 이동
-            navigate('/login'); 
+            navigate("/login");
           } else {
             alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
           }
@@ -44,7 +44,7 @@ const SignUp = () => {
     } catch (err) {
       alert("이메일 중복 체크 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
-};
+  };
 
   return (
     <Container>
@@ -64,7 +64,7 @@ const SignUp = () => {
             required: true,
             minLength: 8,
             maxLength: 15,
-            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/
+            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
           })}
           type="password"
           placeholder="비밀번호"
@@ -74,8 +74,6 @@ const SignUp = () => {
           {errors.password && errors.password.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
           {errors.password && errors.password.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
           {errors.password && errors.password.type === "pattern" && "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
-
-
         </ErrorMessage>
         <Input
           {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })}
