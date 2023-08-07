@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import logoImage from "../../assets/logo.png";
+import logoImage from "../../assets/logo_2.png";
 import { checkEmail, signUp } from "../../lib/api/userApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const {
@@ -20,9 +20,10 @@ const SignUp = () => {
 
   const onSubmit = async (data: any, e: any) => {
     e.preventDefault();
+    console.log(data)
     try {
       const checkEmailResponse = await checkEmail(data.email);
-
+      console.log("checkEmailResponse", checkEmailResponse)
       // 이메일 중복 체크를 성공적으로 수행했고 중복된 이메일이 없다면 회원 가입 요청
       if (checkEmailResponse.data.responseType === true) {
         try {
@@ -85,6 +86,12 @@ const SignUp = () => {
           {errors.passwordConfirm && errors.passwordConfirm.type === "validate" && "비밀번호가 다릅니다."}
         </ErrorMessage>
         <Button />
+      <LoginText>
+        <span>이미 회원가입을 하셨나요?</span>
+        <Link to="/login">
+          <LoginLink>로그인</LoginLink>
+        </Link>
+      </LoginText>
       </Form>
     </Container>
   );
@@ -140,7 +147,7 @@ const Button = styled.input.attrs({
   type: "submit",
   value: "가입",
 })`
-  background-color: ${({ theme }) => theme.colors.green.main};
+  background-color: ${({ theme }) => theme.colors.green.dark};
   border: none;
   color: white;
   padding: 10px 32px;
@@ -151,4 +158,18 @@ const Button = styled.input.attrs({
   margin: 4px 0px;
   cursor: pointer;
   border-radius: 5px;
+`;
+
+const LoginText = styled.p`
+  display: flex;
+  justify-content : center;
+  font-size: 12px;
+  margin-top: 5px;
+  color: ${({ theme }) => theme.colors.orange.main};
+`;
+
+const LoginLink = styled.span`
+  margin-left : 5px;
+  /* text-decoration: underline; */
+  font-weight: bold;
 `;
