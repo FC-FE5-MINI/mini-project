@@ -187,8 +187,9 @@ const Calendar = () => {
   const filteredEventsByTab: EventInput[] = Array.isArray(filteredEvents)
     ? filteredEvents.filter((data: EventInput) => {
         if (selectedTab === "전체") return true;
-        if (selectedTab === "연차") return data.type === "LEAVE";
-        if (selectedTab === "당직") return data.type === "DUTY";
+        if (selectedTab === "연차") return data.eventType === "LEAVE";
+        if (selectedTab === "당직") return data.eventType === "DUTY";
+        console.log("타입", data.type);
         return false;
       })
     : [];
