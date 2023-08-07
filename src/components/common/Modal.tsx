@@ -60,7 +60,7 @@ const ModalLayout = styled(motion.div)<{
   ${({ $smallModal }) =>
     $smallModal &&
     css`
-      max-height: 500px;
+      max-height: 250px;
     `}
 `;
 
