@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import { EventInput, DayHeaderContentArg, DayCellContentArg } from "@fullcalendar/core";
+import { EventInput, DayHeaderContentArg, DayCellContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useQuery } from "react-query";
@@ -146,6 +146,10 @@ const CustomFullCalendar = styled(FullCalendar)`
     border-radius: 10px;
   }
 `;
+const EventTitle = styled.p`
+  font-size: 1rem;
+  padding-left: 0.2rem;
+`;
 
 interface EventData {
   username?: string;
@@ -203,42 +207,18 @@ const Calendar = () => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
-    const startDate = event._instance.range.start;
-    const endDate = event._instance.range.end;
 
     if (orderState === "REJECTED") return null;
 
     return (
       <>
         <StyledEvent id={eventType}>
-          {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;{event.title}
-          <p>
-            {startDate.toISOString().slice(5, 10)} - {endDate.toISOString().slice(5, 10)}
-          </p>
+          {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;
+          <EventTitle>{event.title}</EventTitle>
         </StyledEvent>
-        {extractedIds.length > 3 && <button>+더보기</button>}
       </>
     );
   };
-
-  // eventId의 개수 구하기
-  //mappedEvents 배열에서 orderState가 "REJECTED"인 경우 eventId를 배열에 담지 않기
-  const extractedIds = mappedEvents.filter((event) => event.orderState !== "REJECTED").map((event) => event.id);
-
-  // start 날짜를 기준으로 eventId들을 그룹으로 묶기
-  // const groupedEvents = extractedIds.reduce((groups, eventId) => {
-  //   const event = mappedEvents.find((event) => event.id === eventId);
-  //   if (event) {
-  //     const startDate = event.start;
-  //     if (!groups[startDate]) {
-  //       groups[startDate] = [];
-  //     }
-  //     groups[startDate].push(eventId);
-  //   }
-  //   return groups;
-  // }, {});
-
-  // console.log(groupedEvents);
 
   const eventsString = JSON.stringify(mappedEvents);
   const eventsHash = SHA256(eventsString).toString();
@@ -253,6 +233,14 @@ const Calendar = () => {
     const { date } = arg;
     const textColor = date.getDay() === 0 ? "red" : date.getDay() === 6 ? "blue" : "inherit";
     return <div style={{ color: textColor }}>{date.getDate()}</div>;
+  };
+  const eventClick = (arg: EventClickArg) => {
+    const { start, end } = arg.event;
+    const clickedStartDate = start?.toISOString().slice(0, 10);
+    const clickedEndDate = end?.toISOString().slice(0, 10);
+
+    const clickedDateRange = `${clickedStartDate} - ${clickedEndDate}`;
+    console.log(clickedDateRange);
   };
 
   return (
@@ -304,6 +292,8 @@ const Calendar = () => {
           eventContent={eventContent}
           dayHeaderContent={dayHeaderContent}
           dayCellContent={dayCellContent}
+          dayMaxEvents={3}
+          eventClick={eventClick}
         />
       </motion.div>
     </>
