@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import { EventInput, DayHeaderContentArg, DayCellContentArg } from "@fullcalendar/core";
+import { EventInput, DayHeaderContentArg, DayCellContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useQuery } from "react-query";
@@ -207,8 +207,6 @@ const Calendar = () => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
-    // const startDate = event._instance.range.start;
-    // const endDate = event._instance.range.end;
 
     if (orderState === "REJECTED") return null;
 
@@ -217,9 +215,6 @@ const Calendar = () => {
         <StyledEvent id={eventType}>
           {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;
           <EventTitle>{event.title}</EventTitle>
-          {/* <p>
-            {startDate.toISOString().slice(5, 10)} - {endDate.toISOString().slice(5, 10)}
-          </p> */}
         </StyledEvent>
       </>
     );
@@ -238,6 +233,14 @@ const Calendar = () => {
     const { date } = arg;
     const textColor = date.getDay() === 0 ? "red" : date.getDay() === 6 ? "blue" : "inherit";
     return <div style={{ color: textColor }}>{date.getDate()}</div>;
+  };
+  const eventClick = (arg: EventClickArg) => {
+    const { start, end } = arg.event;
+    const clickedStartDate = start?.toISOString().slice(0, 10);
+    const clickedEndDate = end?.toISOString().slice(0, 10);
+
+    const clickedDateRange = `${clickedStartDate} - ${clickedEndDate}`;
+    console.log(clickedDateRange);
   };
 
   return (
@@ -290,6 +293,7 @@ const Calendar = () => {
           dayHeaderContent={dayHeaderContent}
           dayCellContent={dayCellContent}
           dayMaxEvents={3}
+          eventClick={eventClick}
         />
       </motion.div>
     </>
