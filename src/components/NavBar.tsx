@@ -3,6 +3,7 @@ import { LuLogOut } from "react-icons/lu";
 import LogoImage from "../assets/logo_2.png";
 import { useState } from "react";
 import UserInfoModal from "./UserInfoModal";
+import CharAnimation from './CharAnimation';
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -17,6 +18,7 @@ const NavBar = () => {
   return (
     <Container>
       <LogoBox src={LogoImage} alt="logo image" />
+      <CharAnimation />
       <ProfileContainer>
         <UserProfile
           src="https://i.ibb.co/dfkMYGS/hani.png"

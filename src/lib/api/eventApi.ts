@@ -11,7 +11,7 @@ export interface AddEvent {
 }
 
 const api = axios.create({
-  baseURL: "https://b79e656d-ef86-45fe-a5cb-a112eafd50a8.mock.pstmn.io",
+  baseURL: "https://fd220552-0bf1-4bff-ab2c-50941e7a0832.mock.pstmn.io",
   headers: {
     "Content-Type": "application/json",
   },
