@@ -176,6 +176,7 @@ const Calendar = () => {
   }
 
   const events = showMyList ? myEvents || [] : allEvents || [];
+
   const filteredEvents = usefilterEvents(events, selectedTab);
 
   const mappedEvents = filteredEvents.map((data: EventData) => ({
@@ -227,7 +228,7 @@ const Calendar = () => {
     const clickedDateRange = `${clickedStartDate} - ${clickedEndDate}`;
     console.log(clickedDateRange);
   };
-
+  const TAB_ADD_ALL = ["전체", ...TAB_ADD];
   return (
     <>
       <CalendarTabMenu>
@@ -247,7 +248,7 @@ const Calendar = () => {
           </Label>
         </BorderArea>
         <TabBtnWrapper>
-          {TAB_ADD.map((tab, index) => (
+          {TAB_ADD_ALL.map((tab, index) => (
             <TabBtn key={index} $isActive={selectedTab === tab} onClick={() => setSelectedTab(tab)}>
               {tab}
             </TabBtn>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from "../../store/userStore";
 
 const userStore = useUserStore;
 
@@ -26,7 +26,6 @@ export const login = async (email: string, password: string) => {
   const response = await api.post("/user/login", { email, password });
   return response.data;
 };
-
 
 export const getUserInfo = async () => {
   const headers = {};

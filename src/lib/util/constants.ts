@@ -1,6 +1,6 @@
 import { EventType, OrderStateType } from "../api/eventApi";
 
-const TAB_ADD = ["전체", "연차", "당직"];
+const TAB_ADD = ["연차", "당직"];
 
 const EVENT_TYPE: { [key: string]: EventType } = {
   연차: "LEAVE",
