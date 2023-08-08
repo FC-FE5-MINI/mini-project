@@ -5,22 +5,30 @@ import logoImage from "../../assets/logo_2.png";
 import { checkEmail, signUp } from "../../lib/api/userApi";
 import { Link, useNavigate } from "react-router-dom";
 
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
 const SignUp = () => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({ mode: "onChange" });
+  } = useForm<FormData>({ mode: "onChange" });
 
-  const password = useRef();
+  const password = useRef("");
   password.current = watch("password");
 
   const navigate = useNavigate();
 
-  const onSubmit = async (data: any, e: any) => {
-    e.preventDefault();
-    console.log(data)
+  
+
+  const onSubmit = async (data: FormData) => {
+    // e.preventDefault();
     try {
       const checkEmailResponse = await checkEmail(data.email);
       console.log("checkEmailResponse", checkEmailResponse)
@@ -29,7 +37,7 @@ const SignUp = () => {
         try {
           const signUpResponse = await signUp(data.email, data.password, data.name);
 
-          if (signUpResponse.status === 201) {
+          if (signUpResponse.status === "success") {
             alert("회원가입에 성공하였습니다.");
             //로그인 페이지로 이동
             navigate("/login");

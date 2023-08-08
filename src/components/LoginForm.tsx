@@ -23,7 +23,7 @@ const LoginForm: React.FC = () => {
   const onSubmit = async (data: FormData) => {
     try {
       const loginResponse = await login(data.email, data.password);
-      console.log(loginResponse.data.username, loginResponse.data.imageUrl);
+      // console.log(loginResponse.data.username, loginResponse.data.imageUrl);
 
       if (loginResponse.status === 200) {
         alert("로그인에 성공하였습니다.");
