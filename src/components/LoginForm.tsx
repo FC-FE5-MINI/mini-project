@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { login } from "../lib/api/userApi";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from '../store/userStore';
 
 interface FormData {
   email: string;
@@ -17,6 +18,8 @@ const LoginForm: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const setUser = useUserStore((state) => state.setUser)
+
   const onSubmit = async (data: FormData) => {
     try {
       const loginResponse = await login(data.email, data.password);
@@ -24,6 +27,13 @@ const LoginForm: React.FC = () => {
 
       if (loginResponse.status === 200) {
         alert("로그인에 성공하였습니다.");
+
+        setUser({
+          username: loginResponse.data.username,
+          email: data.email,
+          imageUrl: loginResponse.data.imageUrl,
+          accessToken: loginResponse.data.accessToken
+        });
         //메인 페이지로 이동
         navigate("/");
       } else {

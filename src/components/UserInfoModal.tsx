@@ -29,7 +29,9 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
     const fetchData = async () => {
       const data = await getUserInfo();
       if (data.status === 200) {
-        setUserInfo(data.data);
+        console.log("성공")
+        console.log(data.data.data.username, data.data.data.email)
+        setUserInfo(data.data.data);
       }
     };
 

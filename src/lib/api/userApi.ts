@@ -1,8 +1,16 @@
 import axios from "axios";
+import { useUserStore } from '../../store/userStore';
+
+const userStore = useUserStore;
 
 const api = axios.create({
   baseURL: "http://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
 });
+
+const getToken = () => {
+  // 직접 store 인스턴스에서 상태를 가져옵니다.
+  return userStore.getState().user.accessToken;
+};
 
 export const checkEmail = async (email: string) => {
   const response = await api.post("/user/email/", { email });
@@ -19,7 +27,14 @@ export const login = async (email: string, password: string) => {
   return response.data;
 };
 
+
 export const getUserInfo = async () => {
-  const response = await api.get("/user/myinfo/");
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await api.get("/user/myinfo/", { headers });
   return response.data;
 };
