@@ -5,11 +5,14 @@ import { useState } from "react";
 import UserInfoModal from "./UserInfoModal";
 import CharAnimation from './CharAnimation';
 import { useUserStore } from '../store/userStore';
+import { useNavigate } from 'react-router-dom'
 
 
 
 const NavBar = () => {
   const userData = useUserStore((state) => state.user)
+  const clearUser = useUserStore((state) => state.clearUser);
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -19,6 +22,11 @@ const NavBar = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    clearUser();        // 유저 정보를 초기화합니다.
+    navigate('/login'); // 로그인 페이지로 리다이렉트합니다.
   };
 
   return (
@@ -33,7 +41,7 @@ const NavBar = () => {
           onClick={handleOpenModal}
         />
         <UserName>{userData.username}</UserName>
-        <LogoutButton title="로그아웃">
+        <LogoutButton title="로그아웃" onClick={handleLogout}>
           <LogoutIcon />
         </LogoutButton>
       </ProfileContainer>
