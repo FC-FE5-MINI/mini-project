@@ -28,7 +28,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const getUserInfo = async () => {
-  const headers = {};
+  const headers: { Authorization?: string } = {};
   const token = getToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;

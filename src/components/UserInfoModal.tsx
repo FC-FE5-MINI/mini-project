@@ -29,9 +29,7 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
     const fetchData = async () => {
       const data = await getUserInfo();
       if (data.status === 200) {
-        console.log("성공")
-        console.log(data.data.data.username, data.data.data.email)
-        setUserInfo(data.data.data);
+        setUserInfo(data.data);
       }
     };
 
@@ -59,9 +57,13 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
           <UserInfoArea>
             <img src={userInfo.imageUrl} alt="User profile" />
             <InfoGrid>
-              <IconArea><MailIcon /></IconArea>
+              <IconArea>
+                <MailIcon />
+              </IconArea>
               <p>{userInfo.email}</p>
-              <IconArea><UserIcon /></IconArea>
+              <IconArea>
+                <UserIcon />
+              </IconArea>
               <p>{userInfo.username}</p>
             </InfoGrid>
           </UserInfoArea>
@@ -103,7 +105,6 @@ const UserIcon = styled(RiUser5Line)`
   color: #333;
   font-size: 24px;
 `;
-
 
 const UserInfoWrapper = styled.div`
   display: flex;

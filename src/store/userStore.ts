@@ -14,9 +14,9 @@ interface UserStore {
   clearUser: () => void;
 }
 
-export const useUserStore = create<UserStore>(
-  persist(
-    (set) => ({
+export const useUserStore = create(
+  persist<UserStore>(
+    set => ({
       user: {
         username: null,
         email: null,
@@ -24,12 +24,10 @@ export const useUserStore = create<UserStore>(
         accessToken: null,
       },
       setUser: (user: User) => set({ user }),
-      clearUser: () => set({ user: { username: null, email: null, imageUrl: null, accessToken: null } }),
+      clearUser: () => set({ user: { username: null, email: null, imageUrl: null, accessToken: null } })
     }),
     {
-      name: 'user-storage',  // unique name
-      // Optional: By default, 'localStorage' is used. If you want to use sessionStorage, you can do so.
-      // storage: createJSONStorage(() => sessionStorage)
+      name: 'user-storage',
     }
   )
 );
