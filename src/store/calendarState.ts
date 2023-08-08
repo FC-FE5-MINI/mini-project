@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type TabState = "전체" | "연차" | "당직";
+type TabState = "전체" | "연차" | "당직" | string;
 
 interface TabStore {
   selectedTab: TabState;
