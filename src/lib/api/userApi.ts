@@ -13,12 +13,13 @@ const getToken = () => {
 };
 
 export const checkEmail = async (email: string) => {
-  const response = await api.post("/user/email/", { email });
+  const response = await api.post("/user/email", { email });
+  console.log("EMAIL!!", email);
   return response.data;
 };
 
 export const signUp = async (email: string, password: string, username: string) => {
-  const response = await api.post("/user/join/", { email, password, username });
+  const response = await api.post("/user/join", { email, password, username });
   return response.data;
 };
 
