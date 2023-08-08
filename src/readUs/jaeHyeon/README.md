@@ -1,3 +1,11 @@
+#2023년 8월 8일(화)
+- axios interceptors 로 eventApi 의 모든 API 호출시, header 부분에 access token 삽입.
+- userStore 로 유저 정보 전역 상태 관리
+- zustand persist middleware 를 통해 유저정보 변경시 (예 : access token 등)을 local storage 저장하여, 새로고침 시에도 유저 정보를 다시 불러옴.
+- 회원 정보 조회, 실제 배포 API 연결.
+- 메인페이지 접근시, access token 없으면 로그인 페이지로 이동시킴.
+- 로그아웃 버튼 클릭시, store 상에 저장된 모든 유저정보를 삭제(local storage 포함)하고, 로그인 페이지로 이동시킴.
+
 #2023년 8월 3일(목)
 - 회원정보 수정 모달 레이아웃 완료. API 연결은 아직 안함.
 
