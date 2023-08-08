@@ -7,7 +7,7 @@ import { usefilterEvents, EventData } from "../hooks/useEventFilter";
 import styled, { css } from "styled-components";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { theme } from "../styles/theme";
 import { motion } from "framer-motion";
@@ -17,7 +17,7 @@ import useOpenModal from "../store/closeState";
 import { ORDER_STATE, TAB_ADD } from "../lib/util/constants";
 import { notification } from "antd";
 
-const StyledEvent = styled.div<StyledEventProps>`
+const StyledEvent = styled.div`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.colors.white};
@@ -155,15 +155,11 @@ const EventTitle = styled.p`
   display: flex;
   align-items: center;
 `;
-interface StyledEventProps {
-  defaultAllDay: boolean;
-  children: ReactNode;
-}
+
 const Calendar = () => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
   const [showMyList, setShowMyList] = useState(false);
-  const [defaultAllDay, setDefaultAllDay] = useState(false);
 
   const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
@@ -201,15 +197,12 @@ const Calendar = () => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
-    const startDate = event._instance.range.start;
-    const endDate = event._instance.range.end;
-    setDefaultAllDay(startDate === endDate);
 
     if (orderState === ORDER_STATE.RJ) return null;
 
     return (
       <>
-        <StyledEvent id={eventType} defaultAllDay={defaultAllDay}>
+        <StyledEvent id={eventType}>
           {orderState === ORDER_STATE.WT && <OrderState>&nbsp;{ORDER_STATE[orderState]}승인대기</OrderState>}&nbsp;
           <EventTitle>{event.title}</EventTitle>
         </StyledEvent>
@@ -246,6 +239,7 @@ const Calendar = () => {
       message: eventTypeText,
       description: dateRange,
       placement: "bottom",
+      duration: 2000,
     });
   };
 
