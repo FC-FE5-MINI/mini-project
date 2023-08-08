@@ -7,7 +7,7 @@ import { usefilterEvents, EventData } from "../hooks/useEventFilter";
 import styled, { css } from "styled-components";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { theme } from "../styles/theme";
 import { motion } from "framer-motion";
@@ -15,8 +15,9 @@ import AddModal from "./AddModal";
 import MyListModal from "./MyListModal";
 import useOpenModal from "../store/closeState";
 import { ORDER_STATE, TAB_ADD } from "../lib/util/constants";
+import { notification } from "antd";
 
-const StyledEvent = styled.div`
+const StyledEvent = styled.div<StyledEventProps>`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.colors.white};
@@ -26,6 +27,7 @@ const StyledEvent = styled.div`
   border-radius: 40px;
   font-size: 1rem;
   height: 1.5rem;
+  width: 100%;
 `;
 const LoadingContainer = styled.div`
   display: flex;
@@ -150,12 +152,18 @@ const CustomFullCalendar = styled(FullCalendar)`
 const EventTitle = styled.p`
   font-size: 1rem;
   padding-left: 0.2rem;
+  display: flex;
+  align-items: center;
 `;
-
+interface StyledEventProps {
+  defaultAllDay: boolean;
+  children: ReactNode;
+}
 const Calendar = () => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
   const [showMyList, setShowMyList] = useState(false);
+  const [defaultAllDay, setDefaultAllDay] = useState(false);
 
   const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
@@ -181,8 +189,8 @@ const Calendar = () => {
 
   const mappedEvents = filteredEvents.map((data: EventData) => ({
     title: data.username,
-    start: data.startDate,
-    end: data.endDate,
+    start: new Date(data.startDate),
+    end: new Date(data.endDate),
     type: data.eventType,
     id: data.eventId.toString(),
     userId: data.userId,
@@ -193,12 +201,15 @@ const Calendar = () => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
+    const startDate = event._instance.range.start;
+    const endDate = event._instance.range.end;
+    setDefaultAllDay(startDate === endDate);
 
     if (orderState === ORDER_STATE.RJ) return null;
 
     return (
       <>
-        <StyledEvent id={eventType}>
+        <StyledEvent id={eventType} defaultAllDay={defaultAllDay}>
           {orderState === ORDER_STATE.WT && <OrderState>&nbsp;{ORDER_STATE[orderState]}승인대기</OrderState>}&nbsp;
           <EventTitle>{event.title}</EventTitle>
         </StyledEvent>
@@ -221,13 +232,23 @@ const Calendar = () => {
     return <div style={{ color: textColor }}>{date.getDate()}</div>;
   };
   const eventClick = (arg: EventClickArg) => {
-    const { start, end } = arg.event;
-    const clickedStartDate = start?.toISOString().slice(0, 10);
-    const clickedEndDate = end?.toISOString().slice(0, 10);
-
+    const { event } = arg;
+    const clickedStartDate = event._instance?.range.start.toISOString().slice(0, 10);
+    const clickedEndDate = event._instance?.range.end.toISOString().slice(0, 10);
     const clickedDateRange = `${clickedStartDate} - ${clickedEndDate}`;
-    console.log(clickedDateRange);
+    const clickedEventType = event._def.extendedProps.type;
+    showNotification(clickedDateRange, clickedEventType);
   };
+
+  const showNotification = (dateRange: string, clickedEventType: string) => {
+    const eventTypeText = clickedEventType === "DUTY" ? "당직" : "연차";
+    notification.info({
+      message: eventTypeText,
+      description: dateRange,
+      placement: "bottom",
+    });
+  };
+
   const TAB_ADD_ALL = ["전체", ...TAB_ADD];
   return (
     <>
