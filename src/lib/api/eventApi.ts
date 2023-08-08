@@ -35,7 +35,6 @@ api.interceptors.request.use(
 export const AllList = async () => {
   try {
     const { data } = await api.get(`/user/event/list`);
-    console.log(data.data);
     return data.data;
   } catch (error) {
     console.error("오류 발생:", error);
