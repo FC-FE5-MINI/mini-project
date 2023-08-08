@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useUserStore } from '../../store/userStore';
 
 export type EventType = "DUTY" | "LEAVE";
 export type OrderStateType = "WAITING" | "APPROVED" | "REJECTED";
@@ -15,6 +16,16 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+api.interceptors.request.use((config) => {
+  const token = useUserStore.getState().user.accessToken;  // Zustand store에서 토큰 가져옴
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; 
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 // 모든 유저 연차/당직 리스트(GET)

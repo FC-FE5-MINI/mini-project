@@ -4,8 +4,14 @@ import LogoImage from "../assets/logo_2.png";
 import { useState } from "react";
 import UserInfoModal from "./UserInfoModal";
 import CharAnimation from './CharAnimation';
+import { useUserStore } from '../store/userStore';
+
+
+
 const NavBar = () => {
+  const userData = useUserStore((state) => state.user)
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -21,12 +27,12 @@ const NavBar = () => {
       <CharAnimation />
       <ProfileContainer>
         <UserProfile
-          src="https://i.ibb.co/dfkMYGS/hani.png"
+          src="https://i.ibb.co/dfkMYGS/hani.png" //{userData.imageUrl}
           alt="profile image"
           title="회원정보 수정"
           onClick={handleOpenModal}
         />
-        <UserName>팜하니</UserName>
+        <UserName>{userData.username}</UserName>
         <LogoutButton title="로그아웃">
           <LogoutIcon />
         </LogoutButton>
