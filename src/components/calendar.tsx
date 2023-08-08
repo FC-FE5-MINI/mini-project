@@ -2,9 +2,9 @@ import FullCalendar from "@fullcalendar/react";
 import { EventInput, DayHeaderContentArg, DayCellContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useQuery } from "react-query";
+import { useEventQuery } from "../hooks/useEventQuery";
+import { usefilterEvents, EventData } from "../hooks/useEventFilter";
 import styled, { css } from "styled-components";
-import { AllList, MyList } from "../lib/api/eventApi";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import AddModal from "./AddModal";
 import MyListModal from "./MyListModal";
 import useOpenModal from "../store/closeState";
+import { ORDER_STATE, TAB_ADD } from "../lib/util/constants";
 
 const StyledEvent = styled.div`
   display: flex;
@@ -151,16 +152,6 @@ const EventTitle = styled.p`
   padding-left: 0.2rem;
 `;
 
-interface EventData {
-  username?: string;
-  startDate: string;
-  endDate: string;
-  eventType: string;
-  userId: number;
-  orderState: string;
-  eventId: number;
-}
-
 const Calendar = () => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
@@ -168,12 +159,13 @@ const Calendar = () => {
 
   const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
-  const { data: allEvents, isLoading: allEventsLoading } = useQuery<EventData[]>("events", AllList);
-  const { data: myEvents, isLoading: myEventsLoading } = useQuery<EventData[]>("myevents", MyList);
+  const { data: allEvents, isLoading: allEventsLoading } = useEventQuery("events");
+  const { data: myEvents, isLoading: myEventsLoading } = useEventQuery("myevents");
 
   // allEvents와 myEvents가 존재하지 않을 경우 빈 배열로 초기화
-  const eventsExist =
-    !allEventsLoading && !myEventsLoading && (allEvents || []).length > 0 && (myEvents || []).length > 0;
+  const allEventsExist = allEvents && allEvents.length > 0;
+  const myEventsExist = myEvents && myEvents.length > 0;
+  const eventsExist = !allEventsLoading && !myEventsLoading && (allEventsExist || myEventsExist);
 
   if (allEventsLoading || myEventsLoading || !eventsExist) {
     return (
@@ -183,18 +175,10 @@ const Calendar = () => {
     );
   }
 
-  const filteredEvents: EventInput[] = (showMyList ? myEvents : allEvents) || [];
-  const filteredEventsByTab: EventInput[] = Array.isArray(filteredEvents)
-    ? filteredEvents.filter((data: EventInput) => {
-        if (selectedTab === "전체") return true;
-        if (selectedTab === "연차") return data.eventType === "LEAVE";
-        if (selectedTab === "당직") return data.eventType === "DUTY";
-        console.log("타입", data.type);
-        return false;
-      })
-    : [];
+  const events = showMyList ? myEvents || [] : allEvents || [];
+  const filteredEvents = usefilterEvents(events, selectedTab);
 
-  const mappedEvents: EventInput[] = filteredEventsByTab.map((data: EventInput) => ({
+  const mappedEvents = filteredEvents.map((data: EventData) => ({
     title: data.username,
     start: data.startDate,
     end: data.endDate,
@@ -209,12 +193,12 @@ const Calendar = () => {
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
 
-    if (orderState === "REJECTED") return null;
+    if (orderState === ORDER_STATE.RJ) return null;
 
     return (
       <>
         <StyledEvent id={eventType}>
-          {orderState === "WAITING" && <OrderState>&nbsp;승인대기</OrderState>}&nbsp;
+          {orderState === ORDER_STATE.WT && <OrderState>&nbsp;{ORDER_STATE[orderState]}승인대기</OrderState>}&nbsp;
           <EventTitle>{event.title}</EventTitle>
         </StyledEvent>
       </>
@@ -263,15 +247,11 @@ const Calendar = () => {
           </Label>
         </BorderArea>
         <TabBtnWrapper>
-          <TabBtn $isActive={selectedTab === "전체"} onClick={() => setSelectedTab("전체")}>
-            전체
-          </TabBtn>
-          <TabBtn $isActive={selectedTab === "연차"} onClick={() => setSelectedTab("연차")}>
-            연차
-          </TabBtn>
-          <TabBtn $isActive={selectedTab === "당직"} onClick={() => setSelectedTab("당직")}>
-            당직
-          </TabBtn>
+          {TAB_ADD.map((tab, index) => (
+            <TabBtn key={index} $isActive={selectedTab === tab} onClick={() => setSelectedTab(tab)}>
+              {tab}
+            </TabBtn>
+          ))}
         </TabBtnWrapper>
       </CalendarTabMenu>
 
