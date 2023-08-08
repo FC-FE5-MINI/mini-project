@@ -8,28 +8,40 @@ import { calcPeriods } from "../lib/util/functions";
 import { theme } from "../styles/theme";
 import useOpenModal from "../store/closeState";
 import { AiOutlineClose } from "react-icons/ai";
+import { getUserInfo } from "../lib/api/userApi";
+import { useEffect, useState } from "react";
 
 const MyListModal = () => {
+  const [myAnnual, setMyAnnual] = useState<number>();
   const userId = 4; //임시
   const leaveList = useMyList(EVENT_TYPE.LV, userId);
   const dutyList = useMyList(EVENT_TYPE.DT, userId);
   const { setOpenMyListModal } = useOpenModal();
 
+  useEffect(() => {
+    (async () => {
+      const { data } = await getUserInfo();
+      setMyAnnual(data.annualCount);
+    })();
+  }, []);
+
   const renderCount = () => {
+    let anuualSpend = 0;
     if (leaveList.length) {
-      const myAnuualCount = leaveList[0].annualCount;
-      const anuualSpend = leaveList
-        .map((item) => item.endDate && item.orderState === ORDER_STATE.WT && calcPeriods(item.startDate, item.endDate))
+      anuualSpend = leaveList
+        .filter((item) => item.orderState === ORDER_STATE.WT)
+        .map((item) => calcPeriods(item.startDate, item.endDate))
         .reduce((a, b) => (a as number) + (b as number));
-      return <Leaves>{myAnuualCount - (anuualSpend as number)}</Leaves>;
     }
+
+    if (myAnnual) return <Leaves>{(myAnnual as number) - anuualSpend}</Leaves>;
   };
 
   const renderList = (listData: MyListData[]) => {
     if (listData.length) {
       return listData.map((item, idx) => (
         <List key={idx} orderState={item.orderState} eventId={item.eventId}>
-          {item.endDate ? (
+          {item.eventType === EVENT_TYPE.LV ? (
             <>
               <span>{`${item.startDate} ~ ${item.endDate}`}</span>{" "}
               <LeaveDays>{`(${calcPeriods(item.startDate, item.endDate)}일)`}</LeaveDays>

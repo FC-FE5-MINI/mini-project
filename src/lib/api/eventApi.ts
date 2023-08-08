@@ -11,6 +11,16 @@ export interface AddEvent {
   count?: number;
 }
 
+interface CustomError extends Error {
+  response?: {
+    data: {
+      errCode: {
+        message: string;
+      };
+    };
+  };
+}
+
 const api = axios.create({
   baseURL: "http://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
   headers: {
@@ -55,13 +65,18 @@ export const MyList = async () => {
 
 // 연차/당직 신청(POST)
 const addEvent = async (reqBody: AddEvent) => {
-  const { data } = await api.post("/user/event/add", reqBody);
-  return data;
+  try {
+    const { data } = await api.post("/user/event/add", reqBody);
+    return data;
+  } catch (error: unknown) {
+    const custonError = error as CustomError;
+    alert(custonError.response?.data.errCode.message);
+  }
 };
 
 // 연차/당직 취소
 const cancelEvent = async (userId: number) => {
-  const { data } = await api.post("/user/event/cancel", { userId });
+  const { data } = await api.post(`/user/event/cancel/${userId}`);
   return data;
 };
 

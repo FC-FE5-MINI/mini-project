@@ -24,7 +24,15 @@ const DatePickerComponent = ({ isRange }: DatePickerProp) => {
   };
   return (
     <Space direction="vertical" size={12}>
-      {isRange ? <RangePicker onChange={getSelectedDate} /> : <DatePicker onChange={getSelectedDate} />}
+      {isRange ? (
+        <RangePicker onChange={getSelectedDate} disabledDate={(current) => current.isBefore(Date.now())} />
+      ) : (
+        <DatePicker
+          showToday={false}
+          onChange={getSelectedDate}
+          disabledDate={(current) => current.isBefore(Date.now())}
+        />
+      )}
     </Space>
   );
 };

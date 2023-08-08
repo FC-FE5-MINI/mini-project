@@ -12,13 +12,27 @@ import { MODAL_MESSAGE, EVENT_TYPE, TAB_ADD } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 import useOpenModal from "../store/closeState";
 import { AiOutlineClose } from "react-icons/ai";
+import { notification } from "antd";
 
 const AddModal = () => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
   const { setOpenAddModal } = useOpenModal();
 
-  const onSubmit = (event: MouseEvent) => {
+  const showNotification = (startDate: Date, endDate: Date | null) => {
+    notification.info({
+      message: `${selected === TAB_ADD[0] ? selected + "가" : selected + "이"} 신청되었습니다.`,
+      description: `${
+        endDate
+          ? `${startDate.toLocaleDateString()} ~ ${endDate.toLocaleDateString()}`
+          : `${startDate.toLocaleDateString()}`
+      }`,
+      placement: "top",
+      duration: 1.5,
+    });
+  };
+
+  const onSubmit = async (event: MouseEvent) => {
     event.preventDefault();
     const reqBody: AddEvent = new Object();
 
@@ -33,9 +47,11 @@ const AddModal = () => {
         reqBody.endDate = endDate;
         reqBody.count = calcPeriods(startDate, endDate);
       }
+    } else {
+      reqBody.endDate = startDate;
     }
-    addEvent(reqBody);
-    alert(`${selected} ${MODAL_MESSAGE.ADD_SUCCESS}`);
+    const res = await addEvent(reqBody);
+    res.status === 200 && showNotification(startDate, endDate);
     setOpenAddModal(false);
   };
 
@@ -48,7 +64,12 @@ const AddModal = () => {
       <SelectWrapper>
         <ToggleBar $selected={selected} />
         {TAB_ADD.map((name, idx) => (
-          <Select key={idx} onClick={() => setSelected(name)}>
+          <Select
+            key={idx}
+            $isClicked={selected === TAB_ADD[idx]}
+            $selected={selected}
+            onClick={() => setSelected(name)}
+          >
             {name}
           </Select>
         ))}
@@ -93,7 +114,7 @@ const SelectWrapper = styled.div`
 `;
 
 const ToggleBar = styled.div<{
-  $selected?: string;
+  $selected: string;
 }>`
   width: 45%;
   height: 85%;
@@ -116,13 +137,29 @@ const ToggleBar = styled.div<{
         `};
 `;
 
-const Select = styled.div`
+const Select = styled.div<{ $isClicked: boolean; $selected: string }>`
   z-index: 1;
   display: flex;
   cursor: pointer;
   padding: 10px 0;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease-in-out;
+
+  ${({ $isClicked, $selected, theme }) =>
+    $isClicked
+      ? $selected === TAB_ADD[0]
+        ? css`
+            font-weight: 700;
+            color: ${theme.colors.green.main};
+          `
+        : css`
+            font-weight: 700;
+            color: ${theme.colors.orange.main};
+          `
+      : css`
+          font-weight: 400;
+        `}
 `;
 
 const CalendarWrapper = styled.div`
