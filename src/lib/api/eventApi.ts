@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from "../../store/userStore";
 
 export type EventType = "DUTY" | "LEAVE";
 export type OrderStateType = "WAITING" | "APPROVED" | "REJECTED";
@@ -12,27 +12,31 @@ export interface AddEvent {
 }
 
 const api = axios.create({
-  baseURL: "https://fd220552-0bf1-4bff-ab2c-50941e7a0832.mock.pstmn.io",
+  baseURL: "http://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-api.interceptors.request.use((config) => {
-  const token = useUserStore.getState().user.accessToken;  // Zustand store에서 토큰 가져옴
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`; 
+api.interceptors.request.use(
+  (config) => {
+    const token = useUserStore.getState().user.accessToken; // Zustand store에서 토큰 가져옴
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+);
 
 // 모든 유저 연차/당직 리스트(GET)
 export const AllList = async () => {
   try {
     const { data } = await api.get(`/user/event/list`);
-    return data;
+    console.log(data.data);
+    return data.data;
   } catch (error) {
     console.error("오류 발생:", error);
     throw error;
