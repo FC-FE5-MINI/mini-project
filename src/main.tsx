@@ -9,14 +9,12 @@ import { QueryClient, QueryClientProvider } from "react-query";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <GlobalStyle />
-          <App />
-        </QueryClientProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  // </React.StrictMode>
+  <BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <GlobalStyle />
+        <App />
+      </QueryClientProvider>
+    </ThemeProvider>
+  </BrowserRouter>
 );
