@@ -19,7 +19,7 @@ const Main = () => {
       navigate("/login");
     }
     // 페이지 로드시에 한 번만 확인하면 되므로, 의존성 배열에 빈 배열을 전달
-  }, []);
+  }, [navigate, user.accessToken]);
 
   return (
     <MainContainer>
