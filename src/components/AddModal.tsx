@@ -13,11 +13,13 @@ import { calcPeriods } from "../lib/util/functions";
 import useOpenModal from "../store/closeState";
 import { AiOutlineClose } from "react-icons/ai";
 import { notification } from "antd";
+import { useEventQuery } from "../hooks/useEventQuery";
 
 const AddModal = () => {
   const [selected, setSelected] = useState(TAB_ADD[0]);
   const { startDate, endDate } = useDateStore();
   const { setOpenAddModal } = useOpenModal();
+  const { refetch } = useEventQuery("myevents");
 
   const showNotification = (startDate: Date, endDate: Date | null) => {
     notification.info({
@@ -50,9 +52,15 @@ const AddModal = () => {
     } else {
       reqBody.endDate = startDate;
     }
-    const res = await addEvent(reqBody);
-    res.status === 200 && showNotification(startDate, endDate);
-    setOpenAddModal(false);
+    try {
+      const res = await addEvent(reqBody);
+      res.status === 200 && showNotification(startDate, endDate);
+      setOpenAddModal(false);
+      refetch();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   return (
