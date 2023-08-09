@@ -1,6 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css");
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
   a, abbr, acronym, address, big, cite, code,
@@ -28,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
     display: block;
   }
   body {
-    font-family: 'NanumSquare', sans-serif;
+    font-family: 'Pretendard-Regular', sans-serif;
     line-height: 1;
     -ms-overflow-style: none;
     ::-webkit-scrollbar {
@@ -73,6 +74,7 @@ const GlobalStyle = createGlobalStyle`
   font-size: inherit;
   line-height: inherit;
   border: none;
+  min-width: 1100px;
 }
 
 .fc th,
@@ -100,9 +102,5 @@ const GlobalStyle = createGlobalStyle`
   border: 1px solid ${(props) => props.theme.colors.gray[1]};
   border-radius: 1rem;
 }
-
-
-
 `;
-
 export default GlobalStyle;

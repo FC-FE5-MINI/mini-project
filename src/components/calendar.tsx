@@ -3,7 +3,6 @@ import { EventInput, DayHeaderContentArg, DayCellContentArg, EventClickArg } fro
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEventQuery } from "../hooks/useEventQuery";
-import { usefilterEvents, EventData } from "../hooks/useEventFilter";
 import styled, { css } from "styled-components";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
@@ -16,7 +15,13 @@ import MyListModal from "./MyListModal";
 import useOpenModal from "../store/closeState";
 import { ORDER_STATE, TAB_ADD } from "../lib/util/constants";
 import { notification } from "antd";
+// import { MapData } from "../hooks/useEventQuery";
 
+const CalendarWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 const StyledEvent = styled.div`
   display: flex;
   align-items: center;
@@ -39,6 +44,7 @@ const CalendarTabMenu = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
+  min-width: 1100px;
 `;
 const BorderArea = styled.div`
   width: 100%;
@@ -160,11 +166,22 @@ const Calendar = () => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
   const [showMyList, setShowMyList] = useState(false);
+  // const [filteredEvents, setFilteredEvents] = useState<EventData[]>([]);
+  // const [mappedEvents, setMappedEvents] = useState<MapData[]>([]);
 
   const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
 
-  const { data: allEvents, isLoading: allEventsLoading } = useEventQuery("events");
-  const { data: myEvents, isLoading: myEventsLoading } = useEventQuery("myevents");
+  const {
+    mappedEvents: allMapped,
+    filteredEvents: allEvents,
+    isLoading: allEventsLoading,
+  } = useEventQuery("events", showMyList, selectedTab);
+
+  const {
+    mappedEvents: myMapped,
+    filteredEvents: myEvents,
+    isLoading: myEventsLoading,
+  } = useEventQuery("myevents", showMyList, selectedTab);
 
   // allEvents와 myEvents가 존재하지 않을 경우 빈 배열로 초기화
   const allEventsExist = allEvents && allEvents.length > 0;
@@ -179,19 +196,7 @@ const Calendar = () => {
     );
   }
 
-  const events = showMyList ? myEvents || [] : allEvents || [];
-
-  const filteredEvents = usefilterEvents(events, selectedTab);
-
-  const mappedEvents = filteredEvents.map((data: EventData) => ({
-    title: data.username,
-    start: new Date(data.startDate),
-    end: new Date(data.endDate),
-    type: data.eventType,
-    id: data.eventId.toString(),
-    userId: data.userId,
-    orderState: data.orderState,
-  }));
+  // const filteredEvents = usefilterEvents(showMyList ? myEvents || [] : allEvents || [], selectedTab);
 
   const eventContent = (arg: { event: EventInput }) => {
     const { event } = arg;
@@ -210,8 +215,12 @@ const Calendar = () => {
     );
   };
 
-  const eventsString = JSON.stringify(mappedEvents);
-  const eventsHash = SHA256(eventsString).toString();
+  const renderHash = () => {
+    const eventHash = showMyList
+      ? SHA256(JSON.stringify(myMapped)).toString()
+      : SHA256(JSON.stringify(allMapped)).toString();
+    return eventHash;
+  };
 
   const dayHeaderContent = (arg: DayHeaderContentArg) => {
     const { text } = arg;
@@ -239,13 +248,13 @@ const Calendar = () => {
       message: eventTypeText,
       description: dateRange,
       placement: "bottom",
-      duration: 2000,
+      duration: 1.5,
     });
   };
 
   const TAB_ADD_ALL = ["전체", ...TAB_ADD];
   return (
-    <>
+    <CalendarWrapper>
       <CalendarTabMenu>
         <BorderArea>
           <ModalBtnArea>
@@ -275,7 +284,7 @@ const Calendar = () => {
       {openMyListModal && <MyListModal />}
 
       <motion.div
-        key={eventsHash}
+        key={renderHash()}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 20 }}
@@ -284,7 +293,7 @@ const Calendar = () => {
         <CustomFullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          events={mappedEvents}
+          events={showMyList ? myMapped : allMapped}
           eventBorderColor="white"
           eventContent={eventContent}
           dayHeaderContent={dayHeaderContent}
@@ -293,7 +302,7 @@ const Calendar = () => {
           eventClick={eventClick}
         />
       </motion.div>
-    </>
+    </CalendarWrapper>
   );
 };
 
