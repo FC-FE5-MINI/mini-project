@@ -8,22 +8,13 @@ import { calcPeriods } from "../lib/util/functions";
 import { theme } from "../styles/theme";
 import useOpenModal from "../store/closeState";
 import { AiOutlineClose } from "react-icons/ai";
-import { getUserInfo } from "../lib/api/userApi";
-import { useEffect, useState } from "react";
+import useAnnualCount from "../hooks/useAnnualCount";
 
 const MyListModal = () => {
-  const [myAnnual, setMyAnnual] = useState<number>();
-  const userId = 4; //임시
-  const leaveList = useMyList(EVENT_TYPE.LV, userId);
-  const dutyList = useMyList(EVENT_TYPE.DT, userId);
+  const leaveList = useMyList(EVENT_TYPE.LV);
+  const dutyList = useMyList(EVENT_TYPE.DT);
+  const myAnnual = useAnnualCount();
   const { setOpenMyListModal } = useOpenModal();
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await getUserInfo();
-      setMyAnnual(data.annualCount);
-    })();
-  }, []);
 
   const renderCount = () => {
     let anuualSpend = 0;
@@ -33,7 +24,6 @@ const MyListModal = () => {
         .map((item) => calcPeriods(item.startDate, item.endDate))
         .reduce((a, b) => (a as number) + (b as number));
     }
-
     if (myAnnual) return <Leaves>{(myAnnual as number) - anuualSpend}</Leaves>;
   };
 
