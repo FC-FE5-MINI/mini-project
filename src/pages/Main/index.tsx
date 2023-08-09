@@ -1,5 +1,5 @@
 import NavBar from "../../components/NavBar";
-import Calendar from "../../components/Calendar";
+import Calendar from "../../components/calendar";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useUserStore } from "../../store/userStore";
