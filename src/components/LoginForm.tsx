@@ -2,7 +2,9 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { login } from "../lib/api/userApi";
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from '../store/userStore';
+import { useUserStore } from "../store/userStore";
+import { renderEmailError, renderPasswordError } from "../lib/util/functions";
+import { LOGIN_MESSAGE, REG_EXP_EMAIL_PATTERN, REG_EXP_PW_PATTERN } from "../lib/util/constants";
 
 interface FormData {
   email: string;
@@ -18,56 +20,47 @@ const LoginForm: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const setUser = useUserStore((state) => state.setUser)
+  const setUser = useUserStore((state) => state.setUser);
 
   const onSubmit = async (data: FormData) => {
     try {
       const loginResponse = await login(data.email, data.password);
-      // console.log(loginResponse.data.username, loginResponse.data.imageUrl);
 
       if (loginResponse.status === 200) {
-        alert("로그인에 성공하였습니다.");
+        alert(LOGIN_MESSAGE.LOG_IN_SUCCESS);
 
         setUser({
           username: loginResponse.data.username,
           email: data.email,
           imageUrl: loginResponse.data.imageUrl,
-          accessToken: loginResponse.data.accessToken
+          accessToken: loginResponse.data.accessToken,
         });
         //메인 페이지로 이동
         navigate("/");
       } else {
-        alert("로그인에 실패하였습니다. 다시 시도해주세요.");
+        alert(LOGIN_MESSAGE.LOG_IN_FAILED);
       }
     } catch (err) {
-      alert("로그인 요청 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert(LOGIN_MESSAGE.LOG_IN_ERROR);
     }
   };
 
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} placeholder="이메일" />
-        <ErrorMessage>
-          {errors.email && errors.email.type === "required" && "필수 입력 항목입니다."}
-          {errors.email && errors.email.type === "pattern" && "이메일 형식을 확인해주세요."}
-        </ErrorMessage>
+        <Input {...register("email", { required: true, pattern: REG_EXP_EMAIL_PATTERN })} placeholder="이메일" />
+        <ErrorMessage>{renderEmailError(errors)}</ErrorMessage>
         <Input
           {...register("password", {
             required: true,
             minLength: 8,
             maxLength: 15,
-            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
+            pattern: REG_EXP_PW_PATTERN,
           })}
           type="password"
           placeholder="비밀번호"
         />
-        <ErrorMessage>
-          {errors.password && errors.password.type === "required" && "필수 입력 항목입니다."}
-          {errors.password && errors.password.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
-          {errors.password && errors.password.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
-          {errors.password && errors.password.type === "pattern" && "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
-        </ErrorMessage>
+        <ErrorMessage>{renderPasswordError(errors)}</ErrorMessage>
         <Button />
       </Form>
     </Container>

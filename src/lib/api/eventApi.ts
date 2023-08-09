@@ -42,7 +42,7 @@ api.interceptors.request.use(
 );
 
 // 모든 유저 연차/당직 리스트(GET)
-export const AllList = async () => {
+const allList = async () => {
   try {
     const { data } = await api.get(`/user/event/list`);
     return data.data;
@@ -53,7 +53,7 @@ export const AllList = async () => {
 };
 
 // 내 연차/당직 신청 현솽(GET)
-export const MyList = async () => {
+const myList = async () => {
   try {
     const { data } = await api.get(`/user/event/myList`);
     return data.data;
@@ -76,14 +76,13 @@ const addEvent = async (reqBody: AddEvent) => {
 
 // 연차/당직 취소
 const cancelEvent = async (userId: number) => {
-  const { data } = await api.post(`/user/event/cancel/${userId}`);
-  return data;
+  try {
+    const { data } = await api.post(`/user/event/cancel/${userId}`);
+    return data;
+  } catch (error) {
+    console.error("오류 발생:", error);
+    throw error;
+  }
 };
 
-// 연차/당직 신청 현황
-const getMyEvents = async (userId: number) => {
-  const { data } = await api.get(`/user/event/list?id=${userId}`);
-  return data;
-};
-
-export { addEvent, cancelEvent, getMyEvents };
+export { allList, myList, addEvent, cancelEvent };

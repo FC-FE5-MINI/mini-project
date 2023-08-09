@@ -4,6 +4,13 @@ import { useForm } from "react-hook-form";
 import logoImage from "../../assets/logo_2.png";
 import { checkEmail, signUp } from "../../lib/api/userApi";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  renderEmailError,
+  renderNameError,
+  renderPasswordConfirm,
+  renderPasswordError,
+} from "../../lib/util/functions";
+import { REG_EXP_EMAIL_PATTERN, REG_EXP_PW_PATTERN, SIGNUP_MESSAGE } from "../../lib/util/constants";
 
 interface FormData {
   name: string;
@@ -25,33 +32,30 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  
-
   const onSubmit = async (data: FormData) => {
     // e.preventDefault();
     try {
       const checkEmailResponse = await checkEmail(data.email);
-      console.log("checkEmailResponse", checkEmailResponse)
       // 이메일 중복 체크를 성공적으로 수행했고 중복된 이메일이 없다면 회원 가입 요청
       if (checkEmailResponse.data.responseType === true) {
         try {
           const signUpResponse = await signUp(data.email, data.password, data.name);
 
           if (signUpResponse.status === "success") {
-            alert("회원가입에 성공하였습니다.");
+            alert(SIGNUP_MESSAGE.SIGN_UP_SUCCESS);
             //로그인 페이지로 이동
             navigate("/login");
           } else {
-            alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+            alert(SIGNUP_MESSAGE.SIGN_UP_FAILED);
           }
         } catch (err) {
-          alert("회원가입 요청 중 오류가 발생했습니다. 다시 시도해주세요.");
+          alert(SIGNUP_MESSAGE.SIGN_UP_ERROR);
         }
       } else {
-        alert("이메일이 중복되었습니다. 다른 이메일을 사용해주세요.");
+        alert(SIGNUP_MESSAGE.EMAIL_FAILED);
       }
     } catch (err) {
-      alert("이메일 중복 체크 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert(SIGNUP_MESSAGE.EMAIL_ERROR);
     }
   };
 
@@ -62,44 +66,33 @@ const SignUp = () => {
         <Label>오늘은 내 차례!</Label>
         <Label>회원가입하세요</Label>
         <Input {...register("name", { required: true })} placeholder="이름" />
-        <ErrorMessage>{errors.name && errors.name.type === "required" && "필수 입력 항목입니다."}</ErrorMessage>
-        <Input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} placeholder="이메일" />
-        <ErrorMessage>
-          {errors.email && errors.email.type === "required" && "필수 입력 항목입니다."}
-          {errors.email && errors.email.type === "pattern" && "이메일 형식을 확인해주세요."}
-        </ErrorMessage>
+        <ErrorMessage>{renderNameError(errors)}</ErrorMessage>
+        <Input {...register("email", { required: true, pattern: REG_EXP_EMAIL_PATTERN })} placeholder="이메일" />
+        <ErrorMessage>{renderEmailError(errors)}</ErrorMessage>
         <Input
           {...register("password", {
             required: true,
             minLength: 8,
             maxLength: 15,
-            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
+            pattern: REG_EXP_PW_PATTERN,
           })}
           type="password"
           placeholder="비밀번호"
         />
-        <ErrorMessage>
-          {errors.password && errors.password.type === "required" && "필수 입력 항목입니다."}
-          {errors.password && errors.password.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
-          {errors.password && errors.password.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
-          {errors.password && errors.password.type === "pattern" && "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
-        </ErrorMessage>
+        <ErrorMessage>{renderPasswordError(errors)}</ErrorMessage>
         <Input
           {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })}
           type="password"
           placeholder="비밀번호 확인"
         />
-        <ErrorMessage>
-          {errors.passwordConfirm && errors.passwordConfirm.type === "required" && "필수 입력 항목입니다."}
-          {errors.passwordConfirm && errors.passwordConfirm.type === "validate" && "비밀번호가 다릅니다."}
-        </ErrorMessage>
+        <ErrorMessage>{renderPasswordConfirm(errors)}</ErrorMessage>
         <Button />
-      <LoginText>
-        <span>이미 회원가입을 하셨나요?</span>
-        <Link to="/login">
-          <LoginLink>로그인</LoginLink>
-        </Link>
-      </LoginText>
+        <LoginText>
+          <span>이미 회원가입을 하셨나요?</span>
+          <Link to="/login">
+            <LoginLink>로그인</LoginLink>
+          </Link>
+        </LoginText>
       </Form>
     </Container>
   );
@@ -170,14 +163,14 @@ const Button = styled.input.attrs({
 
 const LoginText = styled.p`
   display: flex;
-  justify-content : center;
+  justify-content: center;
   font-size: 12px;
   margin-top: 5px;
   color: ${({ theme }) => theme.colors.orange.main};
 `;
 
 const LoginLink = styled.span`
-  margin-left : 5px;
+  margin-left: 5px;
   /* text-decoration: underline; */
   font-weight: bold;
 `;

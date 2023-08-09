@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { EventType, OrderStateType, getMyEvents } from "../lib/api/eventApi";
+import { EventType, OrderStateType } from "../lib/api/eventApi";
 import { EVENT_TYPE } from "../lib/util/constants";
+import { useQueryClient } from "react-query";
 
 export interface MyListData {
   eventId: number;
@@ -12,27 +13,34 @@ export interface MyListData {
   orderState: OrderStateType;
 }
 
-const useMyList = (eventType: EventType, userId: number) => {
+const useMyList = (eventType: EventType) => {
   const [listData, setListData] = useState<MyListData[]>([]);
-  const [eventIds, setEventIds] = useState([]);
+  const queryClient = useQueryClient();
+  const datas = queryClient.getQueryData<MyListData[]>("myevents");
 
-  const fetchData = useCallback(async () => {
-    const { data: datas } = await getMyEvents(userId);
-    const filteredData = datas.filter((data: MyListData) => {
-      switch (eventType) {
-        case EVENT_TYPE.DT:
-          return data.eventType === eventType && new Date() <= new Date(data.startDate);
-        case EVENT_TYPE.LV:
-          return data.eventType === eventType && new Date() <= new Date(data.endDate);
+  const fetchData = useCallback(() => {
+    try {
+      if (datas) {
+        const filteredData = datas.filter((data: MyListData) => {
+          switch (eventType) {
+            case EVENT_TYPE.DT:
+              return data.eventType === eventType && new Date() <= new Date(data.startDate);
+            case EVENT_TYPE.LV:
+              return data.eventType === eventType && new Date() <= new Date(data.endDate);
+          }
+        });
+
+        setListData(filteredData);
       }
-    });
-    setEventIds(filteredData.map((item: MyListData) => item.eventId));
-    setListData(filteredData);
-  }, [eventType, userId]);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }, [eventType, datas]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData, eventIds]);
+  }, [fetchData, datas]);
 
   return listData;
 };
