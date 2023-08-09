@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
 import { styled } from "styled-components";
 
@@ -53,7 +53,7 @@ const CharAnimation = () => {
     const spriteHeight = 32;
     const drawWidth = 96;
     const drawHeight = 96;
-    const spriteRows = 8;
+    // const spriteRows = 8;
     const spriteColumns = 4;
     const spriteMargin = { top: -12, right: -65, bottom: -10, left: -66 };
     const charSpeed = 4;
@@ -79,7 +79,7 @@ const CharAnimation = () => {
       updateDirection();
 
       if (ctx !== null) {
-        ctx.imageSmoothingEnabled = false; // 이미지 스무딩을 끕니다.
+        ctx.imageSmoothingEnabled = false; // 이미지 스무딩을 끄기. 최적화
       }
 
       if (ctx === null) {
@@ -116,7 +116,7 @@ const CharAnimation = () => {
         frameCounter = 0;
       }
 
-      // 경계 제약을 계산할 때 여백 크기를 고려합니다.
+      // 경계 제약을 계산할 때 여백 크기를 고려함.
       switch (currentRow) {
         case 0:
           characterPosition.y = Math.min(
