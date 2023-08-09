@@ -3,6 +3,8 @@ import { ChildrenProp } from "./Modal";
 import { theme } from "../../styles/theme";
 import { OrderStateType, cancelEvent } from "../../lib/api/eventApi";
 import { MODAL_MESSAGE, ORDER_STATE } from "../../lib/util/constants";
+import { useEventQuery } from "../../hooks/useEventQuery";
+import { notification } from "antd";
 
 interface ListProp extends ChildrenProp {
   orderState: OrderStateType;
@@ -10,6 +12,16 @@ interface ListProp extends ChildrenProp {
 }
 
 const List = ({ children, orderState, eventId }: ListProp) => {
+  const { refetch } = useEventQuery("myevents");
+
+  const showNotification = () => {
+    notification.info({
+      message: MODAL_MESSAGE.CANCELED,
+      placement: "top",
+      duration: 1.5,
+    });
+  };
+
   const renderState = (orderState: OrderStateType) => {
     switch (orderState) {
       case ORDER_STATE.AP:
@@ -23,7 +35,8 @@ const List = ({ children, orderState, eventId }: ListProp) => {
             <Cancel
               onClick={() => {
                 cancelEvent(eventId);
-                alert(MODAL_MESSAGE.CANCELED);
+                showNotification();
+                refetch();
               }}
             >
               취소
