@@ -57,13 +57,12 @@ const Container = styled.nav`
   position: relative;
   justify-content: space-between;
   align-items: center;
-  /* border-bottom: 1px solid; */
   margin-bottom: 15px;
   width : 1100px;
 `;
 
 const LogoBox = styled.img`
-  width: 190px;
+  width: 186px;
   height: auto;
   position: absolute; // 위치 조정을 위해 추가
   left: 0;  // 왼쪽으로 정렬

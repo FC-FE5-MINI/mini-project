@@ -87,7 +87,7 @@ const CharAnimation = () => {
       }
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#66d9cd";
+      ctx.fillStyle = "#249e8c";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.drawImage(
@@ -131,16 +131,16 @@ const CharAnimation = () => {
           );
           break; // Up
         case 2:
-          characterPosition.x = Math.min(
-            characterPosition.x + (isMoving ? charSpeed : 0),
-            canvas.width - drawWidth / 2 - spriteMargin.right
-          );
+          characterPosition.x += isMoving ? charSpeed : 0;
+          if (characterPosition.x > canvas.width + drawWidth / 2) {
+            characterPosition.x = -drawWidth / 2;
+          }
           break; // Right
         case 3:
-          characterPosition.x = Math.max(
-            characterPosition.x - (isMoving ? charSpeed : 0),
-            drawWidth / 2 + spriteMargin.left
-          );
+          characterPosition.x -= isMoving ? charSpeed : 0;
+          if (characterPosition.x < -drawWidth / 2) {
+            characterPosition.x = canvas.width + drawWidth / 2;
+          }
           break; // Left
       }
     };
@@ -250,15 +250,15 @@ const CharAnimation = () => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
-        const relativeX = e.clientX - rect.left - characterPosition.x; 
+        const relativeX = e.clientX - rect.left - characterPosition.x;
         const relativeY = e.clientY - rect.top - characterPosition.y;
-        
+
         let clickedDirection = "";
         if (relativeX >= 0 && relativeY < 0) clickedDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) clickedDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) clickedDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) clickedDirection = "right-down";
-        
+
         if (clickedDirection === movingDirection) {
           setMovingDirection(null);
           setMouseState(false);
@@ -269,28 +269,27 @@ const CharAnimation = () => {
         }
       }
     };
-    
+
     const handleMouseUp = () => {
       setMouseState(false);
     };
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
         const relativeX = e.clientX - rect.left - characterPosition.x;
         const relativeY = e.clientY - rect.top - characterPosition.y;
-    
+
         let movingDirection = "";
         if (relativeX >= 0 && relativeY < 0) movingDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) movingDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) movingDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) movingDirection = "right-down";
-    
+
         setMovingDirection(movingDirection);
       }
     };
-    
 
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseUp);
@@ -327,9 +326,7 @@ const CharAnimation = () => {
 
 export default CharAnimation;
 
-const CanvasContainer = styled.div.attrs({ className: "canvas-container" })`
-
-`;
+const CanvasContainer = styled.div.attrs({ className: "canvas-container" })``;
 
 const StyledCanvas = styled.canvas`
   /* width: 100%;
