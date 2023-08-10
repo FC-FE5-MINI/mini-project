@@ -35,7 +35,7 @@ const NavBar = () => {
       <CharAnimation />
       <ProfileContainer>
         <UserProfile
-          src="https://i.ibb.co/dfkMYGS/hani.png" //{userData.imageUrl}
+          src="/src/assets/profile/0.png" //{userData.imageUrl}
           alt="profile image"
           title="회원정보 수정"
           onClick={handleOpenModal}
@@ -87,6 +87,7 @@ const UserProfile = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  background-color : #F1F1EF;
   cursor: pointer;
   transition: transform 0.2s; // smooth transition
 
