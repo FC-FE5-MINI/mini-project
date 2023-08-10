@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
 import { styled } from "styled-components";
 
-const CANVAS_HEIGHT = 110; // 높이 고정
 const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -44,7 +43,6 @@ const CharAnimation = () => {
     }
 
     canvas.width = canvasWidth;
-    canvas.height = CANVAS_HEIGHT; // 높이 고정
 
     const characterPosition = { x: canvas.width / 2, y: canvas.height / 2 }; // 이 위치로 이동
 
@@ -132,18 +130,18 @@ const CharAnimation = () => {
             drawHeight / 2 + spriteMargin.top
           );
           break; // Up
-          case 2:
-            characterPosition.x = characterPosition.x + (isMoving ? charSpeed : 0);
-            if (characterPosition.x > RIGHT_BOUNDARY) {
-              characterPosition.x = LEFT_BOUNDARY;
-            }
-            break;
-          case 3:
-            characterPosition.x = characterPosition.x - (isMoving ? charSpeed : 0);
-            if (characterPosition.x < LEFT_BOUNDARY) {
-              characterPosition.x = RIGHT_BOUNDARY;
-            }
-            break;
+        case 2:
+          characterPosition.x = characterPosition.x + (isMoving ? charSpeed : 0);
+          if (characterPosition.x > RIGHT_BOUNDARY) {
+            characterPosition.x = LEFT_BOUNDARY;
+          }
+          break;
+        case 3:
+          characterPosition.x = characterPosition.x - (isMoving ? charSpeed : 0);
+          if (characterPosition.x < LEFT_BOUNDARY) {
+            characterPosition.x = RIGHT_BOUNDARY;
+          }
+          break;
       }
     };
 
@@ -320,7 +318,7 @@ const CharAnimation = () => {
 
   return (
     <CanvasContainer>
-      <StyledCanvas ref={canvasRef} width={canvasWidth} height={CANVAS_HEIGHT}></StyledCanvas>
+      <StyledCanvas ref={canvasRef} width={canvasWidth}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
   );
