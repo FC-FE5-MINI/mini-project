@@ -23,6 +23,7 @@ const MODAL_MESSAGE = {
 
 const SIGNUP_MESSAGE = {
   REQUIRED: "필수 입력 항목입니다.",
+  PATTERN_EMAIL: "공백없이 @가 포함되어야 합니다.",
   PATTERN: "영문, 숫자를 포함(공백 제외)하여 입력해주세요.",
   MIN_LENGHT: "비밀번호는 최소 8자 이상입니다.",
   MAX_LENGHT: "비밀번호는 최대 15자 이하입니다.",
