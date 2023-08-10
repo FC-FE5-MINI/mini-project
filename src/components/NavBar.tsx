@@ -3,18 +3,15 @@ import { LuLogOut } from "react-icons/lu";
 import LogoImage from "../assets/logo_2.png";
 import { useState } from "react";
 import UserInfoModal from "./UserInfoModal";
-import CharAnimation from './CharAnimation';
-import { useUserStore } from '../store/userStore';
-import { useNavigate } from 'react-router-dom'
-
-
+import CharAnimation from "./CharAnimation";
+import { useUserStore } from "../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const userData = useUserStore((state) => state.user)
+  const userData = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -25,8 +22,8 @@ const NavBar = () => {
   };
 
   const handleLogout = () => {
-    clearUser();        // 유저 정보를 초기화합니다.
-    navigate('/login'); // 로그인 페이지로 리다이렉트합니다.
+    clearUser(); // 유저 정보를 초기화합니다.
+    navigate("/login"); // 로그인 페이지로 리다이렉트합니다.
   };
 
   return (
@@ -35,7 +32,7 @@ const NavBar = () => {
       <CharAnimation />
       <ProfileContainer>
         <UserProfile
-          src="/src/assets/profile/0.png" //{userData.imageUrl}
+          src={userData.imageUrl || undefined}
           alt="profile image"
           title="회원정보 수정"
           onClick={handleOpenModal}
@@ -57,17 +54,15 @@ const Container = styled.nav`
   position: relative;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid;
   margin-bottom: 15px;
-  width : 1100px;
+  width: 1100px;
 `;
 
 const LogoBox = styled.img`
-  width: 190px;
+  width: 186px;
   height: auto;
   position: absolute; // 위치 조정을 위해 추가
-  left: 0;  // 왼쪽으로 정렬
-  bottom: 0;  // 아래로 정렬
+  left: 0; // 왼쪽으로 정렬
 `;
 
 const ProfileContainer = styled.div`
@@ -75,27 +70,27 @@ const ProfileContainer = styled.div`
   align-items: center;
   position: absolute; // 위치 조정을 위해 추가
   right: 0; // 오른쪽으로 정렬
-  top: 50px;
-d`;
+  padding: 0 1rem;
+`;
 
 const UserProfile = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color : yellow;
+  background-color: #f1f1ef;
   cursor: pointer;
   transition: transform 0.2s; // smooth transition
 
   &:hover {
     transform: scale(1.1); // scale up on hover
   }
-
 `;
 
 const UserName = styled.p`
   margin: 0 10px;
+  padding: 5px 0;
   width: 150px;
-  font-weight : 600;
+  font-weight: 600;
   white-space: nowrap; // 줄바꿈을 방지
   overflow: hidden; // 넘치는 텍스트 숨기기
   text-overflow: ellipsis; // '...'으로 텍스트 잘라내기
@@ -115,5 +110,4 @@ const LogoutIcon = styled(LuLogOut)`
   &:hover {
     transform: scale(1.1); // scale up on hover
   }
-
 `;

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
 import { styled } from "styled-components";
 
-const CANVAS_HEIGHT = 160; // 높이 고정
 const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -44,7 +43,6 @@ const CharAnimation = () => {
     }
 
     canvas.width = canvasWidth;
-    canvas.height = CANVAS_HEIGHT; // 높이 고정
 
     const characterPosition = { x: canvas.width / 2, y: canvas.height / 2 }; // 이 위치로 이동
 
@@ -58,6 +56,8 @@ const CharAnimation = () => {
     const spriteMargin = { top: -12, right: -65, bottom: -10, left: -66 };
     const charSpeed = 4;
     const motionSpeed = 7;
+    const LEFT_BOUNDARY = 186;
+    const RIGHT_BOUNDARY = canvas.width;
     let frameCounter = 0;
 
     let currentRow = 0;
@@ -87,7 +87,7 @@ const CharAnimation = () => {
       }
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#F1F1EF";
+      ctx.fillStyle = "#249e8c";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.drawImage(
@@ -131,17 +131,17 @@ const CharAnimation = () => {
           );
           break; // Up
         case 2:
-          characterPosition.x = Math.min(
-            characterPosition.x + (isMoving ? charSpeed : 0),
-            canvas.width - drawWidth / 2 - spriteMargin.right
-          );
-          break; // Right
+          characterPosition.x = characterPosition.x + (isMoving ? charSpeed : 0);
+          if (characterPosition.x > RIGHT_BOUNDARY) {
+            characterPosition.x = LEFT_BOUNDARY;
+          }
+          break;
         case 3:
-          characterPosition.x = Math.max(
-            characterPosition.x - (isMoving ? charSpeed : 0),
-            drawWidth / 2 + spriteMargin.left
-          );
-          break; // Left
+          characterPosition.x = characterPosition.x - (isMoving ? charSpeed : 0);
+          if (characterPosition.x < LEFT_BOUNDARY) {
+            characterPosition.x = RIGHT_BOUNDARY;
+          }
+          break;
       }
     };
 
@@ -250,15 +250,15 @@ const CharAnimation = () => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
-        const relativeX = e.clientX - rect.left - characterPosition.x; 
+        const relativeX = e.clientX - rect.left - characterPosition.x;
         const relativeY = e.clientY - rect.top - characterPosition.y;
-        
+
         let clickedDirection = "";
         if (relativeX >= 0 && relativeY < 0) clickedDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) clickedDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) clickedDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) clickedDirection = "right-down";
-        
+
         if (clickedDirection === movingDirection) {
           setMovingDirection(null);
           setMouseState(false);
@@ -269,28 +269,27 @@ const CharAnimation = () => {
         }
       }
     };
-    
+
     const handleMouseUp = () => {
       setMouseState(false);
     };
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
         const relativeX = e.clientX - rect.left - characterPosition.x;
         const relativeY = e.clientY - rect.top - characterPosition.y;
-    
+
         let movingDirection = "";
         if (relativeX >= 0 && relativeY < 0) movingDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) movingDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) movingDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) movingDirection = "right-down";
-    
+
         setMovingDirection(movingDirection);
       }
     };
-    
 
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseUp);
@@ -319,7 +318,7 @@ const CharAnimation = () => {
 
   return (
     <CanvasContainer>
-      <StyledCanvas ref={canvasRef} width={canvasWidth} height={CANVAS_HEIGHT}></StyledCanvas>
+      <StyledCanvas ref={canvasRef} width={canvasWidth}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
   );
@@ -327,9 +326,7 @@ const CharAnimation = () => {
 
 export default CharAnimation;
 
-const CanvasContainer = styled.div.attrs({ className: "canvas-container" })`
-
-`;
+const CanvasContainer = styled.div.attrs({ className: "canvas-container" })``;
 
 const StyledCanvas = styled.canvas`
   /* width: 100%;

@@ -52,3 +52,21 @@ export const getUserInfo = async () => {
     console.error("Error in getUserInfo:", error);
   }
 };
+
+
+export const editUserInfo = async (
+  imageUrl: string,
+  username: string,
+  currentPassword: string,
+  newPassword: string,
+  newPasswordCheck: string
+) => {
+  const headers: { Authorization?: string } = {};
+  const token = getToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await api.put("/user/myinfo", { imageUrl, username, currentPassword, newPassword, newPasswordCheck }, { headers });
+  return response.data;
+};
