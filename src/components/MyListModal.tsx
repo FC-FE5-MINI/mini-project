@@ -16,6 +16,11 @@ const MyListModal = () => {
   const myAnnual = useAnnualCount();
   const { setOpenMyListModal } = useOpenModal();
 
+  const handleClose = () => {
+    setOpenMyListModal(false);
+    window.location.reload();
+  };
+
   const renderCount = () => {
     let anuualSpend = 0;
     if (leaveList.length) {
@@ -47,7 +52,7 @@ const MyListModal = () => {
   return (
     <Modal>
       <ModalTitle>신청현황</ModalTitle>
-      <CloseButton onClick={() => setOpenMyListModal(false)}>
+      <CloseButton onClick={handleClose}>
         <AiOutlineClose size="1.5rem" />
       </CloseButton>
       <ListsWrapper>

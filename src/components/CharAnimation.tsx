@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
 import { styled } from "styled-components";
 
-const CANVAS_HEIGHT = 130; // 높이 고정
+const CANVAS_HEIGHT = 160; // 높이 고정
 const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [canvasWidth, setCanvasWidth] = useState(700);
+  const [canvasWidth, setCanvasWidth] = useState(1100);
 
   const [mouseState, setMouseState] = useState(false);
   const [direction, setDirection] = useState("");
@@ -250,15 +250,15 @@ const CharAnimation = () => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
-        const relativeX = e.clientX - rect.left - characterPosition.x; // 캐릭터 위치 기준으로 계산
+        const relativeX = e.clientX - rect.left - characterPosition.x; 
         const relativeY = e.clientY - rect.top - characterPosition.y;
-
+        
         let clickedDirection = "";
         if (relativeX >= 0 && relativeY < 0) clickedDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) clickedDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) clickedDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) clickedDirection = "right-down";
-
+        
         if (clickedDirection === movingDirection) {
           setMovingDirection(null);
           setMouseState(false);
@@ -267,34 +267,30 @@ const CharAnimation = () => {
           setMouseState(true);
           setDirection(clickedDirection);
         }
-        // console.log("Mouse down at:", e.clientX, e.clientY);
-        // console.log("Character position:", characterPosition.x, characterPosition.y);
-        // console.log("Relative position:", relativeX, relativeY);
-        // console.log("Clicked direction:", clickedDirection);
       }
     };
-
+    
     const handleMouseUp = () => {
       setMouseState(false);
     };
-
+    
     const handleMouseMove = (e: MouseEvent) => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
         const relativeX = e.clientX - rect.left - characterPosition.x;
         const relativeY = e.clientY - rect.top - characterPosition.y;
-
+    
         let movingDirection = "";
         if (relativeX >= 0 && relativeY < 0) movingDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) movingDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) movingDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) movingDirection = "right-down";
-
+    
         setMovingDirection(movingDirection);
-        // console.log("Mouse moved to:", movingDirection);
       }
     };
+    
 
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseUp);
@@ -323,7 +319,7 @@ const CharAnimation = () => {
 
   return (
     <CanvasContainer>
-      <canvas ref={canvasRef} width={canvasWidth} height={CANVAS_HEIGHT}></canvas>
+      <StyledCanvas ref={canvasRef} width={canvasWidth} height={CANVAS_HEIGHT}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
   );
@@ -332,7 +328,13 @@ const CharAnimation = () => {
 export default CharAnimation;
 
 const CanvasContainer = styled.div.attrs({ className: "canvas-container" })`
-  width: 100%;
-  height: 100%;
-  // 추가 스타일
+
+`;
+
+const StyledCanvas = styled.canvas`
+  /* width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1; // LogoBox 및 Profile 컴포넌트 아래에 위치하도록 함 */
 `;

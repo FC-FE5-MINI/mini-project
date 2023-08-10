@@ -1,14 +1,14 @@
 export interface EventData {
-  username: string;
-  startDate: Date;
-  endDate: Date;
+  username?: string;
+  startDate: string;
+  endDate: string;
   eventType: string;
-  annualCount: number;
+  userId: number;
   orderState: string;
   eventId: number;
 }
 
-export function filterEvents(events: EventData[], selectedTab: string) {
+export function usefilterEvents(events: EventData[], selectedTab: string) {
   return events.filter((data: EventData) => {
     if (selectedTab === "전체") return true;
     if (selectedTab === "연차") return data.eventType === "LEAVE";
