@@ -39,6 +39,7 @@ const CalendarTabMenu = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
+  width: 1100px;
 `;
 const BorderArea = styled.div`
   width: 100%;
@@ -239,7 +240,7 @@ const Calendar = () => {
       message: eventTypeText,
       description: dateRange,
       placement: "bottom",
-      duration: 2000,
+      duration: 1.5,
     });
   };
 

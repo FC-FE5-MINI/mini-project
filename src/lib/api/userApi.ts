@@ -4,7 +4,7 @@ import { useUserStore } from "../../store/userStore";
 const userStore = useUserStore;
 
 const api = axios.create({
-  baseURL: "http://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
+  baseURL: "https://myturn.store",
 });
 
 const getToken = () => {
@@ -13,30 +13,44 @@ const getToken = () => {
 };
 
 export const checkEmail = async (email: string) => {
-  const response = await api.post("/user/email", { email });
-  console.log("EMAIL!!", email);
-  return response.data;
+  try {
+    const response = await api.post("/user/email", { email });
+    return response.data;
+  } catch (error) {
+    console.error("Error in checkEmail:", error);
+  }
 };
 
 export const signUp = async (email: string, password: string, username: string) => {
-  const response = await api.post("/user/join", { email, password, username });
-  return response.data;
+  try {
+    const response = await api.post("/user/join", { email, password, username });
+    return response.data;
+  } catch (error) {
+    console.error("Error in signUp:", error);
+  }
 };
 
 export const login = async (email: string, password: string) => {
-  const response = await api.post("/user/login", { email, password });
-  return response.data;
+  try {
+    const response = await api.post("/user/login", { email, password });
+    return response.data;
+  } catch (error) {
+    console.error("Error in login:", error);
+  }
 };
 
 export const getUserInfo = async () => {
-  const headers: { Authorization?: string } = {};
-  const token = getToken();
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  try {
+    const headers: { Authorization?: string } = {};
+    const token = getToken();
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    const response = await api.get("/user/myinfo/", { headers });
+    return response.data;
+  } catch (error) {
+    console.error("Error in getUserInfo:", error);
   }
-
-  const response = await api.get("/user/myinfo/", { headers });
-  return response.data;
 };
 
 
