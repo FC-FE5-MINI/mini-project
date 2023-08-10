@@ -54,6 +54,7 @@ export default NavBar;
 
 const Container = styled.nav`
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid;
@@ -64,19 +65,24 @@ const Container = styled.nav`
 const LogoBox = styled.img`
   width: 190px;
   height: auto;
-  align-self: flex-end; 
+  position: absolute; // 위치 조정을 위해 추가
+  left: 0;  // 왼쪽으로 정렬
+  bottom: 0;  // 아래로 정렬
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
-`;
+  position: absolute; // 위치 조정을 위해 추가
+  right: 0; // 오른쪽으로 정렬
+  top: 50px;
+d`;
 
 const UserProfile = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color : #F1F1EF;
+  background-color : yellow;
   cursor: pointer;
   transition: transform 0.2s; // smooth transition
 
@@ -88,11 +94,12 @@ const UserProfile = styled.img`
 
 const UserName = styled.p`
   margin: 0 10px;
-  width: 100px;
+  width: 150px;
+  font-weight : 600;
   white-space: nowrap; // 줄바꿈을 방지
   overflow: hidden; // 넘치는 텍스트 숨기기
   text-overflow: ellipsis; // '...'으로 텍스트 잘라내기
-  max-width: 7ch; // 최대 7자까지만 보이게 설정
+  max-width: 10ch; // 최대 7자까지만 보이게 설정
 `;
 
 const LogoutButton = styled.button`
