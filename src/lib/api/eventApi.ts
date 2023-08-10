@@ -22,7 +22,7 @@ interface CustomError extends Error {
 }
 
 const api = axios.create({
-  baseURL: "https://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
+  baseURL: "https://myturn.store",
   headers: {
     "Content-Type": "application/json",
   },
