@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
 import { styled } from "styled-components";
 
-const CANVAS_HEIGHT = 160; // 높이 고정
+const CANVAS_HEIGHT = 110; // 높이 고정
 const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -87,7 +87,7 @@ const CharAnimation = () => {
       }
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#F1F1EF";
+      ctx.fillStyle = "#66d9cd";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.drawImage(

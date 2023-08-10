@@ -4,8 +4,11 @@ import styled from "styled-components";
 import Modal from "./common/Modal";
 import ModalTitle from "./common/ModalTitle";
 import { MdOutlineClose } from "react-icons/md";
-import { BsFillCloudUploadFill } from "react-icons/bs";
+import { BiSolidPlusCircle } from "react-icons/bi";
 import Button from "./common/Button";
+import ImageSelectionModal from "./ImageSelectionModal";
+import { editUserInfo } from "../lib/api/userApi";
+import { useUserStore } from "../store/userStore";
 
 interface User {
   imageUrl: string;
@@ -15,156 +18,176 @@ interface User {
 interface EditUserInfoModalProps {
   user: User;
   onCancel: () => void;
+  closeModal: () => void;
 }
 
 interface FormValues {
-  profileImage: FileList;
+  imageUrl: string;
   username: string;
-  currentPwd: string;
-  newPwd: string;
-  newPwdConfirm: string;
+  currentPassword: string;
+  newPassword: string;
+  newPasswordCheck: string;
 }
 
-const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel }) => {
+const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, closeModal}) => {
   const {
     register,
+    setValue,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onChange" });
-  const newPwd = useRef<string>("");
-  newPwd.current = watch("newPwd");
+  const newPassword = useRef<string>("");
+  newPassword.current = watch("newPassword");
 
   const [imagePreview, setImagePreview] = useState(user.imageUrl); // Image URL을 저장하는 상태
+  const [showImageModal, setShowImageModal] = useState(false);
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
+  const handleImageSelection = (imageSrc: string) => {
+    setImagePreview(imageSrc);
+    setValue("imageUrl", imageSrc); // imageUrl 값을 업데이트
+    setShowImageModal(false);
+  };
 
-      if (file.size > 1048576) {
-        alert("이미지 파일은 1MB 이하만 업로드 가능합니다.");
-        return;
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const response = await editUserInfo(
+        data.imageUrl,
+        data.username,
+        data.currentPassword,
+        data.newPassword,
+        data.newPasswordCheck
+      );
+
+      // 성공적으로 변경되었을 때의 로직
+      if (response.status === 200 && response.msg === "success") {
+        alert("회원정보가 수정되었습니다"); // Alert message
+
+        // 전역 상태 업데이트
+        useUserStore.getState().setUser({
+          username: response.data.username,
+          email: response.data.email,
+          imageUrl: response.data.imageUrl,
+          // accessToken은 API 응답에 포함되어 있지 않으므로 현재 값을 유지하거나 적절한 값으로 업데이트 필요
+          accessToken: useUserStore.getState().user.accessToken,
+        });
+
+        onCancel(); // 모달 닫기
       }
-
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        if (e.target) {
-          setImagePreview(e.target.result as string); // 이미지 URL을 상태에 저장
-        }
-      };
-
-      reader.readAsDataURL(event.target.files[0]); // 파일을 읽어 데이터 URL로 변환
+    } catch (error) {
+      // 에러 발생 시 처리할 로직
+      console.error("Error editing user info:", error);
     }
   };
 
-  const onSubmit = (data: FormValues) => {
-    // API 호출하고 서버에 변경 정보 전달하는 로직이 들어갈 자리입니다.
-    console.log(data);
-  };
-
-  const closeModal = () => {
-    onCancel(); // onCancel 함수를 호출하여 모달을 닫도록 설정
-  };
-
   return (
-    <Modal>
-      <ModalTitleArea>
-        <ModalTitle>회원정보 수정</ModalTitle>
-        <CloseButton onClick={closeModal}>
-          <CloseIcon />
-        </CloseButton>
-      </ModalTitleArea>
-      <UserInfoWrapper>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <ProfileImageBox>
-            <ProfileImage src={imagePreview} alt="Profile" />
-            <UploadLabel htmlFor="upload-button">
-              <UploadIcon />
-            </UploadLabel>
-            <Input
-              id="upload-button"
-              type="file"
-              accept="image/*"
-              {...register("profileImage")}
-              style={{ display: "none" }}
-              onChange={onFileChange}
-            />
-          </ProfileImageBox>
-          <InputWrapper>
-            <Label>이름</Label>
-            <Input {...register("username", { required: true })} defaultValue={user.username} />
-            <EmptySpace />
-          </InputWrapper>
-          <ErrorMessage>{errors.username && "이름은 필수 입력 항목입니다."}</ErrorMessage>
-          <InputWrapper>
-            <Label>현재 비밀번호</Label>
-            <Input
-              type="password"
-              {...register("currentPwd", {
-                required: true,
-                minLength: 8,
-                maxLength: 15,
-                pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
-              })}
-              placeholder="현재 비밀번호"
-            />
-            <EmptySpace />
-          </InputWrapper>
-          <ErrorMessage>
-            {errors.currentPwd && errors.currentPwd.type === "required" && "현재 비밀번호는 필수 입력 항목입니다."}
-            {errors.currentPwd && errors.currentPwd.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
-            {errors.currentPwd && errors.currentPwd.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
-            {errors.currentPwd &&
-              errors.currentPwd.type === "pattern" &&
-              "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
-          </ErrorMessage>
-          <InputWrapper>
-            <Label>새 비밀번호</Label>
-            <Input
-              type="password"
-              {...register("newPwd", {
-                required: true,
-                minLength: 8,
-                maxLength: 15,
-                pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
-              })}
-              placeholder="새 비밀번호"
-            />
-            <EmptySpace />
-          </InputWrapper>
-          <ErrorMessage>
-            {errors.newPwd && errors.newPwd.type === "required" && "새 비밀번호는 필수 입력 항목입니다."}
-            {errors.newPwd && errors.newPwd.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
-            {errors.newPwd && errors.newPwd.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
-            {errors.newPwd && errors.newPwd.type === "pattern" && "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
-          </ErrorMessage>
-          <InputWrapper>
-            <Label>새 비밀번호 확인</Label>
-            <Input
-              type="password"
-              {...register("newPwdConfirm", { required: true, validate: (value) => value === newPwd.current })}
-              placeholder="새 비밀번호 확인"
-            />
-            <EmptySpace />
-          </InputWrapper>
-          <ErrorMessage>
-            {errors.newPwdConfirm &&
-              errors.newPwdConfirm.type === "required" &&
-              "새 비밀번호 확인은 필수 입력 항목입니다."}
-            {errors.newPwdConfirm && errors.newPwdConfirm.type === "validate" && "비밀번호가 일치하지 않습니다."}
-          </ErrorMessage>
-          <ButtonWrapper>
-            <Button $greenLight type="button" onClick={onCancel}>
-              취소
-            </Button>
-            <Button $greenDark type="submit">
-              확인
-            </Button>
-          </ButtonWrapper>
-        </Form>
-      </UserInfoWrapper>
-    </Modal>
+    <>
+      <Modal>
+        <ModalTitleArea>
+          <ModalTitle>회원정보 수정</ModalTitle>
+          <CloseButton onClick={closeModal}>
+            <CloseIcon />
+          </CloseButton>
+        </ModalTitleArea>
+        <UserInfoWrapper>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <ProfileImageBox>
+              <ProfileImage src={imagePreview} alt="Profile" />
+              <UploadLabel onClick={() => setShowImageModal(true)}>
+                <UploadIcon />
+              </UploadLabel>
+            </ProfileImageBox>
+            <InputWrapper>
+              <Label>이름</Label>
+              <Input {...register("username", { required: true })} defaultValue={user.username} />
+              <EmptySpace />
+            </InputWrapper>
+            <ErrorMessage>{errors.username && "이름은 필수 입력 항목입니다."}</ErrorMessage>
+            <InputWrapper>
+              <Label>현재 비밀번호</Label>
+              <Input
+                type="password"
+                {...register("currentPassword", {
+                  required: true,
+                  minLength: 8,
+                  maxLength: 15,
+                  pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
+                })}
+                placeholder="현재 비밀번호"
+              />
+              <EmptySpace />
+            </InputWrapper>
+            <ErrorMessage>
+              {errors.currentPassword &&
+                errors.currentPassword.type === "required" &&
+                "현재 비밀번호는 필수 입력 항목입니다."}
+              {errors.currentPassword &&
+                errors.currentPassword.type === "minLength" &&
+                "비밀번호는 최소 8자 이상입니다."}
+              {errors.currentPassword &&
+                errors.currentPassword.type === "maxLength" &&
+                "비밀번호는 최대 15자 이하입니다."}
+              {errors.currentPassword &&
+                errors.currentPassword.type === "pattern" &&
+                "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
+            </ErrorMessage>
+            <InputWrapper>
+              <Label>새 비밀번호</Label>
+              <Input
+                type="password"
+                {...register("newPassword", {
+                  required: true,
+                  minLength: 8,
+                  maxLength: 15,
+                  pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
+                })}
+                placeholder="새 비밀번호"
+              />
+              <EmptySpace />
+            </InputWrapper>
+            <ErrorMessage>
+              {errors.newPassword && errors.newPassword.type === "required" && "새 비밀번호는 필수 입력 항목입니다."}
+              {errors.newPassword && errors.newPassword.type === "minLength" && "비밀번호는 최소 8자 이상입니다."}
+              {errors.newPassword && errors.newPassword.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
+              {errors.newPassword &&
+                errors.newPassword.type === "pattern" &&
+                "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
+            </ErrorMessage>
+            <InputWrapper>
+              <Label>새 비밀번호 확인</Label>
+              <Input
+                type="password"
+                {...register("newPasswordCheck", {
+                  required: true,
+                  validate: (value) => value === newPassword.current,
+                })}
+                placeholder="새 비밀번호 확인"
+              />
+              <EmptySpace />
+            </InputWrapper>
+            <ErrorMessage>
+              {errors.newPasswordCheck &&
+                errors.newPasswordCheck.type === "required" &&
+                "새 비밀번호 확인은 필수 입력 항목입니다."}
+              {errors.newPasswordCheck &&
+                errors.newPasswordCheck.type === "validate" &&
+                "비밀번호가 일치하지 않습니다."}
+            </ErrorMessage>
+            <ButtonWrapper>
+              <Button $greenLight type="button" onClick={onCancel}>
+                취소
+              </Button>
+              <Button $greenDark type="submit">
+                확인
+              </Button>
+            </ButtonWrapper>
+          </Form>
+        </UserInfoWrapper>
+      </Modal>
+      {showImageModal && (
+        <ImageSelectionModal onSelect={handleImageSelection} onClose={() => setShowImageModal(false)} />
+      )}
+    </>
   );
 };
 
@@ -189,9 +212,9 @@ const CloseIcon = styled(MdOutlineClose)`
   font-size: 24px;
 `;
 
-const UploadIcon = styled(BsFillCloudUploadFill)`
+const UploadIcon = styled(BiSolidPlusCircle)`
   color: #333;
-  font-size: 45px;
+  font-size: 28px;
   transition: all 0.2s ease-in-out;
 
   &:hover {
@@ -219,10 +242,12 @@ const Form = styled.form`
 
 const ProfileImageBox = styled.div`
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 64px;
+  height: 64px;
   margin-bottom: 30px;
+  border-radius: 50%;
   align-self: center;
+  background-color: #f1f1ef;
 `;
 
 const ProfileImage = styled.img`
@@ -236,7 +261,7 @@ const ProfileImage = styled.img`
 const UploadLabel = styled.label`
   position: absolute;
   top: 90%;
-  left: 50%;
+  left: calc(50% + 20px);
   transform: translate(-50%, -50%);
   background: transparent;
   border: none;

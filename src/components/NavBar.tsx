@@ -35,7 +35,7 @@ const NavBar = () => {
       <CharAnimation />
       <ProfileContainer>
         <UserProfile
-          src="/src/assets/profile/0.png" //{userData.imageUrl}
+          src={userData.imageUrl || undefined}
           alt="profile image"
           title="회원정보 수정"
           onClick={handleOpenModal}
@@ -57,7 +57,7 @@ const Container = styled.nav`
   position: relative;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid;
+  /* border-bottom: 1px solid; */
   margin-bottom: 15px;
   width : 1100px;
 `;
@@ -67,7 +67,7 @@ const LogoBox = styled.img`
   height: auto;
   position: absolute; // 위치 조정을 위해 추가
   left: 0;  // 왼쪽으로 정렬
-  bottom: 0;  // 아래로 정렬
+  
 `;
 
 const ProfileContainer = styled.div`
@@ -75,14 +75,14 @@ const ProfileContainer = styled.div`
   align-items: center;
   position: absolute; // 위치 조정을 위해 추가
   right: 0; // 오른쪽으로 정렬
-  top: 50px;
-d`;
+  
+`;
 
 const UserProfile = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color : yellow;
+  background-color :  #F1F1EF;
   cursor: pointer;
   transition: transform 0.2s; // smooth transition
 
@@ -94,6 +94,7 @@ const UserProfile = styled.img`
 
 const UserName = styled.p`
   margin: 0 10px;
+  padding : 5px 0;
   width: 150px;
   font-weight : 600;
   white-space: nowrap; // 줄바꿈을 방지

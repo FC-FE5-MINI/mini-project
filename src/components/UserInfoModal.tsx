@@ -27,12 +27,17 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+    try {
       const data = await getUserInfo();
       if (data.status === 200) {
         setUserInfo(data.data);
+      } else {
+        console.error("Error fetching user info:", data.msg);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  }
     fetchData();
   }, []);
 
@@ -41,7 +46,7 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   };
 
   if (editModal && userInfo) {
-    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)} />;
+    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)} closeModal={closeModal} />;
   }
 
   return (
@@ -120,10 +125,11 @@ const UserInfoArea = styled.div`
   flex-direction: column;
   align-items: center;
   img {
-    width: 150px;
-    height: 150px;
-    border-radius: 75px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
     margin-bottom: 15px;
+    background-color: #f1f1ef;
   }
 `;
 
