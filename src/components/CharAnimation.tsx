@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
 import { styled } from "styled-components";
 
-const CANVAS_HEIGHT = 130; // 높이 고정
+const CANVAS_HEIGHT = 160; // 높이 고정
 const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [canvasWidth, setCanvasWidth] = useState(700);
+  const [canvasWidth, setCanvasWidth] = useState(1100);
 
   const [mouseState, setMouseState] = useState(false);
   const [direction, setDirection] = useState("");
@@ -323,7 +323,7 @@ const CharAnimation = () => {
 
   return (
     <CanvasContainer>
-      <canvas ref={canvasRef} width={canvasWidth} height={CANVAS_HEIGHT}></canvas>
+      <StyledCanvas ref={canvasRef} width={canvasWidth} height={CANVAS_HEIGHT}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
   );
@@ -332,7 +332,13 @@ const CharAnimation = () => {
 export default CharAnimation;
 
 const CanvasContainer = styled.div.attrs({ className: "canvas-container" })`
-  width: 800px;
-  height: 100%;
-  // 추가 스타일
+
+`;
+
+const StyledCanvas = styled.canvas`
+  /* width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1; // LogoBox 및 Profile 컴포넌트 아래에 위치하도록 함 */
 `;
