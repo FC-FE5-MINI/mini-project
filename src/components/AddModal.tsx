@@ -57,6 +57,7 @@ const AddModal = () => {
       res.status === 200 && showNotification(startDate, endDate);
       setOpenAddModal(false);
       refetch();
+      window.location.reload();
     } catch (error) {
       console.error(error);
       throw error;
