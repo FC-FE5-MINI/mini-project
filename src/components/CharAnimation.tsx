@@ -332,7 +332,7 @@ const CharAnimation = () => {
 export default CharAnimation;
 
 const CanvasContainer = styled.div.attrs({ className: "canvas-container" })`
-  width: 100%;
+  width: 800px;
   height: 100%;
   // 추가 스타일
 `;
