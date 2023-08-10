@@ -58,6 +58,8 @@ const CharAnimation = () => {
     const spriteMargin = { top: -12, right: -65, bottom: -10, left: -66 };
     const charSpeed = 4;
     const motionSpeed = 7;
+    const LEFT_BOUNDARY = 186;
+    const RIGHT_BOUNDARY = canvas.width;
     let frameCounter = 0;
 
     let currentRow = 0;
@@ -130,18 +132,18 @@ const CharAnimation = () => {
             drawHeight / 2 + spriteMargin.top
           );
           break; // Up
-        case 2:
-          characterPosition.x += isMoving ? charSpeed : 0;
-          if (characterPosition.x > canvas.width + drawWidth / 2) {
-            characterPosition.x = -drawWidth / 2;
-          }
-          break; // Right
-        case 3:
-          characterPosition.x -= isMoving ? charSpeed : 0;
-          if (characterPosition.x < -drawWidth / 2) {
-            characterPosition.x = canvas.width + drawWidth / 2;
-          }
-          break; // Left
+          case 2:
+            characterPosition.x = characterPosition.x + (isMoving ? charSpeed : 0);
+            if (characterPosition.x > RIGHT_BOUNDARY) {
+              characterPosition.x = LEFT_BOUNDARY;
+            }
+            break;
+          case 3:
+            characterPosition.x = characterPosition.x - (isMoving ? charSpeed : 0);
+            if (characterPosition.x < LEFT_BOUNDARY) {
+              characterPosition.x = RIGHT_BOUNDARY;
+            }
+            break;
       }
     };
 
