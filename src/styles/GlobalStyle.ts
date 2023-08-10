@@ -74,7 +74,7 @@ const GlobalStyle = createGlobalStyle`
   font-size: inherit;
   line-height: inherit;
   border: none;
-  min-width: 1100px;
+  width: 1100px;
 }
 
 .fc th,

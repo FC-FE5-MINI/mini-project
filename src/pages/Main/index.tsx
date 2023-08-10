@@ -6,11 +6,11 @@ import { useUserStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 
 const MainContainer = styled.div`
-  margin: 0ws;
-  max-width: 100%;  // 최대 넓이를 1100px로 설정
+  margin-bottom: 2rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; // 내부 컴포넌트들을 가운데 정렬
+  align-items: center;
 `;
 
 const Main = () => {
