@@ -4,7 +4,7 @@ import { useUserStore } from "../../store/userStore";
 const userStore = useUserStore;
 
 const api = axios.create({
-  baseURL: "http://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
+  baseURL: "https://Myturn-env.eba-kab3caa3.ap-northeast-2.elasticbeanstalk.com",
 });
 
 const getToken = () => {
