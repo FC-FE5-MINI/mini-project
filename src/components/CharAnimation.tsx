@@ -250,15 +250,15 @@ const CharAnimation = () => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
-        const relativeX = e.clientX - rect.left - characterPosition.x; // 캐릭터 위치 기준으로 계산
+        const relativeX = e.clientX - rect.left - characterPosition.x; 
         const relativeY = e.clientY - rect.top - characterPosition.y;
-
+        
         let clickedDirection = "";
         if (relativeX >= 0 && relativeY < 0) clickedDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) clickedDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) clickedDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) clickedDirection = "right-down";
-
+        
         if (clickedDirection === movingDirection) {
           setMovingDirection(null);
           setMouseState(false);
@@ -267,34 +267,30 @@ const CharAnimation = () => {
           setMouseState(true);
           setDirection(clickedDirection);
         }
-        // console.log("Mouse down at:", e.clientX, e.clientY);
-        // console.log("Character position:", characterPosition.x, characterPosition.y);
-        // console.log("Relative position:", relativeX, relativeY);
-        // console.log("Clicked direction:", clickedDirection);
       }
     };
-
+    
     const handleMouseUp = () => {
       setMouseState(false);
     };
-
+    
     const handleMouseMove = (e: MouseEvent) => {
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
         const relativeX = e.clientX - rect.left - characterPosition.x;
         const relativeY = e.clientY - rect.top - characterPosition.y;
-
+    
         let movingDirection = "";
         if (relativeX >= 0 && relativeY < 0) movingDirection = "right-up";
         else if (relativeX < 0 && relativeY < 0) movingDirection = "left-up";
         else if (relativeX < 0 && relativeY >= 0) movingDirection = "left-down";
         else if (relativeX >= 0 && relativeY >= 0) movingDirection = "right-down";
-
+    
         setMovingDirection(movingDirection);
-        // console.log("Mouse moved to:", movingDirection);
       }
     };
+    
 
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseUp);
