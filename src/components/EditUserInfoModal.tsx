@@ -9,7 +9,7 @@ import Button from "./common/Button";
 import ImageSelectionModal from "./ImageSelectionModal";
 import { editUserInfo } from "../lib/api/userApi";
 import { useUserStore } from "../store/userStore";
-import { REG_EXP_PW_PATTERN} from "../lib/util/constants";
+import { REG_EXP_PW_PATTERN } from "../lib/util/constants";
 
 interface User {
   imageUrl: string;
@@ -30,7 +30,7 @@ interface FormValues {
   newPasswordCheck: string;
 }
 
-const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, closeModal}) => {
+const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, closeModal }) => {
   const {
     register,
     setValue,
