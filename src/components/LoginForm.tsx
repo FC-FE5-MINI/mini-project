@@ -19,16 +19,16 @@ import image10 from "../../src/assets/10.png";
 
 const imageMapping: { [key: string]: string } = {
   "/src/assets/profile/0.png": image0,
-  "/src/assets/profile/1.png": image1,
-  "/src/assets/profile/2.png": image2,
-  "/src/assets/profile/3.png": image3,
-  "/src/assets/profile/4.png": image4,
-  "/src/assets/profile/5.png": image5,
-  "/src/assets/profile/6.png": image6,
-  "/src/assets/profile/7.png": image7,
-  "/src/assets/profile/8.png": image8,
-  "/src/assets/profile/9.png": image9,
-  "/src/assets/profile/10.png": image10,
+  "/src/assets/1.png": image1,
+  "/src/assets/2.png": image2,
+  "/src/assets/3.png": image3,
+  "/src/assets/4.png": image4,
+  "/src/assets/5.png": image5,
+  "/src/assets/6.png": image6,
+  "/src/assets/7.png": image7,
+  "/src/assets/8.png": image8,
+  "/src/assets/9.png": image9,
+  "/src/assets/10.png": image10,
 };
 
 interface FormData {
