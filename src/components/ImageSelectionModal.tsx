@@ -15,7 +15,19 @@ import image8 from "../../src/assets/8.png";
 import image9 from "../../src/assets/9.png";
 import image10 from "../../src/assets/10.png";
 
-const images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10];
+const imageObjects = [
+  { src: image1, path: "../../src/assets/1.png" },
+  { src: image2, path: "../../src/assets/2.png" },
+  { src: image3, path: "../../src/assets/3.png" },
+  { src: image4, path: "../../src/assets/4.png" },
+  { src: image5, path: "../../src/assets/5.png" },
+  { src: image6, path: "../../src/assets/6.png" },
+  { src: image7, path: "../../src/assets/7.png" },
+  { src: image8, path: "../../src/assets/8.png" },
+  { src: image9, path: "../../src/assets/9.png" },
+  { src: image10, path: "../../src/assets/10.png" }
+];
+
 
 interface ImageSelectionModalProps {
   onSelect: (imageSrc: string) => void;
@@ -24,7 +36,7 @@ interface ImageSelectionModalProps {
 
 const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onClose }) => {
   const handleImageClick = (index: number) => {
-    onSelect(images[index]);
+    onSelect(imageObjects[index].path);
   };
 
   return (
@@ -36,10 +48,10 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onC
         </CloseButton>
       </ModalTitleArea>
       <ImageGrid>
-        {images.map((imageSrc, index) => (
+        {imageObjects.map((imageObj, index) => (
           <ImageThumbnail
             key={index}
-            src={imageSrc}
+            src={imageObj.src}
             alt={`Profile ${index + 1}`}
             onClick={() => handleImageClick(index)}
           />
