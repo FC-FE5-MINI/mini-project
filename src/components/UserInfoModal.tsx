@@ -8,6 +8,7 @@ import { RiUser5Line } from "react-icons/ri";
 import { getUserInfo } from "../lib/api/userApi";
 import Button from "./common/Button";
 import EditUserInfoModal from "./EditUserInfoModal"; // 이 부분 추가
+import { useUserStore } from '../store/userStore';
 
 interface UserInfoModalProps {
   closeModal: () => void;
@@ -25,12 +26,14 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
   const [editModal, setEditModal] = useState(false); // 수정모달 창 상태 관리를 위한 상태
 
+  const globalImageUrl = useUserStore((state) => state.user.imageUrl);
+
   useEffect(() => {
     const fetchData = async () => {
     try {
       const data = await getUserInfo();
       if (data.status === 200) {
-        data.data.imageUrl === "/src/assets/profile/0.png" ? data.data.imageUrl = "/src/assets/0.png" : null;
+        data.data.imageUrl = globalImageUrl;
         setUserInfo(data.data);
       } else {
         console.error("Error fetching user info:", data.msg);
