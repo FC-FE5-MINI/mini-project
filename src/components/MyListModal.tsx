@@ -3,7 +3,7 @@ import Modal from "./common/Modal";
 import ModalTitle from "./common/ModalTitle";
 import List from "./common/List";
 import useMyList, { MyListData } from "../hooks/useMyList";
-import { EVENT_TYPE, ORDER_STATE } from "../lib/util/constants";
+import { EVENT_TYPE, MODAL_MESSAGE, ORDER_STATE } from "../lib/util/constants";
 import { calcPeriods } from "../lib/util/functions";
 import { theme } from "../styles/theme";
 import useOpenModal from "../store/closeState";
@@ -24,10 +24,10 @@ const MyListModal = () => {
   const renderCount = () => {
     let anuualSpend = 0;
     if (leaveList.length) {
-      anuualSpend = leaveList
+      const spendList = leaveList
         .filter((item) => item.orderState === ORDER_STATE.WT)
-        .map((item) => calcPeriods(item.startDate, item.endDate))
-        .reduce((a, b) => (a as number) + (b as number));
+        .map((item) => calcPeriods(item.startDate, item.endDate));
+      anuualSpend = spendList.length ? spendList.reduce((a, b) => (a as number) + (b as number)) : 0;
     }
     if (myAnnual) return <Leaves>{(myAnnual as number) - anuualSpend}</Leaves>;
   };
@@ -46,6 +46,8 @@ const MyListModal = () => {
           )}
         </List>
       ));
+    } else {
+      return <ErrorMessage>{MODAL_MESSAGE.NO_LIST}</ErrorMessage>;
     }
   };
 
@@ -124,6 +126,12 @@ const ListArea = styled.ul`
 const ListTitle = styled.span`
   font-size: 18px;
   font-weight: 700;
+`;
+
+const ErrorMessage = styled.span`
+  font-size: 18px;
+  font-weight: 500;
+  color: ${theme.colors.orange.main};
 `;
 
 export default MyListModal;

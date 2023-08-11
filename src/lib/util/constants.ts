@@ -19,6 +19,7 @@ const MODAL_MESSAGE = {
   PLEASE_ENDDATE: "연차 종료 날짜를 설정해 주세요.",
   CANCELED: "신청이 취소되었습니다.",
   ADD_SUCCESS: "신청이 완료되었습니다.",
+  NO_LIST: "신청 내역이 없습니다.",
 };
 
 const SIGNUP_MESSAGE = {
