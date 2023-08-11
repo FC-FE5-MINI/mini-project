@@ -2,7 +2,6 @@ import Modal from "./common/Modal";
 import ModalTitle from "./common/ModalTitle";
 import styled from "styled-components";
 import { MdOutlineClose } from "react-icons/md";
-import { useUserStore } from "../store/userStore";
 
 // 이미지를 import로 참조
 import image1 from "../../src/assets/1.png";
