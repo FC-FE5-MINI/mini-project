@@ -10,7 +10,7 @@ const calcPeriods = (start: Date, end: Date) => {
 };
 
 const renderNameError = (errors: FieldErrors) => {
-  return errors.name && errors.name.type === "required" && SIGNUP_MESSAGE.REQUIRED;
+  return errors.name && errors.name.type === "required" && SIGNUP_MESSAGE.REQUIRED_ONLY;
 };
 
 const renderEmailError = (errors: FieldErrors) => {
