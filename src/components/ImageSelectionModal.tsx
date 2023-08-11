@@ -2,6 +2,7 @@ import Modal from "./common/Modal";
 import ModalTitle from "./common/ModalTitle";
 import styled from "styled-components";
 import { MdOutlineClose } from "react-icons/md";
+import { useUserStore } from "../store/userStore";
 
 // 이미지를 import로 참조
 import image1 from "../../src/assets/1.png";
@@ -16,18 +17,17 @@ import image9 from "../../src/assets/9.png";
 import image10 from "../../src/assets/10.png";
 
 const imageObjects = [
-  { src: image1, path: "../../src/assets/1.png" },
-  { src: image2, path: "../../src/assets/2.png" },
-  { src: image3, path: "../../src/assets/3.png" },
-  { src: image4, path: "../../src/assets/4.png" },
-  { src: image5, path: "../../src/assets/5.png" },
-  { src: image6, path: "../../src/assets/6.png" },
-  { src: image7, path: "../../src/assets/7.png" },
-  { src: image8, path: "../../src/assets/8.png" },
-  { src: image9, path: "../../src/assets/9.png" },
-  { src: image10, path: "../../src/assets/10.png" }
+  { src: image1, path: "/src/assets/1.png" },
+  { src: image2, path: "/src/assets/2.png" },
+  { src: image3, path: "/src/assets/3.png" },
+  { src: image4, path: "/src/assets/4.png" },
+  { src: image5, path: "/src/assets/5.png" },
+  { src: image6, path: "/src/assets/6.png" },
+  { src: image7, path: "/src/assets/7.png" },
+  { src: image8, path: "/src/assets/8.png" },
+  { src: image9, path: "/src/assets/9.png" },
+  { src: image10, path: "/src/assets/10.png" },
 ];
-
 
 interface ImageSelectionModalProps {
   onSelect: (imageSrc: string) => void;
@@ -36,7 +36,14 @@ interface ImageSelectionModalProps {
 
 const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onClose }) => {
   const handleImageClick = (index: number) => {
-    onSelect(imageObjects[index].path);
+    const selectedImagePath = imageObjects[index].path;
+    onSelect(selectedImagePath);
+
+    const currentUser = useUserStore.getState().user;
+    useUserStore.getState().setUser({
+      ...currentUser,
+      imageUrl: selectedImagePath,
+    });
   };
 
   return (
