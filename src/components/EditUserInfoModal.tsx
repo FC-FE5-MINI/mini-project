@@ -73,7 +73,8 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
           accessToken: useUserStore.getState().user.accessToken,
         });
 
-        onCancel(); // 모달 닫기
+        onCancel(); // 회원정보 수정 모달 닫기
+        closeModal(); // 회원정보 조회 모달 닫기
       }
     } catch (error) {
       // 에러 발생 시 처리할 로직

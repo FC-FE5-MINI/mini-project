@@ -43,12 +43,12 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   }, []);
 
   const onClick = () => {
-    setEditModal(true); // 수정하기 버튼 클릭시 수정모달 창 상태를 true로 변경
+    setEditModal(true);  // 수정모달 창 상태를 true로 변경하여 회원정보 수정 모달 창을 띄움
   };
 
   if (editModal && userInfo) {
-    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)} closeModal={closeModal} />;
-  }
+    return <EditUserInfoModal user={userInfo} onCancel={() => { setEditModal(false); closeModal(); }} closeModal={closeModal} />;
+}
 
   return (
     <Modal $mediumModal>
