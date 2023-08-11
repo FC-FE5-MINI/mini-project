@@ -5,6 +5,32 @@ import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { renderEmailError, renderPasswordError } from "../lib/util/functions";
 import { LOGIN_MESSAGE, REG_EXP_EMAIL_PATTERN, REG_EXP_PW_PATTERN } from "../lib/util/constants";
+import image0 from "../../src/assets/0.png";
+import image1 from "../../src/assets/1.png";
+import image2 from "../../src/assets/2.png";
+import image3 from "../../src/assets/3.png";
+import image4 from "../../src/assets/4.png";
+import image5 from "../../src/assets/5.png";
+import image6 from "../../src/assets/6.png";
+import image7 from "../../src/assets/7.png";
+import image8 from "../../src/assets/8.png";
+import image9 from "../../src/assets/9.png";
+import image10 from "../../src/assets/10.png";
+
+const imageMapping: { [key: string]: string } = {
+  "/src/assets/profile/0.png": image0,
+  "/src/assets/profile/1.png": image1,
+  "/src/assets/profile/2.png": image2,
+  "/src/assets/profile/3.png": image3,
+  "/src/assets/profile/4.png": image4,
+  "/src/assets/profile/5.png": image5,
+  "/src/assets/profile/6.png": image6,
+  "/src/assets/profile/7.png": image7,
+  "/src/assets/profile/8.png": image8,
+  "/src/assets/profile/9.png": image9,
+  "/src/assets/profile/10.png": image10
+};
+
 
 interface FormData {
   email: string;
@@ -28,7 +54,13 @@ const LoginForm: React.FC = () => {
 
       if (loginResponse.status === 200) {
         alert(LOGIN_MESSAGE.LOG_IN_SUCCESS);
-        loginResponse.data.imageUrl === "/src/assets/profile/0.png" ? loginResponse.data.imageUrl = "/src/assets/0.png" : null;
+        
+         // 맵핑된 이미지 객체에서 해당 이미지를 가져옵니다.
+         const mappedImage = imageMapping[loginResponse.data.imageUrl];
+         if (mappedImage) {
+             loginResponse.data.imageUrl = mappedImage;
+         }
+
         setUser({
           username: loginResponse.data.username,
           email: data.email,
