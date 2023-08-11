@@ -39,6 +39,23 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const getUserAuth = async () => {
+  try {
+    const headers: { Authorization?: string } = {};
+    const token = getToken();
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    const response = await api.get("/user/auth/", { headers });
+    return response.data;
+  } catch (error) {
+    console.error("Error in getUserInfo:", error);
+    return { data: { status: 'fail', errCode: { message: 'Error fetching user auth' } } }; 
+  }
+};
+
+
+
 export const getUserInfo = async () => {
   try {
     const headers: { Authorization?: string } = {};

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import { useUserStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
+import { getUserAuth } from "../../lib/api/userApi";
 
 const MainContainer = styled.div`
   margin: 0 0 1rem 0;
@@ -18,10 +19,31 @@ const Main = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Access token이 없는 경우 로그인 페이지로 리다이렉트
+    // accessToken이 없으면 바로 return
     if (!user.accessToken) {
       navigate("/login");
+      return; // 중요: 여기서 return 하여 fetchData 실행을 멈춥니다.
     }
+
+    const fetchData = async () => {
+      try {
+        const response = await getUserAuth();
+        if (response && response.data) {
+          if (response.data.status === "fail") {
+            alert("유효하지 않은 인증으로, login 페이지로 이동합니다.");
+            navigate("/login");
+            console.error("Error fetching user auth:", response.data.errCode.message);
+          }
+        } else {
+          // 응답에 데이터가 없을 때의 처리
+          console.error("No data in response");
+        }
+      } catch (error) {
+        console.error("Error fetching user auth:", error);
+      }
+    };
+
+    fetchData();
     // 페이지 로드시에 한 번만 확인하면 되므로, 의존성 배열에 빈 배열을 전달
   }, [navigate, user.accessToken]);
 
