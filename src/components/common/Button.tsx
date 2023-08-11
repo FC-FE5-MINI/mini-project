@@ -16,8 +16,9 @@ const StyledButton = styled.button<{
   font-size: 1.1rem;
   padding: 5px 10px;
   border-radius: 5px;
-  border: 1px solid ${theme.colors.black};
   transition: all 0.2s ease-in-out;
+  border: 1px solid ${theme.colors.black};
+  font-family: "Pretendard-Regular", sans-serif;
 
   // 흰배경에 녹색 버튼
   ${({ $greenLight }) =>
