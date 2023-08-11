@@ -11,6 +11,31 @@ import { editUserInfo } from "../lib/api/userApi";
 import { useUserStore } from "../store/userStore";
 import { REG_EXP_PW_PATTERN } from "../lib/util/constants";
 
+// 이미지를 import로 참조
+import image1 from "../../src/assets/1.png";
+import image2 from "../../src/assets/2.png";
+import image3 from "../../src/assets/3.png";
+import image4 from "../../src/assets/4.png";
+import image5 from "../../src/assets/5.png";
+import image6 from "../../src/assets/6.png";
+import image7 from "../../src/assets/7.png";
+import image8 from "../../src/assets/8.png";
+import image9 from "../../src/assets/9.png";
+import image10 from "../../src/assets/10.png";
+
+const imageObjects = [
+  { src: image1, path: "/src/assets/profile/1.png" },
+  { src: image2, path: "/src/assets/profile/2.png" },
+  { src: image3, path: "/src/assets/profile/3.png" },
+  { src: image4, path: "/src/assets/profile/4.png" },
+  { src: image5, path: "/src/assets/profile/5.png" },
+  { src: image6, path: "/src/assets/profile/6.png" },
+  { src: image7, path: "/src/assets/profile/7.png" },
+  { src: image8, path: "/src/assets/profile/8.png" },
+  { src: image9, path: "/src/assets/profile/9.png" },
+  { src: image10, path: "/src/assets/profile/10.png" },
+];
+
 interface User {
   imageUrl: string;
   username: string;
@@ -45,8 +70,11 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
   const [showImageModal, setShowImageModal] = useState(false);
 
   const handleImageSelection = (imageSrc: string) => {
-    setImagePreview(imageSrc);
-    setValue("imageUrl", imageSrc); // imageUrl 값을 업데이트
+    const selectedImage = imageObjects.find((obj) => obj.path === imageSrc);
+    if (selectedImage) {
+      setImagePreview(selectedImage.src);
+    }
+    setValue("imageUrl", imageSrc);
     setShowImageModal(false);
   };
 
