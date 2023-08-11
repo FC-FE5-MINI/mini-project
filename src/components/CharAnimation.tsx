@@ -54,8 +54,8 @@ const CharAnimation = () => {
     // const spriteRows = 8;
     const spriteColumns = 4;
     const spriteMargin = { top: -12, right: -65, bottom: -10, left: -66 };
-    const charSpeed = 4;
-    const motionSpeed = 7;
+    const charSpeed = 10;
+    const motionSpeed = 3;
     const LEFT_BOUNDARY = 186;
     const RIGHT_BOUNDARY = canvas.width;
     let frameCounter = 0;
