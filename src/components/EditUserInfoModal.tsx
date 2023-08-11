@@ -9,6 +9,7 @@ import Button from "./common/Button";
 import ImageSelectionModal from "./ImageSelectionModal";
 import { editUserInfo } from "../lib/api/userApi";
 import { useUserStore } from "../store/userStore";
+import { REG_EXP_PW_PATTERN} from "../lib/util/constants";
 
 interface User {
   imageUrl: string;
@@ -72,7 +73,8 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
           accessToken: useUserStore.getState().user.accessToken,
         });
 
-        onCancel(); // 모달 닫기
+        onCancel(); // 회원정보 수정 모달 닫기
+        closeModal(); // 회원정보 조회 모달 닫기
       }
     } catch (error) {
       // 에러 발생 시 처리할 로직
@@ -82,7 +84,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
 
   return (
     <>
-      <Modal>
+      <Modal $h500Modal>
         <ModalTitleArea>
           <ModalTitle>회원정보 수정</ModalTitle>
           <CloseButton onClick={closeModal}>
@@ -111,7 +113,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
                   required: true,
                   minLength: 8,
                   maxLength: 15,
-                  pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
+                  pattern: REG_EXP_PW_PATTERN,
                 })}
                 placeholder="현재 비밀번호"
               />
@@ -129,7 +131,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
                 "비밀번호는 최대 15자 이하입니다."}
               {errors.currentPassword &&
                 errors.currentPassword.type === "pattern" &&
-                "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
+                "영문, 숫자, 특수문자를 포함(공백 제외)한 8~15자"}
             </ErrorMessage>
             <InputWrapper>
               <Label>새 비밀번호</Label>
@@ -139,7 +141,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
                   required: true,
                   minLength: 8,
                   maxLength: 15,
-                  pattern: /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s).{8,15}$/,
+                  pattern: REG_EXP_PW_PATTERN,
                 })}
                 placeholder="새 비밀번호"
               />
@@ -151,7 +153,7 @@ const EditUserInfoModal: React.FC<EditUserInfoModalProps> = ({ user, onCancel, c
               {errors.newPassword && errors.newPassword.type === "maxLength" && "비밀번호는 최대 15자 이하입니다."}
               {errors.newPassword &&
                 errors.newPassword.type === "pattern" &&
-                "영문, 숫자를 포함(공백 제외)하여 입력해주세요."}
+                "영문, 숫자, 특수문자를 포함(공백 제외)한 8~15자"}
             </ErrorMessage>
             <InputWrapper>
               <Label>새 비밀번호 확인</Label>

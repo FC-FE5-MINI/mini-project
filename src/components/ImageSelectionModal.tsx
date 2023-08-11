@@ -10,21 +10,23 @@ interface ImageSelectionModalProps {
 
 const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onClose }) => {
   const handleImageClick = (imageNumber: number) => {
-    const imageSrc = `src/assets/profile/${imageNumber}.png`;
+    const imageSrc = `src/assets/${imageNumber}.png`;
     onSelect(imageSrc);
   };
 
   return (
     <Modal $smallModal>
+      <ModalTitleArea>
       <ModalTitle>이미지 선택</ModalTitle>
       <CloseButton onClick={onClose}>
-          <CloseIcon />
-        </CloseButton>
+        <CloseIcon />
+      </CloseButton>
+      </ModalTitleArea>
       <ImageGrid>
         {Array.from({ length: 10 }).map((_, index) => (
           <ImageThumbnail
             key={index}
-            src={`src/assets/profile/${index + 1}.png`}
+            src={`src/assets/${index + 1}.png`}
             alt={`Profile ${index + 1}`}
             onClick={() => handleImageClick(index + 1)}
           />
@@ -35,6 +37,12 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onC
 };
 
 export default ImageSelectionModal;
+
+const ModalTitleArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 const ImageGrid = styled.div`
   display: grid;
@@ -47,13 +55,13 @@ const ImageThumbnail = styled.img`
   height: 40px;
   cursor: pointer;
   border-radius: 50%;
-  background-color : #F1F1EF;
+  background-color: #f1f1ef;
 
   &:hover {
-  // 호버 상태에서의 효과 설정
-  color: #000; // 색깔이 진해짐
-  transform: scale(1.1); // 크기가 10% 증가
-}
+    // 호버 상태에서의 효과 설정
+    color: #000; // 색깔이 진해짐
+    transform: scale(1.1); // 크기가 10% 증가
+  }
 `;
 
 const CloseButton = styled.button`

@@ -30,6 +30,7 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
     try {
       const data = await getUserInfo();
       if (data.status === 200) {
+        data.data.imageUrl === "/src/assets/profile/0.png" ? data.data.imageUrl = "/src/assets/0.png" : null;
         setUserInfo(data.data);
       } else {
         console.error("Error fetching user info:", data.msg);
@@ -42,15 +43,15 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   }, []);
 
   const onClick = () => {
-    setEditModal(true); // 수정하기 버튼 클릭시 수정모달 창 상태를 true로 변경
+    setEditModal(true);  // 수정모달 창 상태를 true로 변경하여 회원정보 수정 모달 창을 띄움
   };
 
   if (editModal && userInfo) {
-    return <EditUserInfoModal user={userInfo} onCancel={() => setEditModal(false)} closeModal={closeModal} />;
-  }
+    return <EditUserInfoModal user={userInfo} onCancel={() => { setEditModal(false); closeModal(); }} closeModal={closeModal} />;
+}
 
   return (
-    <Modal>
+    <Modal $mediumModal>
       <ModalTitleArea>
         <ModalTitle>회원정보</ModalTitle>
         <CloseButton onClick={closeModal}>
@@ -109,6 +110,7 @@ const MailIcon = styled(AiOutlineMail)`
 const UserIcon = styled(RiUser5Line)`
   color: #333;
   font-size: 24px;
+  font-weight : bold;
 `;
 
 const UserInfoWrapper = styled.div`
@@ -138,9 +140,11 @@ const InfoGrid = styled.div`
   grid-template-columns: 25% 75%;
   width: 100%;
   margin: 10px 0;
+  
   p {
     font-size: 1.5rem;
     margin: 15px 15px;
+    font-weight : 600;
   }
 `;
 
