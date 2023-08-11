@@ -3,7 +3,7 @@ import { EventInput, DayHeaderContentArg, DayCellContentArg, EventClickArg } fro
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEventQuery } from "../hooks/useEventQuery";
-import { usefilterEvents, EventData } from "../hooks/useEventFilter";
+import { usefilterEvents } from "../hooks/useEventFilter";
 import styled, { css } from "styled-components";
 import useTabStore from "../store/calendarState";
 import { SHA256 } from "crypto-js";
@@ -184,22 +184,24 @@ const Calendar = () => {
 
   const filteredEvents = usefilterEvents(events, selectedTab);
 
-  const mappedEvents = filteredEvents.map((data: EventData) => ({
-    title: data.username,
-    start: new Date(data.startDate),
-    end: new Date(data.endDate),
-    type: data.eventType,
-    id: data.eventId.toString(),
-    userId: data.userId,
-    orderState: data.orderState,
-  }));
+  const mappedEvents = filteredEvents
+    .filter((data) => data.orderState !== ORDER_STATE.RJ)
+    .map((data) => ({
+      title: data.username,
+      start: new Date(data.startDate),
+      end: new Date(data.endDate),
+      type: data.eventType,
+      id: data.eventId.toString(),
+      userId: data.userId,
+      orderState: data.orderState,
+    }));
 
   const eventContent = (arg: { event: EventInput }) => {
     const { event } = arg;
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
 
-    if (orderState === ORDER_STATE.RJ) return null;
+    // if (orderState === ORDER_STATE.RJ) return null;
 
     return (
       <>
