@@ -44,7 +44,7 @@ const CharAnimation = () => {
 
     canvas.width = canvasWidth;
 
-    const characterPosition = { x: canvas.width / 2, y: canvas.height / 2 }; // 이 위치로 이동
+    const characterPosition = { x: canvas.width / 2 - 150, y: canvas.height / 2 +40}; // 이 위치로 이동
 
     const ctx = canvas.getContext("2d");
     const spriteWidth = 32;
