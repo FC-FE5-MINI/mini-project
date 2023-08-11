@@ -61,39 +61,43 @@ const SignUp = () => {
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <LogoImage src={logoImage} alt="로고" />
-        <Label>오늘은 내 차례!</Label>
-        <Label>회원가입하세요</Label>
-        <Input {...register("name", { required: true })} placeholder="이름" />
-        <ErrorMessage>{renderNameError(errors)}</ErrorMessage>
-        <Input {...register("email", { required: true, pattern: REG_EXP_EMAIL_PATTERN })} placeholder="이메일" />
-        <ErrorMessage>{renderEmailError(errors)}</ErrorMessage>
-        <Input
-          {...register("password", {
-            required: true,
-            minLength: 8,
-            maxLength: 15,
-            pattern: REG_EXP_PW_PATTERN,
-          })}
-          type="password"
-          placeholder="비밀번호"
-        />
-        <ErrorMessage>{renderPasswordError(errors)}</ErrorMessage>
-        <Input
-          {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })}
-          type="password"
-          placeholder="비밀번호 확인"
-        />
-        <ErrorMessage>{renderPasswordConfirm(errors)}</ErrorMessage>
-        <Button />
-        <LoginText>
-          <span>이미 회원가입을 하셨나요?</span>
-          <Link to="/login">
-            <LoginLink>로그인</LoginLink>
-          </Link>
-        </LoginText>
-      </Form>
+      <Wrapper>
+        <ContainerLogo>
+          <LogoImage src={logoImage} alt="로고" />
+        </ContainerLogo>
+
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Label>회원가입</Label>
+          <Input {...register("name", { required: true })} placeholder="이름" />
+          <ErrorMessage>{renderNameError(errors)}</ErrorMessage>
+          <Input {...register("email", { required: true, pattern: REG_EXP_EMAIL_PATTERN })} placeholder="이메일" />
+          <ErrorMessage>{renderEmailError(errors)}</ErrorMessage>
+          <Input
+            {...register("password", {
+              required: true,
+              minLength: 8,
+              maxLength: 15,
+              pattern: REG_EXP_PW_PATTERN,
+            })}
+            type="password"
+            placeholder="비밀번호"
+          />
+          <ErrorMessage>{renderPasswordError(errors)}</ErrorMessage>
+          <Input
+            {...register("passwordConfirm", { required: true, validate: (value) => value === password.current })}
+            type="password"
+            placeholder="비밀번호 확인"
+          />
+          <ErrorMessage>{renderPasswordConfirm(errors)}</ErrorMessage>
+          <Button />
+          <LoginText>
+            <span>이미 회원가입을 하셨나요?</span>
+            <Link to="/login">
+              <LoginLink>로그인</LoginLink>
+            </Link>
+          </LoginText>
+        </Form>
+      </Wrapper>
     </Container>
   );
 };
@@ -107,20 +111,42 @@ const Container = styled.div`
   height: 100vh;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  width: 1000px;
+  height: 500px;
+  border: 1px solid ${(props) => props.theme.colors.gray[1]};
+  border-radius: 25px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+`;
+
+const ContainerLogo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  background-color: ${(props) => props.theme.colors.green.dark};
+`;
+
 const Form = styled.form`
+  width: 50%;
+  background-color: ${(props) => props.theme.colors.white};
   display: flex;
   flex-direction: column;
-  width: 300px;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
 `;
 
 const LogoImage = styled.img`
-  width: 100%;
+  width: 70%;
   height: auto;
   margin-bottom: 10px;
 `;
 const Input = styled.input`
   box-sizing: border-box;
+  width: 80%;
   height: 40px;
   padding: 0px 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray[1]};
@@ -131,7 +157,7 @@ const Input = styled.input`
 `;
 
 const Label = styled.label`
-  font-size: 20px;
+  font-size: 1.5rem;
   color: ${({ theme }) => theme.colors.orange.main};
   text-align: center;
   margin-bottom: 5px;
@@ -159,12 +185,13 @@ const Button = styled.input.attrs({
   margin: 4px 0px;
   cursor: pointer;
   border-radius: 5px;
+  width: 80%;
 `;
 
 const LoginText = styled.p`
   display: flex;
   justify-content: center;
-  font-size: 12px;
+  font-size: 1rem;
   margin-top: 5px;
   color: ${({ theme }) => theme.colors.orange.main};
 `;
