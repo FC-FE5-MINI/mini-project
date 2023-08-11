@@ -54,10 +54,14 @@ const AddModal = () => {
     }
     try {
       const res = await addEvent(reqBody);
-      res.status === 200 && showNotification(startDate, endDate);
-      setOpenAddModal(false);
-      refetch();
-      window.location.reload();
+      if (res) {
+        setOpenAddModal(false);
+        refetch();
+        showNotification(startDate, endDate);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
     } catch (error) {
       console.error(error);
       throw error;
