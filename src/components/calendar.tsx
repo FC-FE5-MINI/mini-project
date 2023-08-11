@@ -167,12 +167,7 @@ const Calendar = () => {
   const { data: allEvents, isLoading: allEventsLoading } = useEventQuery("events");
   const { data: myEvents, isLoading: myEventsLoading } = useEventQuery("myevents");
 
-  // allEvents와 myEvents가 존재하지 않을 경우 빈 배열로 초기화
-  const allEventsExist = allEvents && allEvents.length > 0;
-  const myEventsExist = myEvents && myEvents.length > 0;
-  const eventsExist = !allEventsLoading && !myEventsLoading && (allEventsExist || myEventsExist);
-
-  if (allEventsLoading || myEventsLoading || !eventsExist) {
+  if (allEventsLoading || myEventsLoading) {
     return (
       <LoadingContainer>
         <SyncLoader size={10} color={theme.colors.green.main} loading={true} />
