@@ -16,10 +16,12 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onC
 
   return (
     <Modal $smallModal>
+      <ModalTitleArea>
       <ModalTitle>이미지 선택</ModalTitle>
       <CloseButton onClick={onClose}>
         <CloseIcon />
       </CloseButton>
+      </ModalTitleArea>
       <ImageGrid>
         {Array.from({ length: 10 }).map((_, index) => (
           <ImageThumbnail
@@ -35,6 +37,12 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onC
 };
 
 export default ImageSelectionModal;
+
+const ModalTitleArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 const ImageGrid = styled.div`
   display: grid;

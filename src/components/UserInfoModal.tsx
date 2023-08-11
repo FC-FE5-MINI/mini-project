@@ -30,6 +30,7 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
     try {
       const data = await getUserInfo();
       if (data.status === 200) {
+        data.data.imageUrl === "/src/assets/profile/0.png" ? data.data.imageUrl = "/src/assets/0.png" : null;
         setUserInfo(data.data);
       } else {
         console.error("Error fetching user info:", data.msg);
@@ -50,7 +51,7 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ closeModal }) => {
   }
 
   return (
-    <Modal>
+    <Modal $mediumModal>
       <ModalTitleArea>
         <ModalTitle>회원정보</ModalTitle>
         <CloseButton onClick={closeModal}>
@@ -109,6 +110,7 @@ const MailIcon = styled(AiOutlineMail)`
 const UserIcon = styled(RiUser5Line)`
   color: #333;
   font-size: 24px;
+  font-weight : bold;
 `;
 
 const UserInfoWrapper = styled.div`
@@ -138,9 +140,11 @@ const InfoGrid = styled.div`
   grid-template-columns: 25% 75%;
   width: 100%;
   margin: 10px 0;
+  
   p {
     font-size: 1.5rem;
     margin: 15px 15px;
+    font-weight : 600;
   }
 `;
 
