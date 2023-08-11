@@ -28,9 +28,8 @@ const imageMapping: { [key: string]: string } = {
   "/src/assets/profile/7.png": image7,
   "/src/assets/profile/8.png": image8,
   "/src/assets/profile/9.png": image9,
-  "/src/assets/profile/10.png": image10
+  "/src/assets/profile/10.png": image10,
 };
-
 
 interface FormData {
   email: string;
@@ -54,12 +53,12 @@ const LoginForm: React.FC = () => {
 
       if (loginResponse.status === 200) {
         alert(LOGIN_MESSAGE.LOG_IN_SUCCESS);
-        
-         // 맵핑된 이미지 객체에서 해당 이미지를 가져옵니다.
-         const mappedImage = imageMapping[loginResponse.data.imageUrl];
-         if (mappedImage) {
-             loginResponse.data.imageUrl = mappedImage;
-         }
+
+        // 맵핑된 이미지 객체에서 해당 이미지를 가져옵니다.
+        const mappedImage = imageMapping[loginResponse.data.imageUrl];
+        if (mappedImage) {
+          loginResponse.data.imageUrl = mappedImage;
+        }
 
         setUser({
           username: loginResponse.data.username,
@@ -115,6 +114,7 @@ const Form = styled.form`
 
 const Input = styled.input`
   box-sizing: border-box;
+  /* width: 100%; */
   height: 40px;
   padding: 0px 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray[1]};
