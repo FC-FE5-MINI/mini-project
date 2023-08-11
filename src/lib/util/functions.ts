@@ -17,9 +17,9 @@ const renderEmailError = (errors: FieldErrors) => {
   if (errors.email) {
     switch (errors.email.type) {
       case "required":
-        return SIGNUP_MESSAGE.REQUIRED;
+        return SIGNUP_MESSAGE.REQUIRED_ONLY;
       case "pattern":
-        return SIGNUP_MESSAGE.PATTERN;
+        return SIGNUP_MESSAGE.PATTERN_EMAIL;
     }
   }
 };
@@ -27,14 +27,14 @@ const renderEmailError = (errors: FieldErrors) => {
 const renderPasswordError = (errors: FieldErrors) => {
   if (errors.password) {
     switch (errors.password.type) {
-      case "required":
-        return SIGNUP_MESSAGE.REQUIRED;
-      case "minLength":
-        return SIGNUP_MESSAGE.MIN_LENGHT;
-      case "maxLength":
-        return SIGNUP_MESSAGE.MAX_LENGHT;
       case "pattern":
-        return SIGNUP_MESSAGE.PATTERN;
+        return SIGNUP_MESSAGE.PATTERN_PASSWORD;
+      case "required":
+        return SIGNUP_MESSAGE.REQUIRED_PASSWORD;
+      case "minLength":
+        return SIGNUP_MESSAGE.MIN_LENGTH;
+      case "maxLength":
+        return SIGNUP_MESSAGE.MAX_LENGTH;
     }
   }
 };
@@ -43,7 +43,7 @@ const renderPasswordConfirm = (errors: FieldErrors) => {
   if (errors.passwordConfirm) {
     switch (errors.passwordConfirm.type) {
       case "required":
-        return SIGNUP_MESSAGE.REQUIRED;
+        return SIGNUP_MESSAGE.REQUIRED_ONLY;
       case "validate":
         return SIGNUP_MESSAGE.VALIDATE;
     }

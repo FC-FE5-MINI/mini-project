@@ -28,7 +28,7 @@ const LoginForm: React.FC = () => {
 
       if (loginResponse.status === 200) {
         alert(LOGIN_MESSAGE.LOG_IN_SUCCESS);
-
+        loginResponse.data.imageUrl === "/src/assets/profile/0.png" ? loginResponse.data.imageUrl = "/src/assets/0.png" : null;
         setUser({
           username: loginResponse.data.username,
           email: data.email,

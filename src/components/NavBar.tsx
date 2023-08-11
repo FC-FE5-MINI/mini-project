@@ -77,7 +77,7 @@ const UserProfile = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: #f1f1ef;
+  background-color: ${(props) => props.theme.colors.orange.light};
   cursor: pointer;
   transition: transform 0.2s; // smooth transition
 
@@ -91,6 +91,7 @@ const UserName = styled.p`
   padding: 5px 0;
   width: 150px;
   font-weight: 600;
+  color : ${(props) => props.theme.colors.white};
   white-space: nowrap; // 줄바꿈을 방지
   overflow: hidden; // 넘치는 텍스트 숨기기
   text-overflow: ellipsis; // '...'으로 텍스트 잘라내기
@@ -103,7 +104,7 @@ const LogoutButton = styled.button`
 `;
 
 const LogoutIcon = styled(LuLogOut)`
-  color: black; // temporary color
+  color: ${(props) => props.theme.colors.orange.light};
   font-size: 24px;
   transition: transform 0.2s; // smooth transition
 

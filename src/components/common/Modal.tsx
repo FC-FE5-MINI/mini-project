@@ -9,6 +9,8 @@ export interface ChildrenProp {
 
 interface ModalProp extends ChildrenProp {
   $smallModal?: boolean;
+  $mediumModal?: boolean;
+  $h500Modal?: boolean;
 }
 
 const Modal = ({ children, ...rest }: ModalProp) => {
@@ -40,6 +42,8 @@ const ModalWrapper = styled(motion.div)`
 
 const ModalLayout = styled(motion.div)<{
   $smallModal?: boolean;
+  $mediumModal?: boolean;
+  $h500Modal?: boolean;
 }>`
   top: 0;
   left: 0;
@@ -61,6 +65,18 @@ const ModalLayout = styled(motion.div)<{
     $smallModal &&
     css`
       max-height: 250px;
+    `}
+
+    ${({ $mediumModal }) =>
+    $mediumModal &&
+    css`
+      max-height: 450px;
+    `}
+
+    ${({ $h500Modal }) =>
+    $h500Modal &&
+    css`
+      max-height: 500px;
     `}
 `;
 
