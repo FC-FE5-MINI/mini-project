@@ -3,32 +3,45 @@ import ModalTitle from "./common/ModalTitle";
 import styled from "styled-components";
 import { MdOutlineClose } from "react-icons/md";
 
+// 이미지를 import로 참조
+import image1 from "../../src/assets/1.png";
+import image2 from "../../src/assets/2.png";
+import image3 from "../../src/assets/3.png";
+import image4 from "../../src/assets/4.png";
+import image5 from "../../src/assets/5.png";
+import image6 from "../../src/assets/6.png";
+import image7 from "../../src/assets/7.png";
+import image8 from "../../src/assets/8.png";
+import image9 from "../../src/assets/9.png";
+import image10 from "../../src/assets/10.png";
+
+const images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10];
+
 interface ImageSelectionModalProps {
   onSelect: (imageSrc: string) => void;
   onClose: () => void;
 }
 
 const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ onSelect, onClose }) => {
-  const handleImageClick = (imageNumber: number) => {
-    const imageSrc = `src/assets/${imageNumber}.png`;
-    onSelect(imageSrc);
+  const handleImageClick = (index: number) => {
+    onSelect(images[index]);
   };
 
   return (
     <Modal $smallModal>
       <ModalTitleArea>
-      <ModalTitle>이미지 선택</ModalTitle>
-      <CloseButton onClick={onClose}>
-        <CloseIcon />
-      </CloseButton>
+        <ModalTitle>이미지 선택</ModalTitle>
+        <CloseButton onClick={onClose}>
+          <CloseIcon />
+        </CloseButton>
       </ModalTitleArea>
       <ImageGrid>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {images.map((imageSrc, index) => (
           <ImageThumbnail
             key={index}
-            src={`src/assets/${index + 1}.png`}
+            src={imageSrc}
             alt={`Profile ${index + 1}`}
-            onClick={() => handleImageClick(index + 1)}
+            onClick={() => handleImageClick(index)}
           />
         ))}
       </ImageGrid>
