@@ -54,6 +54,7 @@ const ModalBtnArea = styled.div`
 `;
 const ModalBtn = styled(motion.button)`
   padding: 0.5rem 1rem;
+  font-family: "Pretendard-Regular";
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 2rem;
   font-size: 1rem;
@@ -77,6 +78,7 @@ const Label = styled.label`
 const MyListBtn = styled.input`
   width: 30px;
   height: 20px;
+  font-family: "Pretendard-Regular";
 `;
 const TabBtnWrapper = styled.div`
   display: flex;
@@ -89,6 +91,7 @@ const TabBtn = styled.button<{ $isActive: boolean }>`
   color: ${(props) => (props.children === "전체" ? props.theme.colors.black : props.theme.colors.white)};
   border: 1px solid ${(props) => props.theme.colors.green.main};
   border-radius: 0.5rem 0.5rem 0 0;
+  font-family: "Pretendard-Regular";
   color: ${(props) => {
     if (props.$isActive) {
       if (props.children === "연차") {
@@ -139,17 +142,13 @@ const OrderState = styled.p`
   background-size: 100%;
 `;
 const CalendarDay = styled.div`
-  font-size: 1.5rem;
   display: flex;
   align-items: center;
 `;
-const CustomFullCalendar = styled(FullCalendar)`
+const CustomFullcalendarWrapper = styled.div`
   z-index: 0;
-  .fc-theme-standard .fc-scrollgrid {
-    border: 10px solid red;
-    border-radius: 10px;
-  }
 `;
+
 const EventTitle = styled.p`
   font-size: 1rem;
   padding-left: 0.2rem;
@@ -196,8 +195,6 @@ const Calendar = () => {
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
 
-    // if (orderState === ORDER_STATE.RJ) return null;
-
     return (
       <>
         <StyledEvent id={eventType}>
@@ -213,8 +210,8 @@ const Calendar = () => {
 
   const dayHeaderContent = (arg: DayHeaderContentArg) => {
     const { text } = arg;
-    const textColor = text === "Sun" ? "red" : text === "Sat" ? "blue" : "inherit";
-    return <CalendarDay style={{ color: textColor }}>{text}</CalendarDay>;
+    const textColor = text === "일" ? "red" : text === "토" ? "blue" : "inherit";
+    return <CalendarDay style={{ color: textColor, fontWeight: "bold" }}>{text}</CalendarDay>;
   };
 
   const dayCellContent = (arg: DayCellContentArg) => {
@@ -242,6 +239,7 @@ const Calendar = () => {
   };
 
   const TAB_ADD_ALL = ["전체", ...TAB_ADD];
+
   return (
     <>
       <CalendarTabMenu>
@@ -279,17 +277,20 @@ const Calendar = () => {
         exit={{ opacity: 0, x: 20 }}
         transition={{ duration: 0.3 }}
       >
-        <CustomFullCalendar
-          plugins={[dayGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          events={mappedEvents}
-          eventBorderColor="white"
-          eventContent={eventContent}
-          dayHeaderContent={dayHeaderContent}
-          dayCellContent={dayCellContent}
-          dayMaxEvents={3}
-          eventClick={eventClick}
-        />
+        <CustomFullcalendarWrapper>
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            events={mappedEvents}
+            eventBorderColor="white"
+            eventContent={eventContent}
+            dayHeaderContent={dayHeaderContent}
+            dayCellContent={dayCellContent}
+            dayMaxEvents={2}
+            eventClick={eventClick}
+            locale="ko"
+          />
+        </CustomFullcalendarWrapper>
       </motion.div>
     </>
   );

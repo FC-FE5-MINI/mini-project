@@ -64,6 +64,11 @@ const LogoBox = styled.img`
   position: absolute; // 위치 조정을 위해 추가
   left: 0; // 왼쪽으로 정렬
 `;
+// const CharGuideText = styled.span`
+//   font-size: 1rem;
+//   color: ${(props) => props.theme.colors.black};
+//   animation: blink 1.5s 3 alternate;
+// `;
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -91,7 +96,7 @@ const UserName = styled.p`
   padding: 5px 0;
   width: 150px;
   font-weight: 600;
-  color : ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.white};
   white-space: nowrap; // 줄바꿈을 방지
   overflow: hidden; // 넘치는 텍스트 숨기기
   text-overflow: ellipsis; // '...'으로 텍스트 잘라내기

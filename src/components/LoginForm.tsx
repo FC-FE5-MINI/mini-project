@@ -114,7 +114,6 @@ const Form = styled.form`
 
 const Input = styled.input`
   box-sizing: border-box;
-  /* width: 100%; */
   height: 40px;
   padding: 0px 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray[1]};

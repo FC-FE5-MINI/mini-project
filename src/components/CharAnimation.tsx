@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import sprite from "../assets/character_sprite_2.png";
-import { styled } from "styled-components";
+import { styled, keyframes } from "styled-components";
 
 const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -44,7 +44,7 @@ const CharAnimation = () => {
 
     canvas.width = canvasWidth;
 
-    const characterPosition = { x: canvas.width / 2 - 150, y: canvas.height / 2 +40}; // 이 위치로 이동
+    const characterPosition = { x: canvas.width / 2 - 150, y: canvas.height / 2 + 40 }; // 이 위치로 이동
 
     const ctx = canvas.getContext("2d");
     const spriteWidth = 32;
@@ -318,6 +318,7 @@ const CharAnimation = () => {
 
   return (
     <CanvasContainer>
+      <CharGuideText>키보드 방향키로 캐릭터를 움직여보세요</CharGuideText>
       <StyledCanvas ref={canvasRef} width={canvasWidth}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
@@ -328,10 +329,23 @@ export default CharAnimation;
 
 const CanvasContainer = styled.div.attrs({ className: "canvas-container" })``;
 
-const StyledCanvas = styled.canvas`
-  /* width: 100%;
+const StyledCanvas = styled.canvas``;
+
+const blinkAnimation = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const CharGuideText = styled.div`
   position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1; // LogoBox 및 Profile 컴포넌트 아래에 위치하도록 함 */
+  top: 100px;
+  left: 430px;
+  font-size: 1rem;
+  color: ${(props) => props.theme.colors.gray[1]};
+  animation: ${blinkAnimation} 2s ease-in-out 3;
+  opacity: 0;
 `;
