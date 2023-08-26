@@ -55,7 +55,7 @@ export default NavBar;
 const Container = styled.div`
   width: 150px;
   height: 100%;
-  padding-bottom: 1rem;
+  padding: 1.5rem 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

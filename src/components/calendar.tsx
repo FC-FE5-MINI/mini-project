@@ -169,8 +169,6 @@ const Calendar = () => {
 const CalendarMainContainer = styled.div`
   width: 100%;
   height: 100%;
-  background-color: ${(props) => props.theme.colors.white};
-  padding-top: 2rem;
 `;
 const StyledEvent = styled.div`
   display: flex;
@@ -186,9 +184,8 @@ const StyledEvent = styled.div`
 `;
 const LoadingContainer = styled.div`
   display: flex;
-  justify-content: center;
+  margin: 0 auto;
   align-items: center;
-  height: 200px;
 `;
 const CalendarTabMenu = styled.div`
   display: flex;

@@ -22,6 +22,7 @@ const Inner = styled.div`
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+  background-color: ${(props) => props.theme.colors.white};
 `;
 
 const Main = () => {
