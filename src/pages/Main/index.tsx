@@ -7,11 +7,21 @@ import { useNavigate } from "react-router-dom";
 import { getUserAuth } from "../../lib/api/userApi";
 
 const MainContainer = styled.div`
-  margin: 0 0 1rem 0;
-  max-width: 100%; // 최대 넓이를 1100px로 설정
   display: flex;
-  flex-direction: column;
-  align-items: center; // 내부 컴포넌트들을 가운데 정렬
+  min-height: 100vh;
+  align-items: center;
+  background-color: ${(props) => props.theme.colors.green.light};
+  padding: 2rem;
+`;
+const Inner = styled.div`
+  min-width: 1100px;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
 `;
 
 const Main = () => {
@@ -49,8 +59,10 @@ const Main = () => {
 
   return (
     <MainContainer>
-      <NavBar />
-      <Calendar />
+      <Inner>
+        <NavBar />
+        <Calendar />
+      </Inner>
     </MainContainer>
   );
 };

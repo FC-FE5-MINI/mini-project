@@ -14,7 +14,6 @@
     "@fullcalendar/daygrid": "^6.1.8",
     "@fullcalendar/interaction": "^6.1.8",
     "@fullcalendar/react": "^6.1.8",
-    "@fullcalendar/timegrid": "^6.1.8",
     "@types/antd": "^1.0.0",
     "@types/react-datepicker": "^4.15.0",
     "@types/styled-components": "^5.1.26",

@@ -40,6 +40,8 @@ const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar {
       display: none !important;
     }
+    background-color: ${(props) => props.theme.colors.green.light};
+
   }
   ol, ul {
     list-style: none;
@@ -79,7 +81,7 @@ const GlobalStyle = createGlobalStyle`
   font-size: inherit;
   line-height: inherit;
   border: none;
-  width: 1100px;
+  margin: 1rem;
 }
 
 .fc th,
@@ -92,7 +94,6 @@ const GlobalStyle = createGlobalStyle`
 
 .fc th {
   border-bottom: 1px solid ${(props) => props.theme.colors.gray[1]};
-  border-radius: 1rem 1rem 0 0;
   text-align: center;
   padding: 0.3rem 0;
 }
@@ -105,7 +106,14 @@ const GlobalStyle = createGlobalStyle`
 }
 .fc-theme-standard .fc-scrollgrid {
   border: 1px solid ${(props) => props.theme.colors.gray[1]};
-  border-radius: 1rem;
+  border-radius: 5px;
+}
+.fc .fc-button-primary {
+  background-color: ${(props) => props.theme.colors.green.dark};
+  border: none;
+}
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: ${(props) => props.theme.colors.green.light};
 }
 `;
 export default GlobalStyle;

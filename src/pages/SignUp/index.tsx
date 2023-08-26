@@ -109,15 +109,15 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: ${(props) => props.theme.colors.green.light};
 `;
 
 const Wrapper = styled.div`
   display: flex;
   width: 1000px;
   height: 500px;
-  border: 1px solid ${(props) => props.theme.colors.gray[1]};
-  border-radius: 25px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 `;
 
@@ -130,13 +130,13 @@ const ContainerLogo = styled.div`
 `;
 
 const Form = styled.form`
-  width: 50%;
-  background-color: ${(props) => props.theme.colors.white};
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
+  background-color: ${(props) => props.theme.colors.white};
 `;
 
 const LogoImage = styled.img`
