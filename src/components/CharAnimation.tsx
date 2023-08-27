@@ -6,7 +6,7 @@ const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [canvasWidth, setCanvasWidth] = useState(150);
+  const [canvasWidth, setCanvasWidth] = useState(100);
   const [canvasHeight, setCanvasHeight] = useState(500);
 
   const [mouseState, setMouseState] = useState(false);
@@ -17,21 +17,26 @@ const CharAnimation = () => {
     const handleResize = () => {
       const canvasContainer = document.querySelector(".canvas-container");
       if (canvasContainer) {
-        setCanvasWidth(canvasContainer.clientWidth);
-        setCanvasHeight(canvasContainer.clientHeight);
+        return { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
       } else {
-        setCanvasWidth(window.innerWidth);
-        setCanvasHeight(window.innerHeight);
+        return { width: window.innerWidth, height: window.innerHeight };
       }
     };
 
-    window.addEventListener("resize", handleResize);
-    handleResize(); // 초기 리사이징
+    // const { width, height } = handleResize();
+    // setCanvasWidth(width);
+    // setCanvasHeight(height);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  });
+    // window.addEventListener("resize", () => {
+    //   const { width, height } = handleResize();
+    //   setCanvasWidth(width);
+    //   setCanvasHeight(height);
+    // });
+
+    // return () => {
+    //   window.removeEventListener("resize", handleResize);
+    // };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -48,10 +53,9 @@ const CharAnimation = () => {
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
-
     // const characterPosition = { x: canvas.width / 2, y: canvas.height / 2 }; // 이 위치로 이동
     const characterPosition = { x: 30, y: 30 }; // 이 위치로 이동
-    
+
     const ctx = canvas.getContext("2d");
     const spriteWidth = 32;
     const spriteHeight = 32;
@@ -62,8 +66,8 @@ const CharAnimation = () => {
     const spriteMargin = { top: -12, right: -65, bottom: -10, left: -66 };
     const charSpeed = 10;
     const motionSpeed = 3;
-    const LEFT_BOUNDARY = 186;
-    const RIGHT_BOUNDARY = canvas.width;
+    // const LEFT_BOUNDARY = 186;
+    // const RIGHT_BOUNDARY = canvas.width;
     let frameCounter = 0;
 
     let currentRow = 0;
@@ -137,17 +141,17 @@ const CharAnimation = () => {
           );
           break; // Up
         case 2:
-          characterPosition.x = characterPosition.x + (isMoving ? charSpeed : 0);
-          if (characterPosition.x > RIGHT_BOUNDARY) {
-            characterPosition.x = LEFT_BOUNDARY;
-          }
-          break;
+          characterPosition.x = Math.min(
+            characterPosition.x + (isMoving ? charSpeed : 0),
+            canvas.width - drawWidth / 2 - spriteMargin.right - 40
+          );
+          break; // Right
         case 3:
-          characterPosition.x = characterPosition.x - (isMoving ? charSpeed : 0);
-          if (characterPosition.x < LEFT_BOUNDARY) {
-            characterPosition.x = RIGHT_BOUNDARY;
-          }
-          break;
+          characterPosition.x = Math.max(
+            characterPosition.x - (isMoving ? charSpeed : 0),
+            drawWidth / 2 + spriteMargin.left + 40
+          );
+          break; // Left
       }
     };
 
@@ -328,7 +332,7 @@ const CharAnimation = () => {
         <br />
         캐릭터를 움직여보세요
       </CharGuideText>
-      <StyledCanvas ref={canvasRef} width={canvasWidth} height={500}></StyledCanvas>
+      <StyledCanvas ref={canvasRef} width={canvasWidth} height={canvasHeight}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
   );
@@ -356,4 +360,5 @@ const CharGuideText = styled.div`
   color: ${(props) => props.theme.colors.gray[1]};
   animation: ${blinkAnimation} 2s ease-in-out 3;
   opacity: 0;
+  z-index: 1;
 `;
