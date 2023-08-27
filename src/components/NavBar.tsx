@@ -72,6 +72,7 @@ const Wrapper = styled.div`
 const LogoBox = styled.img`
   width: 150px;
 `;
+
 const ProfileContainer = styled.div`
   display: flex;
   align-items: center;

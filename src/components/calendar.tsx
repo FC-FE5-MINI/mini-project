@@ -308,4 +308,5 @@ const EventTitle = styled.p`
   align-items: center;
 `;
 
+
 export default Calendar;

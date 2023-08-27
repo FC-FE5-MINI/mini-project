@@ -198,6 +198,5 @@ const LoginText = styled.p`
 
 const LoginLink = styled.span`
   margin-left: 5px;
-  /* text-decoration: underline; */
   font-weight: bold;
 `;
