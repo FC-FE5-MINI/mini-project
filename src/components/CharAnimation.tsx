@@ -6,46 +6,17 @@ const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [canvasWidth, setCanvasWidth] = useState(100);
-  const [canvasHeight, setCanvasHeight] = useState(500);
+  const canvasWidth = 150;
+  const canvasHeight = 500;
 
   const [mouseState, setMouseState] = useState(false);
   const [direction, setDirection] = useState("");
   const [movingDirection, setMovingDirection] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      const canvasContainer = document.querySelector(".canvas-container");
-      if (canvasContainer) {
-        return { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
-      } else {
-        return { width: window.innerWidth, height: window.innerHeight };
-      }
-    };
-
-    // const { width, height } = handleResize();
-    // setCanvasWidth(width);
-    // setCanvasHeight(height);
-
-    // window.addEventListener("resize", () => {
-    //   const { width, height } = handleResize();
-    //   setCanvasWidth(width);
-    //   setCanvasHeight(height);
-    // });
-
-    // return () => {
-    //   window.removeEventListener("resize", handleResize);
-    // };
-  }, []);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     const image = imageRef.current;
 
-    const canvasContainer = document.querySelector(".canvas-container");
-    if (canvasContainer) {
-      setCanvasWidth(canvasContainer.clientWidth);
-    }
     if (canvas === null || image === null) {
       return;
     }
@@ -53,8 +24,7 @@ const CharAnimation = () => {
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
-    // const characterPosition = { x: canvas.width / 2, y: canvas.height / 2 }; // 이 위치로 이동
-    const characterPosition = { x: 30, y: 30 }; // 이 위치로 이동
+    const characterPosition = { x: 30, y: 30 };
 
     const ctx = canvas.getContext("2d");
     const spriteWidth = 32;
@@ -325,6 +295,7 @@ const CharAnimation = () => {
       canvas.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
+
   return (
     <CanvasContainer>
       <CharGuideText>
@@ -360,5 +331,4 @@ const CharGuideText = styled.div`
   color: ${(props) => props.theme.colors.gray[1]};
   animation: ${blinkAnimation} 2s ease-in-out 3;
   opacity: 0;
-  z-index: 1;
 `;
