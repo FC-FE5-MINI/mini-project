@@ -5,7 +5,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useEventQuery } from "../hooks/useEventQuery";
 import { usefilterEvents } from "../hooks/useEventFilter";
 import styled, { css } from "styled-components";
-import useTabStore from "../store/calendarState";
+import { useTabStore, TabState } from "../store/calendarState";
 import { SHA256 } from "crypto-js";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
@@ -17,6 +17,157 @@ import useOpenModal from "../store/closeState";
 import { ORDER_STATE, TAB_ADD } from "../lib/util/constants";
 import { notification } from "antd";
 
+const Calendar = () => {
+  const selectedTab = useTabStore((state) => state.selectedTab);
+  const setSelectedTab = useTabStore((state) => state.setSelectedTab);
+  const [showMyList, setShowMyList] = useState(false);
+
+  const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
+
+  const { data: allEvents, isLoading: allEventsLoading } = useEventQuery("events");
+  const { data: myEvents, isLoading: myEventsLoading } = useEventQuery("myevents");
+
+  if (allEventsLoading || myEventsLoading) {
+    return (
+      <LoadingContainer>
+        <SyncLoader size={10} color={theme.colors.green.main} loading={true} />
+      </LoadingContainer>
+    );
+  }
+
+  const events = showMyList ? myEvents || [] : allEvents || [];
+
+  const filteredEvents = usefilterEvents(events, selectedTab);
+
+  const mappedEvents = filteredEvents
+    .filter((data) => data.orderState !== ORDER_STATE.RJ)
+    .map((data) => ({
+      title: data.username,
+      start: new Date(data.startDate),
+      end: new Date(data.endDate),
+      type: data.eventType,
+      id: data.eventId.toString(),
+      userId: data.userId,
+      orderState: data.orderState,
+    }));
+
+  const eventContent = (arg: { event: EventInput }) => {
+    const { event } = arg;
+    const eventType = event._def.extendedProps.type;
+    const orderState = event._def.extendedProps.orderState;
+
+    return (
+      <>
+        <StyledEvent id={eventType}>
+          {orderState === ORDER_STATE.WT && <OrderState>&nbsp;{ORDER_STATE[orderState]}승인대기</OrderState>}&nbsp;
+          <EventTitle>{event.title}</EventTitle>
+        </StyledEvent>
+      </>
+    );
+  };
+
+  const eventsString = JSON.stringify(mappedEvents);
+  const eventsHash = SHA256(eventsString).toString();
+
+  const dayHeaderContent = (arg: DayHeaderContentArg) => {
+    const { text } = arg;
+    const textColor = text === "Sun" ? "red" : text === "Sat" ? "blue" : "inherit";
+    return <CalendarDay style={{ color: textColor }}>{text}</CalendarDay>;
+  };
+
+  const dayCellContent = (arg: DayCellContentArg) => {
+    const { date } = arg;
+    const textColor = date.getDay() === 0 ? "red" : date.getDay() === 6 ? "blue" : "inherit";
+    return <div style={{ color: textColor }}>{date.getDate()}</div>;
+  };
+  const eventClick = (arg: EventClickArg) => {
+    const { event } = arg;
+    const clickedStartDate = event._instance?.range.start.toISOString().slice(0, 10);
+    const clickedEndDate = event._instance?.range.end.toISOString().slice(0, 10);
+    const clickedDateRange = `${clickedStartDate} - ${clickedEndDate}`;
+    const clickedEventType = event._def.extendedProps.type;
+    showNotification(clickedDateRange, clickedEventType);
+  };
+
+  const showNotification = (dateRange: string, clickedEventType: string) => {
+    const eventTypeText = clickedEventType === "DUTY" ? "당직" : "연차";
+    notification.info({
+      message: eventTypeText,
+      description: dateRange,
+      placement: "bottom",
+      duration: 1.5,
+    });
+  };
+
+  const TAB_ADD_ALL = ["전체", ...TAB_ADD];
+
+  const headerToolbarOptions = {
+    left: "prev",
+    center: "title",
+    right: "today next",
+  };
+  return (
+    <CalendarMainContainer>
+      <CalendarTabMenu>
+        <BorderArea>
+          <ModalBtnArea>
+            <ModalBtn onClick={() => setOpenAddModal(true)}>연차/당직 신청</ModalBtn>
+            <ModalBtn onClick={() => setOpenMyListModal(true)}>내 신청현황</ModalBtn>
+          </ModalBtnArea>
+          <Label htmlFor="myListCheckbox">
+            <MyListBtn
+              type="checkbox"
+              id="myListCheckbox"
+              checked={showMyList}
+              onChange={() => setShowMyList((prev) => !prev)}
+            />
+            내 일정만 보기
+          </Label>
+        </BorderArea>
+        <TabBtnWrapper>
+          {TAB_ADD_ALL.map((tab, index) => (
+            <TabBtn key={index} $isActive={selectedTab === tab} onClick={() => setSelectedTab(tab as TabState)}>
+              {tab}
+            </TabBtn>
+          ))}
+        </TabBtnWrapper>
+      </CalendarTabMenu>
+
+      {openAddModal && <AddModal />}
+      {openMyListModal && <MyListModal />}
+
+      <motion.div
+        key={eventsHash}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <CustomFullcalendarWrapper>
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            events={mappedEvents}
+            eventBorderColor="white"
+            eventContent={eventContent}
+            dayHeaderContent={dayHeaderContent}
+            dayCellContent={dayCellContent}
+            dayMaxEvents={2}
+            eventClick={eventClick}
+            locale="ko"
+            headerToolbar={headerToolbarOptions}
+            contentHeight={600}
+          />
+        </CustomFullcalendarWrapper>
+      </motion.div>
+    </CalendarMainContainer>
+  );
+};
+
+const CalendarMainContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 const StyledEvent = styled.div`
   display: flex;
   align-items: center;
@@ -31,15 +182,14 @@ const StyledEvent = styled.div`
 `;
 const LoadingContainer = styled.div`
   display: flex;
-  justify-content: center;
+  margin: 0 auto;
   align-items: center;
-  height: 200px;
 `;
 const CalendarTabMenu = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
-  width: 1100px;
+  padding: 0 1rem;
 `;
 const BorderArea = styled.div`
   width: 100%;
@@ -68,17 +218,18 @@ const ModalBtn = styled(motion.button)`
   }
 `;
 const Label = styled.label`
-  width: 200px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   margin-right: 1rem;
+  width: 100%;
 `;
 
 const MyListBtn = styled.input`
   width: 30px;
   height: 20px;
   font-family: "Pretendard-Regular";
+  accent-color: ${(props) => props.theme.colors.green.dark};
 `;
 const TabBtnWrapper = styled.div`
   display: flex;
@@ -146,6 +297,7 @@ const CalendarDay = styled.div`
   align-items: center;
 `;
 const CustomFullcalendarWrapper = styled.div`
+  width: 100%;
   z-index: 0;
 `;
 
@@ -156,144 +308,5 @@ const EventTitle = styled.p`
   align-items: center;
 `;
 
-const Calendar = () => {
-  const selectedTab = useTabStore((state) => state.selectedTab);
-  const setSelectedTab = useTabStore((state) => state.setSelectedTab);
-  const [showMyList, setShowMyList] = useState(false);
-
-  const { openAddModal, setOpenAddModal, openMyListModal, setOpenMyListModal } = useOpenModal();
-
-  const { data: allEvents, isLoading: allEventsLoading } = useEventQuery("events");
-  const { data: myEvents, isLoading: myEventsLoading } = useEventQuery("myevents");
-
-  if (allEventsLoading || myEventsLoading) {
-    return (
-      <LoadingContainer>
-        <SyncLoader size={10} color={theme.colors.green.main} loading={true} />
-      </LoadingContainer>
-    );
-  }
-
-  const events = showMyList ? myEvents || [] : allEvents || [];
-
-  const filteredEvents = usefilterEvents(events, selectedTab);
-
-  const mappedEvents = filteredEvents
-    .filter((data) => data.orderState !== ORDER_STATE.RJ)
-    .map((data) => ({
-      title: data.username,
-      start: new Date(data.startDate),
-      end: new Date(data.endDate),
-      type: data.eventType,
-      id: data.eventId.toString(),
-      userId: data.userId,
-      orderState: data.orderState,
-    }));
-
-  const eventContent = (arg: { event: EventInput }) => {
-    const { event } = arg;
-    const eventType = event._def.extendedProps.type;
-    const orderState = event._def.extendedProps.orderState;
-
-    return (
-      <>
-        <StyledEvent id={eventType}>
-          {orderState === ORDER_STATE.WT && <OrderState>&nbsp;{ORDER_STATE[orderState]}승인대기</OrderState>}&nbsp;
-          <EventTitle>{event.title}</EventTitle>
-        </StyledEvent>
-      </>
-    );
-  };
-
-  const eventsString = JSON.stringify(mappedEvents);
-  const eventsHash = SHA256(eventsString).toString();
-
-  const dayHeaderContent = (arg: DayHeaderContentArg) => {
-    const { text } = arg;
-    const textColor = text === "일" ? "red" : text === "토" ? "blue" : "inherit";
-    return <CalendarDay style={{ color: textColor, fontWeight: "bold" }}>{text}</CalendarDay>;
-  };
-
-  const dayCellContent = (arg: DayCellContentArg) => {
-    const { date } = arg;
-    const textColor = date.getDay() === 0 ? "red" : date.getDay() === 6 ? "blue" : "inherit";
-    return <div style={{ color: textColor }}>{date.getDate()}</div>;
-  };
-  const eventClick = (arg: EventClickArg) => {
-    const { event } = arg;
-    const clickedStartDate = event._instance?.range.start.toISOString().slice(0, 10);
-    const clickedEndDate = event._instance?.range.end.toISOString().slice(0, 10);
-    const clickedDateRange = `${clickedStartDate} - ${clickedEndDate}`;
-    const clickedEventType = event._def.extendedProps.type;
-    showNotification(clickedDateRange, clickedEventType);
-  };
-
-  const showNotification = (dateRange: string, clickedEventType: string) => {
-    const eventTypeText = clickedEventType === "DUTY" ? "당직" : "연차";
-    notification.info({
-      message: eventTypeText,
-      description: dateRange,
-      placement: "bottom",
-      duration: 1.5,
-    });
-  };
-
-  const TAB_ADD_ALL = ["전체", ...TAB_ADD];
-
-  return (
-    <>
-      <CalendarTabMenu>
-        <BorderArea>
-          <ModalBtnArea>
-            <ModalBtn onClick={() => setOpenAddModal(true)}>연차/당직 신청</ModalBtn>
-            <ModalBtn onClick={() => setOpenMyListModal(true)}>내 신청현황</ModalBtn>
-          </ModalBtnArea>
-          <Label htmlFor="myListCheckbox">
-            <MyListBtn
-              type="checkbox"
-              id="myListCheckbox"
-              checked={showMyList}
-              onChange={() => setShowMyList((prev) => !prev)}
-            />
-            내 일정만 보기
-          </Label>
-        </BorderArea>
-        <TabBtnWrapper>
-          {TAB_ADD_ALL.map((tab, index) => (
-            <TabBtn key={index} $isActive={selectedTab === tab} onClick={() => setSelectedTab(tab)}>
-              {tab}
-            </TabBtn>
-          ))}
-        </TabBtnWrapper>
-      </CalendarTabMenu>
-
-      {openAddModal && <AddModal />}
-      {openMyListModal && <MyListModal />}
-
-      <motion.div
-        key={eventsHash}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 20 }}
-        transition={{ duration: 0.3 }}
-      >
-        <CustomFullcalendarWrapper>
-          <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            events={mappedEvents}
-            eventBorderColor="white"
-            eventContent={eventContent}
-            dayHeaderContent={dayHeaderContent}
-            dayCellContent={dayCellContent}
-            dayMaxEvents={2}
-            eventClick={eventClick}
-            locale="ko"
-          />
-        </CustomFullcalendarWrapper>
-      </motion.div>
-    </>
-  );
-};
 
 export default Calendar;

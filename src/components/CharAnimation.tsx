@@ -6,7 +6,8 @@ const CharAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [canvasWidth, setCanvasWidth] = useState(1100);
+  const [canvasWidth, setCanvasWidth] = useState(150);
+  const [canvasHeight, setCanvasHeight] = useState(500);
 
   const [mouseState, setMouseState] = useState(false);
   const [direction, setDirection] = useState("");
@@ -17,8 +18,10 @@ const CharAnimation = () => {
       const canvasContainer = document.querySelector(".canvas-container");
       if (canvasContainer) {
         setCanvasWidth(canvasContainer.clientWidth);
+        setCanvasHeight(canvasContainer.clientHeight);
       } else {
         setCanvasWidth(window.innerWidth);
+        setCanvasHeight(window.innerHeight);
       }
     };
 
@@ -43,9 +46,12 @@ const CharAnimation = () => {
     }
 
     canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
-    const characterPosition = { x: canvas.width / 2 - 150, y: canvas.height / 2 + 40 }; // 이 위치로 이동
 
+    // const characterPosition = { x: canvas.width / 2, y: canvas.height / 2 }; // 이 위치로 이동
+    const characterPosition = { x: 30, y: 30 }; // 이 위치로 이동
+    
     const ctx = canvas.getContext("2d");
     const spriteWidth = 32;
     const spriteHeight = 32;
@@ -315,11 +321,14 @@ const CharAnimation = () => {
       canvas.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
-
   return (
     <CanvasContainer>
-      <CharGuideText>키보드 방향키로 캐릭터를 움직여보세요</CharGuideText>
-      <StyledCanvas ref={canvasRef} width={canvasWidth}></StyledCanvas>
+      <CharGuideText>
+        키보드 방향키로
+        <br />
+        캐릭터를 움직여보세요
+      </CharGuideText>
+      <StyledCanvas ref={canvasRef} width={canvasWidth} height={500}></StyledCanvas>
       <img ref={imageRef} src={sprite} style={{ display: "none" }} />
     </CanvasContainer>
   );
@@ -341,9 +350,8 @@ const blinkAnimation = keyframes`
 `;
 
 const CharGuideText = styled.div`
-  position: absolute;
-  top: 100px;
-  left: 430px;
+  width: 100%;
+  text-align: center;
   font-size: 1rem;
   color: ${(props) => props.theme.colors.gray[1]};
   animation: ${blinkAnimation} 2s ease-in-out 3;
