@@ -56,8 +56,6 @@ const Calendar = () => {
     const eventType = event._def.extendedProps.type;
     const orderState = event._def.extendedProps.orderState;
 
-    // if (orderState === ORDER_STATE.RJ) return null;
-
     return (
       <>
         <StyledEvent id={eventType}>
@@ -106,7 +104,7 @@ const Calendar = () => {
   const headerToolbarOptions = {
     left: "prev",
     center: "title",
-    right: "next",
+    right: "today next",
   };
   return (
     <CalendarMainContainer>
