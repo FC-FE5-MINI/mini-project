@@ -28,61 +28,62 @@ const NavBar = () => {
 
   return (
     <Container>
-      <LogoBox src={LogoImage} alt="logo image" />
+      <Wrapper>
+        <LogoBox src={LogoImage} alt="logo image" />
+        <ProfileContainer>
+          <UserProfile
+            src={userData.imageUrl || undefined}
+            alt="profile image"
+            title="회원정보 수정"
+            onClick={handleOpenModal}
+          />
+          <UserName>{userData.username}</UserName>
+        </ProfileContainer>
+      </Wrapper>
       <CharAnimation />
-      <ProfileContainer>
-        <UserProfile
-          src={userData.imageUrl || undefined}
-          alt="profile image"
-          title="회원정보 수정"
-          onClick={handleOpenModal}
-        />
-        <UserName>{userData.username}</UserName>
-        <LogoutButton title="로그아웃" onClick={handleLogout}>
-          <LogoutIcon />
-        </LogoutButton>
-      </ProfileContainer>
+
       {isModalOpen && <UserInfoModal closeModal={handleCloseModal} />}
+      <LogoutButton title="로그아웃" onClick={handleLogout}>
+        로그아웃 <LogoutIcon />
+      </LogoutButton>
     </Container>
   );
 };
 
 export default NavBar;
 
-const Container = styled.nav`
+const Container = styled.div`
+  width: 150px;
+  height: 100%;
+  padding-bottom: 1rem;
   display: flex;
-  position: relative;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  width: 1100px;
+  background-color: ${(props) => props.theme.colors.green.dark};
 `;
 
-const LogoBox = styled.img`
-  width: 186px;
-  height: auto;
-  position: absolute; // 위치 조정을 위해 추가
-  left: 0; // 왼쪽으로 정렬
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 1rem;
 `;
-// const CharGuideText = styled.span`
-//   font-size: 1rem;
-//   color: ${(props) => props.theme.colors.black};
-//   animation: blink 1.5s 3 alternate;
-// `;
+const LogoBox = styled.img`
+  width: 150px;
+`;
 
 const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
-  position: absolute; // 위치 조정을 위해 추가
-  right: 0; // 오른쪽으로 정렬
-  padding: 0 1rem;
+  padding: 1rem;
 `;
 
 const UserProfile = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: ${(props) => props.theme.colors.orange.light};
+  background-color: ${(props) => props.theme.colors.white};
   cursor: pointer;
   transition: transform 0.2s; // smooth transition
 
@@ -94,7 +95,6 @@ const UserProfile = styled.img`
 const UserName = styled.p`
   margin: 0 10px;
   padding: 5px 0;
-  width: 150px;
   font-weight: 600;
   color: ${(props) => props.theme.colors.white};
   white-space: nowrap; // 줄바꿈을 방지
@@ -104,16 +104,22 @@ const UserName = styled.p`
 `;
 
 const LogoutButton = styled.button`
+  color: ${(props) => props.theme.colors.white};
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
-`;
+  color: ${(props) => props.theme.colors.white};
+  font-size: 1rem;
 
-const LogoutIcon = styled(LuLogOut)`
-  color: ${(props) => props.theme.colors.orange.light};
-  font-size: 24px;
   transition: transform 0.2s; // smooth transition
 
   &:hover {
     transform: scale(1.1); // scale up on hover
   }
+`;
+
+const LogoutIcon = styled(LuLogOut)`
+  margin-left: 1rem;
 `;
