@@ -44,7 +44,7 @@ api.interceptors.request.use(
 // 모든 유저 연차/당직 리스트(GET)
 const allList = async () => {
   try {
-    const { data } = await api.get(`/user/event/list`);
+    const { data } = await api.get(`/user/events`);
     return data.data;
   } catch (error) {
     console.error("오류 발생:", error);
@@ -55,7 +55,7 @@ const allList = async () => {
 // 내 연차/당직 신청 현솽(GET)
 const myList = async () => {
   try {
-    const { data } = await api.get(`/user/event/myList`);
+    const { data } = await api.get(`/user/event`);
     return data.data;
   } catch (error) {
     console.error("오류 발생:", error);
@@ -66,7 +66,7 @@ const myList = async () => {
 // 연차/당직 신청(POST)
 const addEvent = async (reqBody: AddEvent) => {
   try {
-    const { data } = await api.post("/user/event/add", reqBody);
+    const { data } = await api.post("/user/event", reqBody);
     return data;
   } catch (error: unknown) {
     const custonError = error as CustomError;
@@ -77,7 +77,7 @@ const addEvent = async (reqBody: AddEvent) => {
 // 연차/당직 취소
 const cancelEvent = async (userId: number) => {
   try {
-    const { data } = await api.post(`/user/event/cancel/${userId}`);
+    const { data } = await api.delete(`/user/event/${userId}`);
     return data;
   } catch (error) {
     console.error("오류 발생:", error);
