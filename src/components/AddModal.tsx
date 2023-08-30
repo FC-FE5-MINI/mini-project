@@ -43,10 +43,9 @@ const AddModal = () => {
       if (!endDate) {
         alert(MODAL_MESSAGE.PLEASE_ENDDATE);
         return;
-      } else {
-        reqBody.endDate = endDate;
-        reqBody.count = calcPeriods(startDate, endDate);
       }
+      reqBody.endDate = endDate;
+      reqBody.count = calcPeriods(startDate, endDate);
     } else {
       reqBody.endDate = startDate;
     }
