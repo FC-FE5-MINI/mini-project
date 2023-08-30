@@ -41,48 +41,42 @@ api.interceptors.request.use(
   }
 );
 
+const endPoint = "/user/event";
+
+const fetchData = async (url: string, method: string, reqData?: unknown) => {
+  try {
+    const { data } = await api({ url, method, data: reqData });
+    if (method === "get") return data.data;
+    return data;
+  } catch (error) {
+    if (url === endPoint && method === "post") {
+      const custonError = error as CustomError;
+      alert(custonError.response?.data.errCode.message);
+    } else {
+      console.error("오류 발생:", error);
+      throw error;
+    }
+  }
+};
+
 // 모든 유저 연차/당직 리스트(GET)
 const allList = async () => {
-  try {
-    const { data } = await api.get(`/user/events`);
-    return data.data;
-  } catch (error) {
-    console.error("오류 발생:", error);
-    throw error;
-  }
+  return await fetchData(`${endPoint}s`, "get");
 };
 
 // 내 연차/당직 신청 현솽(GET)
 const myList = async () => {
-  try {
-    const { data } = await api.get(`/user/event`);
-    return data.data;
-  } catch (error) {
-    console.error("오류 발생:", error);
-    throw error;
-  }
+  return await fetchData(endPoint, "get");
 };
 
 // 연차/당직 신청(POST)
 const addEvent = async (reqBody: AddEvent) => {
-  try {
-    const { data } = await api.post("/user/event", reqBody);
-    return data;
-  } catch (error: unknown) {
-    const custonError = error as CustomError;
-    alert(custonError.response?.data.errCode.message);
-  }
+  return await fetchData(endPoint, "post", reqBody);
 };
 
 // 연차/당직 취소
 const cancelEvent = async (userId: number) => {
-  try {
-    const { data } = await api.delete(`/user/event/${userId}`);
-    return data;
-  } catch (error) {
-    console.error("오류 발생:", error);
-    throw error;
-  }
+  return await fetchData(`${endPoint}/${userId}`, "delete");
 };
 
 export { allList, myList, addEvent, cancelEvent };
