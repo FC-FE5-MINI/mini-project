@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getUserInfo } from "../lib/api/userApi";
 
 const useAnnualCount = () => {
-  const [myAnnual, setMyAnnual] = useState<number>();
+  const [myAnnual, setMyAnnual] = useState<number>(0);
 
   useEffect(() => {
     (async () => {

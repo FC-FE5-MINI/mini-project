@@ -21,14 +21,12 @@ const AddModal = () => {
   const { setOpenAddModal } = useOpenModal();
   const { refetch } = useEventQuery("myevents");
 
+  const hasFinalConsonant = (word: string) => (word[word.length - 1].charCodeAt(0) - parseInt("ac00", 16)) % 28 > 0;
+
   const showNotification = (startDate: Date, endDate: Date | null) => {
     notification.info({
-      message: `${selected === TAB_ADD[0] ? selected + "가" : selected + "이"} 신청되었습니다.`,
-      description: `${
-        endDate
-          ? `${startDate.toLocaleDateString()} ~ ${endDate.toLocaleDateString()}`
-          : `${startDate.toLocaleDateString()}`
-      }`,
+      message: `${selected}${hasFinalConsonant(selected) ? "이" : "가"} 신청되었습니다.`,
+      description: `${startDate.toLocaleDateString()}${endDate ? ` ~ ${endDate.toLocaleDateString()}` : ""}`,
       placement: "top",
       duration: 1.5,
     });
@@ -36,19 +34,18 @@ const AddModal = () => {
 
   const onSubmit = async (event: MouseEvent) => {
     event.preventDefault();
-    const reqBody: AddEvent = new Object();
-
-    reqBody.startDate = startDate;
-    reqBody.eventType = EVENT_TYPE[selected];
+    const reqBody: AddEvent = {
+      startDate,
+      eventType: EVENT_TYPE[selected],
+    };
 
     if (selected === TAB_ADD[0]) {
       if (!endDate) {
         alert(MODAL_MESSAGE.PLEASE_ENDDATE);
         return;
-      } else {
-        reqBody.endDate = endDate;
-        reqBody.count = calcPeriods(startDate, endDate);
       }
+      reqBody.endDate = endDate;
+      reqBody.count = calcPeriods(startDate, endDate);
     } else {
       reqBody.endDate = startDate;
     }
@@ -121,7 +118,6 @@ const SelectWrapper = styled.div`
   align-items: center;
   border-radius: 0.5rem;
   justify-content: space-around;
-  transition: all 1s ease-in-out;
   background-color: ${theme.colors.gray[2]};
   border: 1px solid ${theme.colors.gray[1]};
 `;
