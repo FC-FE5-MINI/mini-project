@@ -18,8 +18,9 @@ const DatePickerComponent = ({ isRange }: DatePickerProp) => {
     if (typeof dateString === "string") {
       setStartDate(new Date(dateString));
     } else {
-      setStartDate(new Date(dateString[0]));
-      setEndDate(new Date(dateString[1]));
+      const [start, end] = dateString;
+      setStartDate(new Date(start));
+      setEndDate(new Date(end));
     }
   };
   return (

@@ -34,8 +34,8 @@ const MyListModal = () => {
 
   const renderList = (listData: MyListData[]) => {
     if (listData.length) {
-      return listData.map((item, idx) => (
-        <List key={idx} orderState={item.orderState} eventId={item.eventId}>
+      return listData.map((item) => (
+        <List key={item.eventId} orderState={item.orderState} eventId={item.eventId}>
           {item.eventType === EVENT_TYPE.LV ? (
             <>
               <span>{`${item.startDate} ~ ${item.endDate}`}</span>{" "}
