@@ -21,14 +21,12 @@ const AddModal = () => {
   const { setOpenAddModal } = useOpenModal();
   const { refetch } = useEventQuery("myevents");
 
+  const hasFinalConsonant = (word: string) => (word[word.length - 1].charCodeAt(0) - parseInt("ac00", 16)) % 28 > 0;
+
   const showNotification = (startDate: Date, endDate: Date | null) => {
     notification.info({
-      message: `${selected === TAB_ADD[0] ? selected + "가" : selected + "이"} 신청되었습니다.`,
-      description: `${
-        endDate
-          ? `${startDate.toLocaleDateString()} ~ ${endDate.toLocaleDateString()}`
-          : `${startDate.toLocaleDateString()}`
-      }`,
+      message: `${selected}${hasFinalConsonant(selected) ? "이" : "가"} 신청되었습니다.`,
+      description: `${startDate.toLocaleDateString()}${endDate ? ` ~ ${endDate.toLocaleDateString()}` : ""}`,
       placement: "top",
       duration: 1.5,
     });
