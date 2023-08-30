@@ -34,10 +34,10 @@ const AddModal = () => {
 
   const onSubmit = async (event: MouseEvent) => {
     event.preventDefault();
-    const reqBody: AddEvent = new Object();
-
-    reqBody.startDate = startDate;
-    reqBody.eventType = EVENT_TYPE[selected];
+    const reqBody: AddEvent = {
+      startDate,
+      eventType: EVENT_TYPE[selected],
+    };
 
     if (selected === TAB_ADD[0]) {
       if (!endDate) {
@@ -118,7 +118,6 @@ const SelectWrapper = styled.div`
   align-items: center;
   border-radius: 0.5rem;
   justify-content: space-around;
-  transition: all 1s ease-in-out;
   background-color: ${theme.colors.gray[2]};
   border: 1px solid ${theme.colors.gray[1]};
 `;
